@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{5D28C7C3-811F-4F36-85F5-4DF9DD80ACF7}</ProjectGuid>
+    <AssemblyName>GenerateWixInclude</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>GenerateWixInclude</RootNamespace>
+    <PlatformTarget>x86</PlatformTarget>
+    <FxCopEnabled>false</FxCopEnabled>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="GenerateWixInclude.cs" />
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+</Project>

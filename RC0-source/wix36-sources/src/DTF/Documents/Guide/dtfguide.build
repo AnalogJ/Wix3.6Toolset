@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="dtfguide" default="dtfguide.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    dtfref.build - Builds the Deployment Tools Foundation user-guide CHM.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  
+  <!-- Help tools directories -->
+  <property name="dir.hhw" value="${environment::get-variable('ProgramFiles(x86)')}\HTML Help Workshop" readonly="true" if="${environment::variable-exists('ProgramFiles(x86)')}" />
+  <property name="dir.hhw" value="${environment::get-variable('ProgramFiles')}\HTML Help Workshop" readonly="true" unless="${environment::variable-exists('ProgramFiles(x86)')}" />
+  <property name="hhw-found" value="${directory::exists(dir.hhw)}" readonly="true" />
+
+  <!-- dtfguide-specific properties -->
+  <property name="dir.src.dtfguide" value="${dir.wixroot.src}\dtf\Documents\Guide" readonly="true" />
+  <property name="dir.build.dtfguide" value="${dir.build.wix}\dtfguide" readonly="true" />
+  
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="dtfguide.build" description="Peforms a full rebuild (clean then build)" depends="dtfguide.clean dtfguide.inc">
+  </target>
+
+  <!-- Clean -->
+  <target name="dtfguide.clean" description="Cleans the build">
+    <delete dir="${dir.build.dtfguide}" />
+    <delete file="${dir.target.wix}\DTF.chm" />
+  </target>
+
+  <!-- Inc -->
+  <target name="dtfguide.inc" description="Performs an incremental build">
+    <if test="${not ship}">
+      <echo message="Skipping DTF user-guide CHM build because build flavor is not 'ship'." />
+    </if>
+    <if test="${not hhw-found}">
+      <echo message="Skipping DTF user-guide CHM build because HTML Help Workshop was not found at '${dir.hhw}'." />
+    </if>
+    <if test="${ship and hhw-found}">
+      <exec program="${dir.src.dtfguide}\hhc.bat" workingdir="${dir.src.dtfguide}" failonerror="true">
+        <arg file="${dir.hhw}\hhc.exe" />
+        <arg file="${dir.src.dtfguide}\dtf.hhp" />
+      </exec>
+      <move file="${dir.src.dtfguide}\DTFhelp.log" todir="${dir.build.dtfguide}" overwrite="true" />
+      <move file="${dir.src.dtfguide}\DTF.chm" todir="${dir.target.wix}" overwrite="true" />
+    </if>
+  </target>
+</project>

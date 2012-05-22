@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="dutil" default="dutil.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    dutil.build - Builds dutil.lib.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- dutil-specific properties -->
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="dutil.build" description="Peforms a full rebuild (clean then build)" depends="dutil.clean, dutil.inc" />
+  
+  <!-- Clean -->
+  <target name="dutil.clean" description="Cleans the build">
+    <delete dir="${dir.build.dutil.x86}" failonerror="false" if="${directory::exists(dir.build.dutil.x86)}" />
+    <delete dir="${dir.build.dutil.x64}" failonerror="false" if="${directory::exists(dir.build.dutil.x64)}" />
+    <delete dir="${dir.build.dutil.ia64}" failonerror="false" if="${directory::exists(dir.build.dutil.ia64)}" />
+
+    <delete file="${file.target.dutil.vs2010.x86}" failonerror="false" if="${file::exists(file.target.dutil.vs2010.x86)}" />
+    <delete file="${file.target.dutil.vs2010.x64}" failonerror="false" if="${file::exists(file.target.dutil.vs2010.x64)}" />
+    <delete file="${file.target.dutil.vs2010.ia64}" failonerror="false" if="${file::exists(file.target.dutil.vs2010.ia64)}" />
+
+    <delete file="${file.target.dutil.vs2008.x86}" failonerror="false" if="${file::exists(file.target.dutil.vs2008.x86)}" />
+    <delete file="${file.target.dutil.vs2008.x64}" failonerror="false" if="${file::exists(file.target.dutil.vs2008.x64)}" />
+    <delete file="${file.target.dutil.vs2008.ia64}" failonerror="false" if="${file::exists(file.target.dutil.vs2008.ia64)}" />
+
+    <delete file="${file.target.dutil.vs2005.x86}" failonerror="false" if="${file::exists(file.target.dutil.vs2005.x86)}" />
+    <delete file="${file.target.dutil.vs2005.x64}" failonerror="false" if="${file::exists(file.target.dutil.vs2005.x64)}" />
+    <delete file="${file.target.dutil.vs2005.ia64}" failonerror="false" if="${file::exists(file.target.dutil.vs2005.ia64)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="dutil.inc" description="Performs an incremental build" depends="makeDirs">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.dutil}">
+      <include name="aclutil.cpp" />
+      <include name="apuputil.cpp" />
+      <include name="atomutil.cpp" />
+      <include name="buffutil.cpp" />
+      <include name="cabutil.cpp" />
+      <include name="cabcutil.cpp" />
+      <include name="certutil.cpp" />
+      <include name="conutil.cpp" />
+      <include name="cryputil.cpp" />
+      <include name="dirutil.cpp" />
+      <include name="dutil.cpp" />
+      <include name="fileutil.cpp" />
+      <include name="gdiputil.cpp" />
+      <include name="dictutil.cpp" />
+      <include name="eseutil.cpp" />
+      <include name="iis7util.cpp" />
+      <include name="inetutil.cpp" />
+      <include name="iniutil.cpp" />
+      <include name="jsonutil.cpp" />
+      <include name="locutil.cpp" />
+      <include name="logutil.cpp" />
+      <include name="memutil.cpp" />
+      <include name="metautil.cpp" />
+      <include name="osutil.cpp" />
+      <include name="pathutil.cpp" />
+      <include name="perfutil.cpp" />
+      <include name="procutil.cpp" />
+      <include name="proc2utl.cpp" />
+      <include name="proc3utl.cpp" />
+      <include name="regutil.cpp" />
+      <include name="resrutil.cpp" />
+      <include name="reswutil.cpp" />
+      <include name="rexutil.cpp" />
+      <include name="rmutil.cpp" />
+      <include name="rssutil.cpp" />
+      <include name="sceutil.cpp" />
+      <include name="shelutil.cpp" />
+      <include name="sqlutil.cpp" />
+      <include name="srputil.cpp" />
+      <include name="strutil.cpp" />
+      <include name="svcutil.cpp" />
+      <include name="thmutil.cpp" />
+      <include name="timeutil.cpp" />
+      <include name="uriutil.cpp" />
+      <include name="userutil.cpp" />
+      <include name="wiutil.cpp" />
+      <include name="wuautil.cpp" />
+      <include name="xmlutil.cpp" />
+    </fileset>
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2010.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2010.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make vs2010 x86 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2010.x64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2010.x64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x64" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make VS2010 x64 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2010.ia64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <!-- Our winnt.h defines functions as intrinsic for ia-64 which don't exist in the VS2005 compiler.
+         the following "/wd4163" switch can likely be removed if using the VS2010 compiler -->
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2010.ia64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="ia64" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make VS2010 ia64 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2008.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2008.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make vs2008 x86 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2008.x64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2008.x64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x64" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make VS2008 x64 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2008.ia64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <!-- Our winnt.h defines functions as intrinsic for ia-64 which don't exist in the VS2005 compiler.
+         the following "/wd4163" switch can likely be removed if using the VS2008 compiler -->
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2008.ia64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="ia64" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make VS2008 ia64 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <!-- Now build VS 2005 versions of dutil.lib for each architecture -->
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2005.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2005.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make VS2005 x86 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2005.x64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2005.x64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x64" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make VS2005 x64 dutil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.dutil.vs2005.ia64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dutil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <!-- Our winnt.h defines functions as intrinsic for ia-64 which don't exist in the VS2005 compiler.
+         the following "/wd4163" switch can likely be removed if using the VS2008 compiler -->
+    <property name="makeNativeLib.file.target" value="${file.target.dutil.vs2005.ia64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="ia64" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make VS2005 ia64 dutil.lib -->
+    <call target="makeNativeLib" />
+
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="dutil.properties.defined" value="true" readonly="true" />
+
+</project>

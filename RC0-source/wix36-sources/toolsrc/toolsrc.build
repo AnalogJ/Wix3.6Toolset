@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Toolsrc" default="toolsrc.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    Toolsrc.build - Builds the native Toolsrc projects.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Includes
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <include buildfile="thmviewer\thmviewer.build" />
+
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="toolsrc.build" description="Peforms a full rebuild (clean then build)" depends="toolsrc.clean, toolsrc.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.toolsrc}\Toolsrc.sln" />
+    </exec>
+  </target>
+
+  <!-- Clean -->
+  <target name="toolsrc.clean" description="Cleans the build"
+          depends="thmviewer.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.toolsrc}\Toolsrc.sln" />
+    </exec>
+    <delete dir="${dir.build.toolsrc}" failonerror="false" if="${directory::exists(dir.build.toolsrc)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="toolsrc.inc" description="Performs an incremental build"
+          depends="thmviewer.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.toolsrc}\Toolsrc.sln" />
+    </exec>
+  </target>
+</project>

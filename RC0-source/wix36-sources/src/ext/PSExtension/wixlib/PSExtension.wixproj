@@ -1,0 +1,19 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{9d4ccdfc-840c-4d4e-a9b0-3d6015480645}</ProjectGuid>
+    <OutputName>ps</OutputName>
+    <OutputType>Library</OutputType>
+    <BindFiles>True</BindFiles>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <DefineConstants>
+      $(DefineConstants);
+      caerrwxi=$(OutputPath)\caerr.wxi;
+    </DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="PSExtension.wxs" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+</Project>

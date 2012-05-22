@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Unit-testing custom actions with Lux</title>
+</head>
+
+<body>
+  <h1>Unit-testing custom actions with Lux</h1>
+
+  <p>
+  Custom actions are a frequent cause of installation failures so it's important to test them thoroughly.
+  Custom actions themselves usually aren't tested. The traditional testing approach is to run functional 
+  tests on an entire installer and to cover as many scenarios and platform combinations as possible.
+  </p>
+  
+  <h2>Custom action patterns</h2>
+  <p>
+  WiX compiler extensions provide one way of improving custom action quality: Because compiler extensions
+  run at build time instead of install time, they can perform all sorts of data validation and conversion
+  on strongly-typed authoring before converting it to rows and columns of custom tables in the MSI
+  package.
+  </p>
+  <p>
+  Immediate custom actions then read those custom tables, check current state (for example, component 
+  action state, the state of the machine itself), and serialize the resulting data into a custom action
+  data property.
+  
+  Immediate custom actions are the place to do the logic that needs live state and cannot be determined
+  at build time by a compiler extension.
+  
+  Because immediate custom actions run in the security context of the installing user
+  and outside an installation transaction, they generally do not have permissions to modify the machine
+  and if they fail, the installation simply ends without the need to do any cleanup or rollback.
+  </p>
+  <p>
+  Deferred custom actions read the custom action data property set by immediate custom actions to know
+  what to do. One way to improve custom action reliability is to make as few decisions as possible in
+  deferred custom actions; instead, implement all the logic in compiler extensions and immediate
+  custom actions and have deferred custom actions simply read the custom action data property in a 
+  loop to modify the machine.
+  </p>
+  
+  <p>
+  The WiX custom actions that modify the machine use this pattern. For example, XmlConfig authoring
+  is validated by the WixUtilExtension compiler extension and translated to rows and columns in the
+  XmlConfig table. The SchedXmlConfig immediate custom action reads the XmlConfig table, constructs
+  a custom action data property based on the XmlConfig table and machine's state (including checking
+  component state and storing existing file data to support rollback), then schedules the 
+  ExecXmlConfig deferred custom action to execute the XML changes and the ExecXmlConfigRollback
+  rollback custom action to roll back the changes.
+  </p>
+  
+  <h2>Testing with Lux</h2>
+  <p>
+  Lux is a WiX extension (and associated tools) that let you write data-driven unit tests for your custom actions.
+
+  The executive summary: Lux runs your immediate custom actions then validates they set properties to the values you expect.
+  </p>
+  
+  <p>
+  While it's a simple approach, if your custom actions are factored as discussed above, validating
+  the properties set by immediate custom actions can validate all the interaction between your
+  custom actions, the MSI package, and MSI itself. 
+  </p>
+  
+  <p>
+  If your custom actions aren't factored as discussed--for example, if your deferred custom actions
+  expect only an installation directory and have logic to construct file paths from it--then it's
+  likely that your immediate custom actions don't have a lot of logic that's useful to test.
+  </p>
+  
+  <p>
+  Lux does not help you test the custom action code that actually modifies the machine;
+  for that, continue to use other unit-test frameworks and automated tests. By working only with immediate custom
+  actions, Lux can let MSI run the custom actions as-is, eliminating the need to write custom 
+  <a href="http://xunitpatterns.com/Test%20Double.html">test doubles</a> for the MSI API. 
+  
+  Lux runs from a per-user package so unless you run the tests from an elevated command prompt, 
+  none of the custom actions get elevated privileges and therefore cannot modify the machine.
+  </p>
+  
+  <p>
+  Here's how Lux works:
+  </p>
+  
+  <ol>
+    <li>You write your unit tests using XML in WiX source files.</li>
+    <li>The Lux extension converts the XML to a table in a test .msi package.</li>
+    <li>The Lux custom action runs after all other immediate custom actions and evaluates your unit tests.</li>
+  </ol>
+
+  <h1>Authoring unit tests</h1>
+  <p>Lux supports the following unit tests:</p>
+  <ul>
+    <li>Property values</li>
+    <li>Expressions</li>
+    <li>Multi-value properties</li>
+    <li>Name/value-pair properties</li>
+  </ul>
+  <p>Note that you should always author unit tests in fragments separate from your custom action authoring or any other product authoring.
+  If you mix unit tests with other authoring, WiX includes the unit-test data in your "real" installers.</p>
+
+  <h2>Property value tests</h2>
+  <p>A simple test lets you specify a property to test, a value to test against, and the operator to compare with (which defaults to "equal").</p>
+  <pre>&lt;Fragment&gt;
+  &lt;lux:UnitTest CustomAction="TestCustomActionSimple" Property="SIMPLE" Value="[INSTALLFOLDER]" Operator="equal" /&gt;
+&lt;/Fragment&gt;</pre>
+
+  <p>When the test runs, Lux compares the value of the SIMPLE property against the (formatted) value [INSTALLFOLDER].
+  If the two match (because the operator is "equal"), the test passes. Legal values of the Operator attribute are:</p>
+    <dl>
+        <dt><dfn>equal</dfn></dt>
+            <dd>(Default) Compares Property to Value and succeeds if they are equal.</dd>
+        <dt><dfn>notEqual</dfn></dt>
+            <dd>Compares Property to Value and succeeds if they are NOT equal.</dd>
+        <dt><dfn>caseInsensitiveEqual</dfn></dt>
+            <dd>Compares Property to Value and succeeds if they are equal (ignoring case).</dd>
+        <dt><dfn>caseInsensitiveNotEqual</dfn></dt>
+            <dd>Compares Property to Value and succeeds if they are NOT equal (ignoring case).</dd>
+    </dl>
+    <p></p>
+  
+  <h2>Test conditions</h2>
+  <p>Conditions let you validate code paths in your custom action. For example, if your custom action behaves differently on Windows XP than it does on Windows Vista and later, 
+  you can create two tests with mutually exclusive conditions:</p>
+  <pre>&lt;Fragment&gt;
+  &lt;lux:UnitTest CustomAction="TestCustomActionSimple" Property="SIMPLE" Value="[INSTALLFOLDER]"&gt;
+    &lt;lux:Condition&gt;&lt;![CDATA[VersionNT &lt; 600]]&gt;&lt;/lux:Condition&gt;
+  &lt;/lux:UnitTest&gt;
+  &lt;lux:UnitTest CustomAction="TestCustomActionSimple" Property="SIMPLE" Value="[INSTALLFOLDER]"&gt;
+    &lt;lux:Condition&gt;&lt;![CDATA[VersionNT &gt;= 600]]&gt;&lt;/lux:Condition&gt;
+  &lt;/lux:UnitTest&gt;
+&lt;/Fragment&gt;
+</pre>
+  <p>If a test has a condition, the test runs only if its condition is true.</p>
+  
+  <h2>Expression tests</h2>
+  <p>Expression tests let you test any valid MSI expression. If the expression is true, the test passes. If the expression is false or invalid, the test fails.</p>
+  <pre>&lt;Fragment&gt;
+  &lt;lux:UnitTest CustomAction="TestCustomActionSimple"&gt;
+    &lt;lux:Expression&gt;NOT MsiSystemRebootPending AND SIMPLE&lt;/lux:Expression&gt;
+  &lt;/lux:UnitTest&gt;
+&lt;/Fragment&gt;
+</pre>
+
+  <h2>Multi-value property tests</h2>
+  <p>Because deferred custom actions can access only a single custom-action data property, custom actions that need more than one piece of data encode it in a single string. 
+  One way is to have the immediate custom action separate multiple elements with a known separator character, then have the deferred custom action split the string at
+  those separate characters. Lux supports such separators using the ValueSeparator and Index attributes.</p>
+  <pre>&lt;Fragment&gt;
+  &lt;lux:UnitTest CustomAction="TestCustomActionMultiValue" Property="MULTIVALUE" ValueSeparator="*"&gt;
+    &lt;lux:Condition&gt;VersionNT&lt;/lux:Condition&gt;
+    &lt;lux:UnitTest Index="0" Value="1" /&gt;
+    &lt;lux:UnitTest Index="1" Value="[INSTALLFOLDER]"&gt;
+      &lt;lux:Condition&gt;NOT Installed&lt;/lux:Condition&gt;
+    &lt;/lux:UnitTest&gt;
+    &lt;lux:UnitTest Index="2" Value="WIXEAST" /&gt;
+  &lt;/lux:UnitTest&gt;
+&lt;/Fragment&gt;
+</pre>
+  <p>A condition under the parent UnitTest element applies to all individual unit tests. Override it with a Condition child element.</p>
+  
+  <h2>Name/value-pair property tests</h2>
+  <p>Another way of providing multiple values to a deferred custom action is to combine name/value pairs into a single string. Lux supports name/value-pair
+  properties using the NameValueSeparator and Index attributes.</p>
+  <pre>&lt;Fragment&gt;
+  &lt;lux:UnitTest CustomAction="TestCustomActionNameValuePairs" Property="NAMEVALUEPAIRS" NameValueSeparator="#"&gt;
+    &lt;lux:UnitTest Index="InstallationRoot" Value="[INSTALLFOLDER]" /&gt;
+    &lt;lux:UnitTest Index="Developers" Operator="caseInsensitiveNotEqual" Value="WIXEAST" /&gt;
+  &lt;/lux:UnitTest&gt;
+&lt;/Fragment&gt;</pre>
+  
+  <h1>Test mutations</h1>
+  <p>Immediate custom actions frequently need to create different custom action data depending
+  on global machine state. For example, if a component is already installed, a custom action 
+  might have different behavior to upgrade the component, versus installing it for the first 
+  time.</p> 
+  
+  <p>Because Lux runs only immediate custom actions, it's not possible to actually update the
+  global machine state. One approach is to create multiple custom action DLLs, mocking MSI 
+  functions to return hard-coded values. Lux simplifies this model with <i>test mutations</i>.</p>
+  
+  <p>Test mutations let you author unit tests with different expected results. The mutation
+  id is passed as the value of the WIXLUX_RUNNING_MUTATION property. Your custom action,
+  typically in an '#ifdef DEBUG' block, retrieves the WIXLUX_RUNNING_MUTATION property
+  and mock different behavior based on the mutation. To author test mutations, use the
+  Mutation element with UnitTest elements as children. For example:</p>
+  <pre>&lt;lux:Mutation Id="SimulateDiskFull"&gt;
+  &lt;lux:UnitTest ... /&gt;
+&lt;/lux:Mutation&gt;
+</pre>
+  <p>Nit runs the test package once for each mutation, setting the WIXLUX_RUNNING_MUTATION 
+  property to one mutation id at a time. Tests that aren't children of a mutation are run 
+  every time.</p>
+
+  <h1>Building test packages</h1>
+  <p>Lux unit tests run from a minimal package that includes just your unit tests and the resources they need to run. Because Lux runs only immediate
+  custom actions, it doesn't need a full, per-machine package that includes all the files and other resources to be installed. Such a minimal package
+  saves build time but does require that your WiX source code be well modularized with fragments.
+  For example, you should always author unit tests in fragments separate from any other authoring.
+  If you mix unit tests with other authoring, WiX includes the unit-test data in your "real" installers.
+  Likewise, any other WiX authoring included in unit-test fragments is included in test packages.</p>
+  
+  <p>Lux comes with a tool that simplifies the creation of test packages. Its name is lux.exe. To use lux.exe:
+  </p>
+  
+  <ol>
+      <li>Compile the source file containing your unit tests.</li>
+      <li>Run lux.exe on the .wixobj file and specify a source file for the test package.</li>
+      <li>Compile the test package source.</li>
+      <li>Link the test package .wixobj with the unit tests .wixobj.</li>
+  </ol>
+  
+  <p>For example:</p>
+  
+  <pre>candle -ext WixLuxExtension CustomActions.wxs
+lux CustomActions.wixobj -out LuxSample1_test.wxs
+candle -ext WixLuxExtension LuxSample1_test.wxs
+light -ext WixLuxExtension LuxSample1_test.wixobj CustomActions.wixobj -out LuxSample1_test.msi</pre>
+
+  <p>Lux also includes an MSBuild task and .targets file to let you build test packages from the same .wixproj you use to build your installers.
+  To build a test package, build the BuildTestPackage target using MSBuild 3.5:</p>
+  
+  <pre>%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe /t:BuildTestPackage</pre>
+
+  <h1>Running unit tests</h1>
+  <p>After building the test package, you can run it with logging enabled to capture test results:</p>
+  <pre>msiexec /l test1.log /i bin\Debug\LuxSample1_test.msi</pre>
+  <p>Search the log for <b>WixRunImmediateUnitTests</b> to see test results and other logging from the Lux custom action.</p>
+  
+  <h2>Nit: The Lux test runner</h2>
+  <p>Lux also includes Nit, a console program that monitors the logging messages emitted by unit tests and reports success or failure. To use Nit on your test packages, just specify their filenames as arguments to nit.exe. For example:</p>
+
+  <pre>nit LuxSample1_test.msi</pre>
+
+  <p>Lux also lets you run Nit on your test packages from the same .wixproj you use to build your installers.
+  To run a test package under Nit, build the Test target using MSBuild 3.5:</p>
+  
+  <pre>%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe /t:Test</pre>
+
+  <p>The test package will be built before the tests are run, if necessary. The output looks like the following, with failing tests highlighted in red as build errors:</p>
+  
+  <pre>Test:
+  Microsoft (R) Windows Installer Xml Unit Test Runner version 3.5.1204.0
+  Copyright (C) Microsoft Corporation. All rights reserved.
+  
+  Test luxB21F0D12E0701DBA30FFB92A532A5390 passed: Property 'SIMPLE' matched expected value '[INSTALLFOLDER]'.
+  Test TestConditionBeforeVista passed: Property 'SIMPLE' matched expected value '[INSTALLFOLDER]'.
+  Test TestConditionVistaOrLater passed: Property 'SIMPLE' matched expected value '[INSTALLFOLDER]'.
+  Test TestExpressionTruth passed: Expression 'NOT MsiSystemRebootPending AND SIMPLE' evaluated to true.
+nit.exe : error NIT8103: Test luxA6D27EC5903612D7F3786FF71952E314 failed: Property 'MULTIVALUE' expected value '2' but actual value was '1'.
+  Test lux210257649C16AFA33793F1CDDF575505 passed: Property 'MULTIVALUE' matched expected value '[INSTALLFOLDER]'.
+nit.exe : error NIT8103: Test lux402940A90D3ADAD181D599AB8C260FA0 failed: Property 'MULTIVALUE' expected value 'xxxWIXEAST' but actual value was 'WIXEAST'.
+  Test lux453EC8DB458A8F66F0D22970CFF2AE99 passed: Property 'NAMEVALUEPAIRS' matched expected value '[INSTALLFOLDER]'.
+  Test lux20CB4F88795F22D15631FD60BA03AFEB passed: Property 'NAMEVALUEPAIRS' matched expected value 'WIXWEST'.
+nit.exe : error NIT8102: 2 tests failed. 7 tests passed.
+Done Building Project "C:\Delivery\Dev\wix35\src\lux\samples\LuxSample1\LuxSample1.wixproj" (Test target(s)) -- FAILED.
+
+Build FAILED.
+
+"C:\Delivery\Dev\wix35\src\lux\samples\LuxSample1\LuxSample1.wixproj" (Test target) (1) ->
+(Test target) -> 
+  nit.exe : error NIT8103: Test luxA6D27EC5903612D7F3786FF71952E314 failed: Property 'MULTIVALUE' expected value '2' but actual value was '1'.
+  nit.exe : error NIT8103: Test lux402940A90D3ADAD181D599AB8C260FA0 failed: Property 'MULTIVALUE' expected value 'xxxWIXEAST' but actual value was 'WIXEAST'.
+  nit.exe : error NIT8102: 2 tests failed. 7 tests passed.
+
+    0 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:07.87
+</pre>
+  
+  <h1>FAQ</h1>
+    <dl>
+        <dt>Are these really unit tests? They look a lot like <a href="http://fit.c2.com/">Fit tests</a>.</dt>
+            <dd>Fit tests are tabular and data-driven, so they have a lot in common with Lux's unit tests. But fit tests are focused on high-level outputs, 
+            whereas unit tests are low-level developer tests.
+            </dd>
+        <dt>Using the custom action code as-is sounds good, but are there any limitations with that approach?</dt>
+            <dd>Yes. Because you are running the actual custom action, any code paths that rely on machine state reflect the state of the machine you run the tests on.
+            For example, code that has different behavior on different versions of Windows runs only one way, just like it does in a normal installer. 
+            You can add debug code that looks for the presence of the WIXLUXTESTPACKAGE property; it's set to 1 in a test package.
+            </dd>
+        <dt>I have unit tests that fail because directory properties are being returned as empty strings. Why?</dt>
+            <dd>The most likely cause is that your directories are defined as children of your installer's Product element. Lux.exe builds its own Product element to
+            product a minimal test package, so none of the resources defined in your Product are available to the unit tests. The simplest solution is to move those
+            resources to their own Fragment.
+            </dd>
+        <dt>Do I have to write my custom actions in C++?</dt>
+            <dd>No, Lux works with any immediate custom actions, regardless of the language they're written in, including
+            MSI type 51 property-setting custom actions.
+            </dd>
+    </dl>
+
+</body>
+</html>

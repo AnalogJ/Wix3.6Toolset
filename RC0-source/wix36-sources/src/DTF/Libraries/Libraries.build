@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="libraries" default="libraries.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    libraries.build - Builds DTF libraries.
+  </description>
+
+  <!-- Includes -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- Properties -->
+  <property name="dir.src.dtf.libraries.compression" value="${dir.src.dtf.libraries}\compression" readonly="true" />
+  <property name="dir.src.dtf.libraries.compression.cab" value="${dir.src.dtf.libraries}\compression.cab" readonly="true" />
+  <property name="dir.src.dtf.libraries.compression.zip" value="${dir.src.dtf.libraries}\compression.zip" readonly="true" />
+  <property name="dir.src.dtf.libraries.resources" value="${dir.src.dtf.libraries}\resources" readonly="true" />
+  <property name="dir.src.dtf.libraries.windowsinstaller" value="${dir.src.dtf.libraries}\windowsinstaller" readonly="true" />
+  <property name="dir.src.dtf.libraries.windowsinstaller.linq" value="${dir.src.dtf.libraries}\windowsinstaller.linq" readonly="true" />
+  <property name="dir.src.dtf.libraries.windowsinstaller.package" value="${dir.src.dtf.libraries}\windowsinstaller.package" readonly="true" />
+  <property name="file.target.dtf.compression" value="${dir.target.wix}\compression.dll" readonly="true" />
+  <property name="file.target.dtf.compression.cab" value="${dir.target.wix}\compression.cab.dll" readonly="true" />
+  <property name="file.target.dtf.compression.zip" value="${dir.target.wix}\compression.zip.dll" readonly="true" />
+  <property name="file.target.dtf.resources" value="${dir.target.wix}\resources.dll" readonly="true" />
+  <property name="file.target.dtf.windowsinstaller" value="${dir.target.wix}\windowsinstaller.dll" readonly="true" />
+  <property name="file.target.dtf.windowsinstaller.linq" value="${dir.target.wix}\windowsinstaller.linq.dll" readonly="true" />
+  <property name="file.target.dtf.windowsinstaller.package" value="${dir.target.wix}\windowsinstaller.package.dll" readonly="true" />
+
+
+  <!-- Build -->
+  <target name="libraries.build" description="Peforms a full rebuild (clean then build)"
+          depends="libraries.clean,
+                   libraries.inc" />
+
+  <!-- Clean -->
+  <target name="libraries.clean" description="Cleans the build"
+          depends="compression.clean,
+                   compression.cab.clean,
+                   compression.zip.clean,
+                   resources.clean,
+                   windowsinstaller.clean,
+                   windowsinstaller.linq.clean,
+                   windowsinstaller.package.clean" />
+
+  <!-- Inc -->
+  <target name="libraries.inc" description="Performs an incremental build"
+          depends="compression.inc,
+                   compression.cab.inc,
+                   compression.zip.inc,
+                   resources.inc,
+                   windowsinstaller.inc,
+                   windowsinstaller.linq.inc,
+                   windowsinstaller.package.inc" />
+
+  <!-- Begin Compression -->
+  <target name="compression" depends="compression.inc" />
+
+  <target name="compression.build" description="Rebuild compression" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.compression}\compression.csproj" />
+    </exec>
+  </target>
+
+  <target name="compression.clean" description="Cleans compression">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.compression}\compression.csproj" />
+    </exec>
+  </target>
+
+  <target name="compression.inc" description="Incremental compression build" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.compression}\compression.csproj" />
+    </exec>
+  </target>
+  <!-- End Compression -->
+
+  <!-- Begin Compression.Cab -->
+  <target name="compression.cab" depends="compression.cab.inc" />
+
+  <target name="compression.cab.build" description="Rebuild compression.cab" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.compression.cab}\compression.cab.csproj" />
+    </exec>
+  </target>
+
+  <target name="compression.cab.clean" description="Cleans compression.cab" depends="compression.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.compression.cab}\compression.cab.csproj" />
+    </exec>
+  </target>
+
+  <target name="compression.cab.inc" description="Incremental compression.cab build" depends="makeDirs, createKeyFile, compression.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.compression.cab}\compression.cab.csproj" />
+    </exec>
+  </target>
+  <!-- End Compression.Cab -->
+
+  <!-- Begin Compression.Zip -->
+  <target name="compression.zip" depends="compression.zip.inc" />
+
+  <target name="compression.zip.build" description="Rebuild compression.zip" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.compression.zip}\compression.zip.csproj" />
+    </exec>
+  </target>
+
+  <target name="compression.zip.clean" description="Cleans compression.zip" depends="compression.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.compression.zip}\compression.zip.csproj" />
+    </exec>
+  </target>
+
+  <target name="compression.zip.inc" description="Incremental compression.zip build" depends="makeDirs, createKeyFile, compression.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.compression.zip}\compression.zip.csproj" />
+    </exec>
+  </target>
+  <!-- End Compression.Zip -->
+
+  <!-- Begin Resources -->
+  <target name="resources" depends="resources.inc" />
+
+  <target name="resources.build" description="Rebuild resources" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.resources}\resources.csproj" />
+    </exec>
+  </target>
+
+  <target name="resources.clean" description="Cleans resources">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.resources}\resources.csproj" />
+    </exec>
+  </target>
+
+  <target name="resources.inc" description="Incremental resources build" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.resources}\resources.csproj" />
+    </exec>
+  </target>
+  <!-- End Resources -->
+
+  <!-- Begin WindowsInstaller -->
+  <target name="windowsinstaller" depends="windowsinstaller.inc" />
+
+  <target name="windowsinstaller.build" description="Rebuild windowsinstaller" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller}\windowsinstaller.csproj" />
+    </exec>
+  </target>
+
+  <target name="windowsinstaller.clean" description="Cleans windowsinstaller">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller}\windowsinstaller.csproj" />
+    </exec>
+  </target>
+
+  <target name="windowsinstaller.inc" description="Incremental windowsinstaller build" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller}\windowsinstaller.csproj" />
+    </exec>
+  </target>
+  <!-- End WindowsInstaller -->
+
+  <!-- Begin WindowsInstaller.Linq -->
+  <target name="windowsinstaller.linq" depends="windowsinstaller.linq.inc" />
+
+  <target name="windowsinstaller.linq.build" description="Rebuild windowsinstaller.linq" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller.linq}\windowsinstaller.linq.csproj" />
+    </exec>
+  </target>
+
+  <target name="windowsinstaller.linq.clean" description="Cleans windowsinstaller.linq" depends="windowsinstaller.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller.linq}\windowsinstaller.linq.csproj" />
+    </exec>
+  </target>
+
+  <target name="windowsinstaller.linq.inc" description="Incremental windowsinstaller.linq build" depends="makeDirs, createKeyFile, windowsinstaller.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller.linq}\windowsinstaller.linq.csproj" />
+    </exec>
+  </target>
+  <!-- End WindowsInstaller.Linq -->
+
+  <!-- Begin WindowsInstaller.Package -->
+  <target name="windowsinstaller.package" depends="windowsinstaller.package.inc" />
+
+  <target name="windowsinstaller.package.build" description="Rebuild windowsinstaller.package" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller.package}\windowsinstaller.package.csproj" />
+    </exec>
+  </target>
+
+  <target name="windowsinstaller.package.clean" description="Cleans windowsinstaller.package" depends="compression.clean, compression.cab.clean, windowsinstaller.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller.package}\windowsinstaller.package.csproj" />
+    </exec>
+  </target>
+
+  <target name="windowsinstaller.package.inc" description="Incremental windowsinstaller.package build" depends="makeDirs, createKeyFile, compression.inc, compression.cab.inc, windowsinstaller.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.libraries.windowsinstaller.package}\windowsinstaller.package.csproj" />
+    </exec>
+  </target>
+  <!-- End WindowsInstaller.Package -->
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="dtflibraries.properties.defined" value="true" readonly="true" />
+
+</project>

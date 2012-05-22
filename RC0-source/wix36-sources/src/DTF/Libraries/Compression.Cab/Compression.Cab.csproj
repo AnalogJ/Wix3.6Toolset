@@ -1,0 +1,54 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{15895FD1-DD68-407B-8717-08F6DD14F02C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Deployment.Compression.Cab</RootNamespace>
+    <AssemblyName>Microsoft.Deployment.Compression.Cab</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.Compression.Cab.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <FxCopEnabled>false</FxCopEnabled>
+    <DocumentationFile>Microsoft.Deployment.Compression.Cab.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CabPacker.cs" />
+    <Compile Include="CabEngine.cs" />
+    <Compile Include="CabWorker.cs" />
+    <Compile Include="CabException.cs" />
+    <Compile Include="CabUnpacker.cs" />
+    <Compile Include="CabFileInfo.cs" />
+    <Compile Include="CabInfo.cs" />
+    <Compile Include="HandleManager.cs" />
+    <Compile Include="NativeMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Errors.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Compression\Compression.csproj">
+      <Project>{2D62850C-9F81-4BE9-BDF3-9379389C8F7B}</Project>
+      <Name>Compression</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Errors.resources.resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+</Project>

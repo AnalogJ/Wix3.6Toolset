@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Create the Skeleton Bundle Authoring</title>
+</head>
+
+<body>
+<h1>Create the Skeleton Bundle Authoring</h1>
+
+<p>The root element of a bundle is <a href="wix_xsd_bundle.htm">&lt;Bundle&gt;</a>. The <a href="wix_xsd_bundle.htm">&lt;Bundle&gt;</a> element is a child directly under the <a href="wix_xsd_wix.htm">&lt;Wix&gt;</a>; element. Here's an example of a blank bundle:</p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;&gt;
+      &lt;Bundle&gt;
+        &lt;!-- Contents of the bundle goes here --&gt;
+      &lt;/Bundle&gt;
+    &lt;/Wix&gt;</pre>
+
+<p>In this example, we will be adding the following elements to the <a href="wix_xsd_bundle.htm">&lt;Bundle&gt;</a> element:</p>
+
+<ul>
+  <li><a href="wix_xsd_bootstrapperapplicationref.htm">&lt;BootstrapperApplicationRef&gt;</a></li>
+
+  <li><a href="wix_xsd_chain.htm">&lt;Chain&gt;</a></li>
+
+  <li><a href="wix_xsd_variable.htm">&lt;Variable&gt;</a></li>
+</ul>
+
+<p>As a start, let's add the two most common elements inside a <a href="wix_xsd_bundle.htm">&lt;Bundle&gt;</a> :</p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;&gt;
+      &lt;Bundle&gt;
+        &lt;BootstrapperApplicationRef /&gt;
+        &lt;Chain&gt;
+        &lt;/Chain&gt;
+      &lt;/Bundle&gt;
+    &lt;/Wix&gt;</pre>
+
+<p>The <a href="wix_xsd_bootstrapperapplicationref.htm">&lt;BootstrapperApplicationRef&gt;</a> element will eventually point to the standard BootstrapperApplication provided by the WiX toolset and the <a href="wix_xsd_chain.htm">&lt;Chain&gt;</a> element will eventually contain the ordered list of packages that make up the bundle.</p>
+
+<p>Now you have the skeleton authoring of a Bundle, let's move on to adding information for the <a href="wix_xsd_bootstrapperapplicationref.htm">&lt;BootstrapperApplicationRef&gt;</a> element. See <a href="authoring_bundle_application.htm">Author the BootstrapperApplication for a Bundle</a>.</p>
+</body>
+</html>

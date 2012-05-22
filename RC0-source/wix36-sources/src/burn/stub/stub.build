@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="stub" default="stub.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    stub.build - Builds the Burn executable stub (burnstub.exe).
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  <include buildfile="${dir.src.deputil}\deputil.build" unless="${property::exists('deputil.properties.defined')}" />
+
+  <property name="dir.src.stub" value="${dir.src.burn}\stub" readonly="true" />
+
+  <!-- stub-specific properties -->
+  <property name="dir.build.stub.x86" value="${dir.build.burn.x86}\stub" readonly="true" />
+  <property name="dir.target.burn.x86" value="${dir.target.wix.x86}\x86" readonly="true" />
+  <property name="stub.file.target.x86" value="${dir.target.burn.x86}\burn.exe" readonly="true" />
+  <property name="stub.file.targetpdb.x86" value="${dir.target.wix.x86}\burn.pdb" readonly="true" />
+  <property name="stub.additionalIncludes" value="/I &quot;${dir.src.burn}\inc&quot; /I &quot;${dir.src.burn.engine}\inc&quot;"/>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="stub.build" description="Peforms a full rebuild (clean then build)" depends="stub.clean, stub.inc" />
+
+  <!-- Clean -->
+  <target name="stub.clean" description="Cleans the build" depends="deputil.clean">
+    <delete dir="${dir.build.stub.x86}" failonerror="false" if="${directory::exists(dir.build.stub.x86)}" />
+    <delete file="${stub.file.target.x86}" failonerror="false" if="${file::exists(stub.file.target.x86)}" />
+    <delete file="${stub.file.targetpdb.x86}" failonerror="false" if="${file::exists(stub.file.targetpdb.x86)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="stub.inc" description="Performs an incremental build" depends="makeDirs, deputil.inc">
+    <mkdir dir="${dir.build.stub.x86}" />
+    <mkdir dir="${dir.target.burn.x86}" />
+
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.stub}">
+      <include name="stub.cpp" />
+      <include name="StubSection.cpp" />
+    </fileset>
+
+    <!-- Build x86 -->
+    <property name="compileCpp.dir.build" value="${dir.build.stub.x86}" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.stub}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.stub}\stub.rc" />
+    <property name="compileCpp.additionalIncludes" value="${stub.additionalIncludes}" />
+    <property name="compileCpp.additionalOptions" value="-DUNICODE -D_UNICODE" />
+    <property name="makeNativeExe.file.target" value="${stub.file.target.x86}" />
+    <property name="makeNativeExe.additionalLibs" value="/SWAPRUN:CD /SWAPRUN:NET -entry:wWinMainCRTStartup &quot;${dir.target.wix}\engine.lib&quot; &quot;${dir.target.wix}\engine.res&quot; &quot;${file.target.dutil}&quot; &quot;${file.target.deputil}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot; &quot;${dir.platformsdk.lib}\rpcrt4.lib&quot; &quot;${dir.platformsdk.lib}\wininet.lib&quot; &quot;${dir.platformsdk.lib}\wintrust.lib&quot; &quot;${dir.platformsdk.lib}\crypt32.lib&quot; &quot;${dir.platformsdk.lib}\gdi32.lib&quot; &quot;${dir.platformsdk.lib}\shlwapi.lib&quot; &quot;${dir.platformsdk.lib}\cabinet.lib&quot; &quot;${dir.platformsdk.lib}\Userenv.lib&quot; &quot;${dir.platformsdk.lib}\Wtsapi32.lib&quot; &quot;${dir.platformsdk.lib}\wuguid.lib&quot;" />
+    <call target="makeNativeExe" />
+  </target>
+
+</project>

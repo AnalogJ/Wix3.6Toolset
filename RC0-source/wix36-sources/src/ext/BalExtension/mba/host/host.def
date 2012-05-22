@@ -1,0 +1,13 @@
+;-------------------------------------------------------------------------------------------------
+; <copyright file="host.def" company="Microsoft">
+;    Copyright (c) Microsoft Corporation.  All rights reserved.
+; </copyright>
+; 
+; <summary>
+;    MBA Host DLL entry points.
+; </summary>
+;-------------------------------------------------------------------------------------------------
+
+EXPORTS
+    BootstrapperApplicationCreate
+    BootstrapperApplicationDestroy

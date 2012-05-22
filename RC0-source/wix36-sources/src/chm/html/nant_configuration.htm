@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>NAnt Configuration</title>
+</head>
+
+<body>
+  <h1>NAnt Configuration</h1>
+
+  <h2><a name="net-4.0"></a>Microsoft .NET Framework 4.0 Support</h2>
+
+  <p>In order to build WiX using NAnt with only Microsoft Visual Studio 2010 and the .NET Framework 4.0, you need to add the following to the list of frameworks supported by NAnt.</p>
+
+  <pre>&lt;framework name="net-4.0" family="net" version="4.0" description="Microsoft .NET Framework 4.0" sdkdirectory="${path::combine(sdkInstallRoot, 'bin')}" frameworkdirectory="${installRoot}" frameworkassemblydirectory="${installRoot}" clrversion="4.0"&gt;
+  &lt;!-- ${installVersion} --&gt;
+  &lt;runtime&gt;
+    &lt;probing-paths&gt;
+      &lt;directory name="lib/net/4.0" /&gt;
+      &lt;directory name="lib/net/neutral" /&gt;
+      &lt;directory name="lib/common/4.0" /&gt;
+      &lt;directory name="lib/common/neutral" /&gt;
+    &lt;/probing-paths&gt;
+    &lt;modes&gt;
+      &lt;strict&gt;
+        &lt;environment&gt;
+          &lt;variable name="COMPLUS_VERSION" value="v${installVersion}" /&gt;
+        &lt;/environment&gt;
+      &lt;/strict&gt;
+    &lt;/modes&gt;
+  &lt;/runtime&gt;
+  &lt;reference-assemblies basedir="${path::combine(installRoot, 'v' + ${installVersion})}"&gt;
+    &lt;include name="Accessibility.dll" /&gt;
+    &lt;include name="mscorlib.dll" /&gt;
+    &lt;include name="Microsoft.Build.Utilities.dll" /&gt;
+    &lt;include name="Microsoft.Vsa.dll" /&gt;
+    &lt;include name="Microsoft.VisualBasic.dll" /&gt;
+    &lt;include name="Microsoft.VisualBasic.Compatibility.dll" /&gt;
+    &lt;include name="Microsoft.VisualBasic.Compatibility.Data.dll" /&gt;
+    &lt;include name="System.Configuration.dll" /&gt;
+    &lt;include name="System.Configuration.Install.dll" /&gt;
+    &lt;include name="System.Data.dll" /&gt;
+    &lt;include name="System.Data.OracleClient.dll" /&gt;
+    &lt;include name="System.Data.SqlXml.dll" /&gt;
+    &lt;include name="System.Deployment.dll" /&gt;
+    &lt;include name="System.Design.dll" /&gt;
+    &lt;include name="System.DirectoryServices.dll" /&gt;
+    &lt;include name="System.dll" /&gt;
+    &lt;include name="System.Drawing.Design.dll" /&gt;
+    &lt;include name="System.Drawing.dll" /&gt;
+    &lt;include name="System.EnterpriseServices.dll" /&gt;
+    &lt;include name="System.Management.dll" /&gt;
+    &lt;include name="System.Messaging.dll" /&gt;
+    &lt;include name="System.Runtime.Remoting.dll" /&gt;
+    &lt;include name="System.Runtime.Serialization.Formatters.Soap.dll" /&gt;
+    &lt;include name="System.Security.dll" /&gt;
+    &lt;include name="System.ServiceProcess.dll" /&gt;
+    &lt;include name="System.Transactions.dll" /&gt;
+    &lt;include name="System.Web.dll" /&gt;
+    &lt;include name="System.Web.Mobile.dll" /&gt;
+    &lt;include name="System.Web.RegularExpressions.dll" /&gt;
+    &lt;include name="System.Web.Services.dll" /&gt;
+    &lt;include name="System.Windows.Forms.dll" /&gt;
+    &lt;include name="System.Xml.dll" /&gt;
+    &lt;include name="Microsoft.Build.Engine.dll" /&gt;
+    &lt;include name="Microsoft.Build.Framework.dll" /&gt;
+    &lt;include name="System.AddIn.Contract.dll" /&gt;
+    &lt;include name="System.AddIn.dll" /&gt;
+    &lt;include name="System.Core.dll" /&gt;
+    &lt;include name="System.Data.DataSetExtensions.dll" /&gt;
+    &lt;include name="System.Data.Linq.dll" /&gt;
+    &lt;include name="System.DirectoryServices.AccountManagement.dll" /&gt;
+    &lt;include name="System.Management.Instrumentation.dll" /&gt;
+    &lt;include name="System.Net.dll" /&gt;
+    &lt;include name="System.ServiceModel.Web.dll" /&gt;
+    &lt;include name="System.Web.Extensions.Design.dll" /&gt;
+    &lt;include name="System.Web.Extensions.dll" /&gt;
+    &lt;include name="System.Windows.Presentation.dll" /&gt;
+    &lt;include name="System.WorkflowServices.dll" /&gt;
+    &lt;include name="System.Xml.Linq.dll" /&gt;
+    &lt;include name="System.IdentityModel.dll" /&gt;
+    &lt;include name="System.IdentityModel.Selectors.dll" /&gt;
+    &lt;include name="System.IO.Log.dll" /&gt;
+    &lt;include name="System.Printing.dll" /&gt;
+    &lt;include name="System.Runtime.Serialization.dll" /&gt;
+    &lt;include name="System.ServiceModel.dll" /&gt;
+    &lt;include name="System.Speech.dll" /&gt;
+    &lt;include name="System.Workflow.Activities.dll" /&gt;
+    &lt;include name="System.Workflow.ComponentModel.dll" /&gt;
+    &lt;include name="System.Workflow.Runtime.dll" /&gt;
+    &lt;include name="WindowsBase.dll" /&gt;
+  &lt;/reference-assemblies&gt;
+  &lt;task-assemblies&gt;
+    &lt;!-- include MS.NET version-neutral assemblies --&gt;
+    &lt;include name="extensions/net/neutral/**/*.dll" /&gt;
+    &lt;!-- include MS.NET 4.0 specific assemblies --&gt;
+    &lt;include name="extensions/net/4.0/**/*.dll" /&gt;
+    &lt;!-- include MS.NET specific task assembly --&gt;
+    &lt;include name="NAnt.MSNetTasks.dll" /&gt;
+    &lt;!-- include MS.NET specific test assembly --&gt;
+    &lt;include name="NAnt.MSNet.Tests.dll" /&gt;
+    &lt;!-- include .NET 4.0 specific assemblies --&gt;
+    &lt;include name="extensions/common/4.0/**/*.dll" /&gt;
+  &lt;/task-assemblies&gt;
+  &lt;tool-paths&gt;
+    &lt;directory name="${path::combine(sdkInstallRoot, 'bin')}" if="${property::exists('sdkInstallRoot')}" /&gt;
+    &lt;directory name="${installRoot}" /&gt;
+  &lt;/tool-paths&gt;
+  &lt;project&gt;
+    &lt;readregistry property="installRoot" key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client\InstallPath" hive="LocalMachine" /&gt;
+    &lt;readregistry property="installVersion" key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client\Version" hive="LocalMachine" /&gt;
+    &lt;readregistry property="sdkInstallRoot" key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0\WinSDK\InstallationFolder" hive="LocalMachine" failonerror="false" /&gt;
+    &lt;readregistry property="sdkInstallRoot" unless="${property::exists('sdkInstallRoot')}" key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\InstallationFolder" hive="LocalMachine" failonerror="false" /&gt;
+  &lt;/project&gt;
+  &lt;tasks&gt;
+    &lt;task name="csc"&gt;
+      &lt;attribute name="supportsnowarnlist"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportswarnaserrorlist"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportskeycontainer"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportskeyfile"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsdelaysign"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsplatform"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportslangversion"&gt;true&lt;/attribute&gt;
+    &lt;/task&gt;
+    &lt;task name="vbc"&gt;
+      &lt;attribute name="supportsdocgeneration"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsnostdlib"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsnowarnlist"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportskeycontainer"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportskeyfile"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsdelaysign"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsplatform"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportswarnaserrorlist"&gt;true&lt;/attribute&gt;
+    &lt;/task&gt;
+    &lt;task name="jsc"&gt;
+      &lt;attribute name="supportsplatform"&gt;true&lt;/attribute&gt;
+    &lt;/task&gt;
+    &lt;task name="vjc"&gt;
+      &lt;attribute name="supportsnowarnlist"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportskeycontainer"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportskeyfile"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsdelaysign"&gt;true&lt;/attribute&gt;
+    &lt;/task&gt;
+    &lt;task name="resgen"&gt;
+      &lt;attribute name="supportsassemblyreferences"&gt;true&lt;/attribute&gt;
+      &lt;attribute name="supportsexternalfilereferences"&gt;true&lt;/attribute&gt;
+    &lt;/task&gt;
+    &lt;task name="delay-sign"&gt;
+      &lt;attribute name="exename"&gt;sn&lt;/attribute&gt;
+    &lt;/task&gt;
+    &lt;task name="license"&gt;
+      &lt;attribute name="exename"&gt;lc&lt;/attribute&gt;
+      &lt;attribute name="supportsassemblyreferences"&gt;true&lt;/attribute&gt;
+    &lt;/task&gt;
+  &lt;/tasks&gt;
+&lt;/framework&gt;</pre>
+
+</body>
+</html>

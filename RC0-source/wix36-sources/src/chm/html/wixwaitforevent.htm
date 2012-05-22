@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>WixWaitForEvent Custom Action</title>
+</head>
+<body>
+    <h1>
+        WixWaitForEvent Custom Action</h1>
+    <p>
+        If you have scenarios you want to test where a package or bundle takes a while to
+        install, you can write a simple MSI package that includes the WixWaitForEvent custom
+        action to simulate this behavior. This custom action waits for either of the globally
+        named automatic reset events documented below and will either return ERROR_INSTALL_FAILURE
+        or ERROR_SUCCESS depending on which event you signal.</p>
+    <ul>
+        <li>Global\WixWaitForEventFail - when signaled, the custom action returns ERROR_INSTALL_FAILURE.</li>
+        <li>Global\WixWaitForEventSucceed - when signaled, the custom action returns ERROR_SUCCESS.</li>
+    </ul>
+    <p>
+        This is especially useful in test cases when you don't want or need to build
+        your entire product and only want small test packages.</p>
+    <p>
+        You can also test MSP packages using this custom action. If the WixWaitForEvent
+        custom action is authored into the target MSI, depending on what condition you author
+        the custom actions will still run. You can also add this custom action to your upgrade
+        MSI package used for building your MSP package, but then the custom actions will
+        not run during MSP uninstall unless you explicitly author them as patch uninstall
+        custom actions.</p>
+    <p>
+        Follow the steps below to include this custom action in your MSI package and schedule
+        it whenever in your sequence you prefer. You can use the WixWaitForEvent 
+        immediate custom action or the WixWaitForEventDeferred deferred custom action. If you want to author the custom action
+        in additional places throughout your sequence, you will have to author the 
+        CustomAction elements yourself using different CustomAction/@Id attribute 
+        values. The binary is WixCA and the entry point is WixWaitForEvent.</p>
+    <h2>
+        Step 1: Add the WiX utilities extensions library to your project</h2>
+    <p>
+        The WiX support for WixWaitForEvent is included in a WiX extension library that
+        must be added to your project prior to use. If you are using WiX on the command
+        line you need to add the following to your light command line:</p>
+    <pre>
+light.exe myproject.wixobj -ext <span>WixUtilExtension</span>
+</pre>
+    <p>
+        If you are using Votive you can add the extension using the Add Reference dialog:</p>
+    <ol>
+        <li>Open your Votive project in Visual Studio</li>
+        <li>Right click on your project in Solution Explorer and select Add Reference...</li>
+        <li>Select the <strong>WixUtilExtension.dll</strong> assembly from the list and click
+            Add</li>
+        <li>Close the Add Reference dialog</li>
+    </ol>
+    <h2>
+        Step 2: Add a reference to the WixWaitForEvent custom action</h2>
+    <p>
+        To add a reference to the WixWaitForEvent 
+        immediate custom action, include the following in
+        your WiX setup authoring:</p>
+    <pre>
+&lt;CustomActionRef Id=&quot;WixWaitForEvent" /&gt;
+</pre>
+    <p>
+        This will cause WiX to add the WaitWaitForEvent custom action to your MSI 
+        as an immediate custom action scheduled immediately before InstallFinalize. This 
+        will block the installation after script generation. You can
+        schedule it anywhere else in your sequence.</p>
+    <p>
+        To add a reference to the WixWaitForEventDeferred deferred custom action, 
+        include the following in your WiX setup authoring:</p>
+    <pre>
+&lt;CustomActionRef Id=&quot;WixWaitForEventDeferred" /&gt;
+</pre>
+    <p>This deferred custom action is scheduled immediately after InstallInitialize so 
+        it will block after starting script execution. You can schedule this custom 
+        action anywhere else in your sequence as well.</p>
+    <p>You can schedule both custom actions in the same package, but you will need to 
+        signal either of the named automatic reset events documented above both times.</p>
+    <h2>
+        Step 3: Build your MSI and test various scenarios</h2>
+    <p>
+        Once you've built your MSI package you can install it using msiexec.exe, Burn,
+        or by any other means you wish. When Windows Installer executes your custom action,
+        Windows Installer will wait for you to signal either the event documented above.
+        Depending on the named event you signal, the custom action will fail or succeed 
+        causing the MSI or MSP package to fail or succeed.</p>
+</body>
+</html>

@@ -1,0 +1,1068 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="Global NAnt build properties" default="global.initTools" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+
+    global.include - Contains global properties for the NAnt builds.
+  </description>
+
+  <!-- Include the global directory properties -->
+  <include buildfile="directories.include" unless="${property::exists('directories.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- C/C++ compiler properties -->
+  <!--
+    -FC = Put full path to source file in debug information
+    -GF = Read only string pooling.  All string literals into .rdata and combined.
+    -GS = Buffers security check
+    -Gy = Enables function-level linking
+    -Gz = Uses the __stdcall calling convention
+    -RTC1 = Runtime error checking for stack frame and uninitialized variables (same as -GZ)
+    -O1 = Optimizes for small code
+    -Od = Disables optimization
+    -Oi = Generates intrinsic functions
+    -W3 = Warning level 3
+    -Zi = Generates complete debugging information
+    -Zl = Removes default library name from .obj file
+    -GR- = Disables run-time type information
+    -WX = Enable warnings as errors
+  -->
+  <property name="cl.commondefines" value="-D_MT -D_NT1X_=100 -D_WIN32_IE=0x0600 -D_WIN32_MSI=310 -D_WIN32_WINNT=0x0600 -D_WINNT -DCONDITION_HANDLING -DDEVL -DSTD_CALL -DNT_UP -DWINNT -DWINVER=0x0600" />
+  <property name="cl.commonstandardoptions" value="-FC -GF -GS -Gy -Gz -W3 -Z7 -Zl -Zp8 -GR- -WX" />
+  <if test="${debug}">
+    <property name="cl.commondefines" value="${cl.commondefines} -D_DEBUG -DDBG=1 -DDEBUG -DFPO=0" />
+    <property name="cl.commonstandardoptions" value="${cl.commonstandardoptions} -RTC1" />
+    <property name="cl.optimization.x86" value="-Od" />
+    <property name="cl.optimization.x64" value="-Od" />
+    <property name="cl.optimization.ia64" value="-Od" />
+  </if>
+  <if test="${ship}">
+    <property name="cl.commondefines" value="${cl.commondefines} -DDBG=0 -DFPO=1 -DNDEBUG -DSHIP" />
+    <property name="cl.commonstandardoptions" value="${cl.commonstandardoptions} -cbstring" />
+    <property name="cl.optimization.x86" value="-O1" />
+    <property name="cl.optimization.x64" value="-O1" />
+    <property name="cl.optimization.ia64" value="-O1" />
+  </if>
+
+  <property name="cl.analysis.x86" value="" />
+  <property name="cl.analysis.x86" value="-analyze" if="${property::exists('codeanalysis') and string::contains(codeanalysis, 'prefast')}" />
+
+  <property name="cl.standardoptions.x86" value="-hotpatch"/>
+  <property name="cl.standardoptions.x64" value=""/>
+  <property name="cl.standardoptions.ia64" value=""/>
+
+  <property name="cl.defines.x86" value="${cl.commondefines} -D_X86_ -Di386 -DWIN32" readonly="true" />
+  <property name="cl.defines.x64" value="${cl.commondefines} -D_WIN64 -D_X64_ -DBITS=64 -DWIN64" readonly="true" />
+  <property name="cl.defines.ia64" value="${cl.commondefines} -D_IA64_ -D_WIN64 -DBITS=64 -DWIN64" readonly="true" />
+
+  <property name="cl.standardOptions" value="${cl.commonstandardoptions} ${cl.standardoptions} ${cl.defines}" dynamic="true"/>
+
+  <!-- C/C++ lib and linker properties -->
+  <!--
+    -debug        = Creates debugging information (pdb file)
+    -debugtype:cv,fixup = Include fixup information in PDB file
+    -incremental  = Controls incremental linking
+    -merge        = Combines sections
+    -nodefaultlib = Ignores all (or specified) default libraries when resolving external references
+    -opt:ref      = Eliminates functions and/or data that are never referenced
+    -opt:win98    = Aligns sections on 4K boundary to improve load time
+    -release      = Sets the Checksum in the .exe header
+  -->
+  <property name="link.standardOptions.common" value="-debug -incremental:no -nodefaultlib -NXCOMPAT -debugtype:cv,fixup" />
+  <property name="lib.standardOptions" value="-nodefaultlib"/>
+  <if test="${debug}">
+    <property name="link.standardOptions.common" value="${link.standardOptions.common} -opt:noref" />
+  </if>
+  <if test="${ship}">
+    <property name="link.standardOptions.common" value="${link.standardOptions.common} -opt:ref -release -merge:.bootdata=.data -merge:msoconst=.text -merge:.rdata=.text -merge:.orpc=.text" />
+  </if>
+
+  <property name="link.standardOptions.x86" value="-SafeSEH"/>
+  <property name="link.standardOptions.x64" value=""/>
+  <property name="link.standardOptions.ia64" value=""/>
+
+  <property name="link.standardOptions" value="${link.standardOptions.common} ${link.standardOptions.switch} -machine:${platform}" dynamic="true" />
+
+  <!--
+    JRock: We're statically linking the C runtime library for two reasons:
+    1) We are using the /GS flag which is the new security cookie buffer overrun checks. When
+       we use that flag, we need to link with the bufferoverflowU.lib when using the 7.0 C runtime
+       libraries, which is what NAnt will use by default if the PlatformSDK is installed. That library
+       is only in the 7.0 version and not in the 6.0 version, which brings us to our next point.
+    2) Our custom action DLLs cannot have a dependency on MSVCRT 7.0 because we can't install that
+       MSM before our custom actions need to run. We have to use 6.0 which comes with the OS.
+    
+    This makes our DLLs about twice the size, but they're still relatively small (around 100-132K).
+    In this case security trumps file size.
+  -->
+  <if test="${debug}">
+    <property name="link.standardLibs.flavorDependent" value="&quot;${dir.vc.lib}\libcmtd.lib&quot;" dynamic="true"/>
+  </if>
+  <if test="${ship}">
+    <property name="link.standardLibs.flavorDependent" value="&quot;${dir.vc.lib}\libcmt.lib&quot;" dynamic="true"/>
+  </if>
+
+  <!-- Common linker properties for DLLs and EXEs -->
+  <property name="link.dll.x86" value="${link.standardOptions} -dll -DYNAMICBASE -subsystem:windows ${link.standardLibs.x86} ${link.standardLibs.flavorDependent}" dynamic="true" />
+  <property name="link.dll.x64" value="${link.standardOptions} -dll -DYNAMICBASE -subsystem:windows ${link.standardLibs.x64} ${link.standardLibs.flavorDependent}" dynamic="true" />
+  <property name="link.dll.ia64" value="${link.standardOptions} -dll -DYNAMICBASE -subsystem:windows ${link.standardLibs.ia64} ${link.standardLibs.flavorDependent}" dynamic="true" />
+  <property name="link.exe.x86" value="${link.standardOptions} -TSAWARE -DYNAMICBASE -entry:wmainCRTStartup -subsystem:windows ${link.standardLibs.x86} ${link.standardLibs.flavorDependent}" dynamic="true" />
+  <property name="link.exe.x64" value="${link.standardOptions} -TSAWARE -DYNAMICBASE -entry:wmainCRTStartup -subsystem:windows ${link.standardLibs.x64} ${link.standardLibs.flavorDependent}" dynamic="true" />
+  <property name="link.exe.ia64" value="${link.standardOptions} -TSAWARE -DYNAMICBASE -entry:wmainCRTStartup -subsystem:windows ${link.standardLibs.ia64} ${link.standardLibs.flavorDependent}" dynamic="true" />
+
+  <!-- RC properties -->
+  <property name="rc.defines.x86" value="/d X86" dynamic="true" />
+  <property name="rc.defines.x64" value="/d X64" dynamic="true" />
+  <property name="rc.defines.ia64" value="/d IA64" dynamic="true" />
+  <if test="${debug}">
+    <property name="rc.standardOptions" value="/d DEBUG" />
+  </if>
+  <if test="${ship}">
+    <property name="rc.standardOptions" value="" />
+  </if>
+
+  <!-- C# properties -->
+  <if test="${debug}">
+    <property name="csc.debug" value="Full" readonly="true" />
+    <property name="csc.defines" value="DEBUG" />
+  </if>
+  <if test="${ship}">
+    <property name="csc.debug" value="PdbOnly" readonly="true" />
+    <property name="csc.defines" value="" />
+  </if>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!--
+    checkRequiredArgs and clearArgs
+    ===============================
+    Arguments:
+      args  A comma-delimited list of arguments to check or clear.
+  -->
+  <property name="args" value="" />
+  <target name="checkRequiredArgs" description="Makes sure that all of the arguments in the list are defined and have a non-blank value.">
+    <foreach property="requiredArg" item="String" delim="," in="${args}">
+      <do>
+        <!-- Trim any spaces from the argument (property) name -->
+        <property name="requiredArg" value="${string::trim(requiredArg)}" />
+        <if test="${not property::exists(requiredArg) or string::trim(property::get-value(requiredArg)) == ''}">
+          <fail message="${requiredArg} not defined or is empty." />
+        </if>
+      </do>
+    </foreach>
+  </target>
+  <target name="clearArgs" description="Clears the values of a list of arguments in preparation for another call">
+    <foreach property="arg" item="String" delim="," in="${args}">
+      <do>
+        <if test="${string::get-length(string::trim(arg)) > 0}">
+          <property name="${string::trim(arg)}" value="" />
+        </if>
+      </do>
+    </foreach>
+  </target>
+
+  <!--
+    compileCpp
+    ==========
+    Arguments:
+      compileCpp.dir.build          Required - The directory where .obj and other temporary files are built
+      compileCpp.file.precomp.h     Optional - If supplied, the absolute path to the precomp.h file to use for the precompiled header
+      compileCpp.file.rc            Optional - If supplied, the source .rc file to compile
+      compileCpp.output.rc          Optional - If supplied, the output .res file from compile
+      compileCpp.file.mc            Optional - If supplied, the source .mc file to compile
+      compileCpp.options.mc         Optional - If supplied, the options for .mc compile
+      compileCpp.additionalIncludes Optional - If supplied, additional include paths
+      compileCpp.additionalOptions  Optional - Additional options to pass to the cl.exe compiler
+      compileCpp.preserveArgs       Optional - If true, then the arguments won't be cleared on completion of the target
+      compileCpp.platform           Optional - The CPU architecture to build for - default is "x86"
+      compileCpp.vctoolsversion     Optional - The version of VC tools to use - default is "9" (Visual Studio 2008)
+  -->
+  <property name="compileCpp.requiredArgs" value="compileCpp.dir.build" />
+  <property name="compileCpp.optionalArgs" value="compileCpp.file.precomp.h, compileCpp.file.rc, compileCpp.output.rc, compileCpp.file.mc, compileCpp.options.mc, compileCpp.additionalOptions, compileCpp.preserveArgs, compileCpp.platform, compileCpp.vctoolsversion" />
+  <target name="compileCpp" description="Compiles a C++ project by correctly using a precompiled header (if supplied)" >
+    <!-- Check the required arguments -->
+    <property name="args" value="${compileCpp.requiredArgs}" />
+    <call target="checkRequiredArgs" />
+
+    <!-- Set the default values for the optional parameters -->
+    <if test="${not property::exists('compileCpp.additionalIncludes')}">
+      <property name="compileCpp.additionalIncludes" value="" />
+    </if>
+    <if test="${not property::exists('compileCpp.additionalOptions')}">
+      <property name="compileCpp.additionalOptions" value="" />
+    </if>
+    <if test="${not property::exists('compileCpp.preserveArgs')}">
+      <property name="compileCpp.preserveArgs" value="false" />
+    </if>
+    <if test="${not property::exists('compileCpp.platform') or compileCpp.platform == ''}">
+      <property name="compileCpp.platform" value="x86" />
+    </if>
+    <if test="${not property::exists('compileCpp.vctoolsversion') or compileCpp.vctoolsversion == ''}">
+      <property name="compileCpp.vctoolsversion" value="${setPlatform.originalvctoolsversion}" />
+    </if>
+
+    <!-- Start "are we building for this platform?" condition -->
+    <if test="${((compileCpp.platform == 'x86' and (property::exists('x86') and x86)) or (compileCpp.platform == 'x64' and (property::exists('x64') and x64)) or (compileCpp.platform == 'ia64' and (property::exists('ia64') and ia64))) and ((compileCpp.vctoolsversion == '8' and BuildVC8) or (compileCpp.vctoolsversion == '9' and BuildVC9) or (compileCpp.vctoolsversion == '10' and BuildVC10))}">
+
+      <!--If necessary, create temp variable to store the original state of the "platform" property
+          and switch to the requested platform -->
+      <property name="compileCpp.backupPlatform" value=""/>
+      <if test="${compileCpp.platform != platform or compileCpp.vctoolsversion != vctoolsversion}">
+        <property name="compileCpp.backupPlatform" value="${platform}" unless="${platform == compileCpp.platform}" />
+        <property name="platform" value="${compileCpp.platform}"/>
+        <property name="compileCpp.backupvctoolsversion" value="${vctoolsversion}" unless="${vctoolsversion == compileCpp.vctoolsversion}" />
+        <property name="vctoolsversion" value="${compileCpp.vctoolsversion}"/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- Create the build directory if necessary -->
+      <mkdir dir="${compileCpp.dir.build}" />
+
+      <!-- Compile the .mc file if there is one -->
+      <if test="${property::exists('compileCpp.file.mc') and string::trim(compileCpp.file.mc) != ''}">
+        <if test="${not property::exists('compileCpp.options.mc')}">
+          <property name="compileCpp.options.mc" value="" />
+        </if>
+        <mc mcfile="${compileCpp.file.mc}" headerpath="${compileCpp.dir.build}" rcpath="${compileCpp.dir.build}" options="${compileCpp.options.mc}" />
+      </if>
+
+      <!-- See if we need to use a precompiled header -->
+      <if test="${property::exists('compileCpp.file.precomp.h') and string::trim(compileCpp.file.precomp.h) != ''}">
+        <!-- Local variables -->
+        <property name="compileCpp.file.precomp.cpp" value="${compileCpp.dir.build}\precomp.cpp" />
+
+        <!-- Create a dummy .cpp file that just includes the precompiled header -->
+        <if test="${not file::exists(compileCpp.file.precomp.cpp)}">
+          <echo file="${compileCpp.file.precomp.cpp}" message="#include &quot;${compileCpp.file.precomp.h}&quot;" />
+        </if>
+        <!-- Create the precompiled header -->
+        <cl
+          outputdir="${compileCpp.dir.build}"
+          pchfile="precomp.pch"
+          pchmode="Create"
+          pchthroughfile="${compileCpp.file.precomp.h}"
+          options="${cl.standardOptions} -YlprecompDefine ${compileCpp.additionalIncludes} ${cl.standardIncludes} ${compileCpp.additionalOptions}"
+        >
+          <sources>
+            <include name="${compileCpp.file.precomp.cpp}" />
+          </sources>
+        </cl>
+      </if>
+
+      <!-- Compile the .rc file if there is one -->
+      <if test="${property::exists('compileCpp.file.rc') and string::trim(compileCpp.file.rc) != ''}">
+        <if test="${not property::exists('compileCpp.output.rc') or string::trim(compileCpp.output.rc) == ''}">
+          <property name="compileCpp.output.rc" value="${compileCpp.dir.build}\${path::get-file-name-without-extension(compileCpp.file.rc)}.res" />
+        </if>
+        <rc rcfile="${compileCpp.file.rc}" langid="0" output="${compileCpp.output.rc}" options="${rc.defines} ${rc.standardOptions} ${cl.standardIncludes}" />
+      </if>
+
+      <!-- Compile the cpp files into the obj files -->
+      <if test="${property::exists('compileCpp.file.precomp.h') and string::trim(compileCpp.file.precomp.h) != ''}">
+        <cl
+          outputdir="${compileCpp.dir.build}"
+          pchfile="precomp.pch"
+          pchmode="Use"
+          pchthroughfile="${path::get-file-name(compileCpp.file.precomp.h)}"
+          options="${cl.standardOptions} ${compileCpp.additionalIncludes} ${cl.standardIncludes} ${compileCpp.additionalOptions}"
+        >
+          <sources refid="compileCpp.fileset.sources" />
+        </cl>
+      </if>
+      <if test="${not property::exists('compileCpp.file.precomp.h') or string::trim(compileCpp.file.precomp.h) == ''}">
+        <cl
+          outputdir="${compileCpp.dir.build}"
+          options="${cl.standardOptions} ${compileCpp.additionalIncludes} ${cl.standardIncludes} ${compileCpp.additionalOptions}"
+        >
+          <sources refid="compileCpp.fileset.sources" />
+        </cl>
+      </if>
+
+      <!-- if we altered the build platform, revert it back and clear the temp variable -->
+      <if test="${property::exists('compileCpp.backupPlatform') and compileCpp.backupPlatform != ''}">
+        <property name="platform" value="${compileCpp.backupPlatform}"/>
+        <property name="compileCpp.backupPlatform" value=""/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- if we altered the vctoolsversion, revert it back and clear the temp variable -->
+      <if test="${property::exists('compileCpp.backupvctoolsversion') and compileCpp.backupvctoolsversion != ''}">
+        <property name="vctoolsversion" value="${compileCpp.backupvctoolsversion}"/>
+        <property name="compileCpp.backupvctoolsversion" value=""/>
+        <call target="setPlatform"/>
+      </if>
+
+    <!-- End "are we building for this platform?" condition -->
+    </if>
+
+    <!-- Clear the variables for the next call -->
+    <if test="${property::exists(compileCpp.preserveArgs) and compileCpp.preserveArgs}">
+      <property name="args" value="${compileCpp.requiredArgs}, ${compileCpp.optionalArgs}, compileCpp.backupPlatform" />
+      <call target="clearArgs" />
+    </if>
+  </target>
+
+  <!--
+    makeNativeLib
+    =============
+    Arguments:
+      All of the arguments from compileCpp plus
+      makeNativeLib.file.target      Required - The destination .lib file
+      makeNativeLib.platform         Optional - The CPU architecture to build for - default is "x86"
+      makeNativeLib.vctoolsversion   Optional - The version of VC tools to use - default is "9" (Visual Studio 2008)
+  -->
+  <property name="makeNativeLib.requiredArgs" value="makeNativeLib.file.target" />
+  <property name="makeNativeLib.optionalArgs" value="makeNativeLib.platform, makeNativeLib.vctoolsversion" />
+  <target name="makeNativeLib" description="Makes a native .lib file" >
+    <!-- Check the required arguments -->
+    <property name="args" value="${makeNativeLib.requiredArgs}" />
+    <call target="checkRequiredArgs" />
+
+    <!-- Set the default values for the optional parameters -->
+    <if test="${not property::exists('makeNativeLib.platform') or makeNativeLib.platform == ''}">
+      <property name="makeNativeLib.platform" value="x86" />
+    </if>
+
+    <if test="${not property::exists('makeNativeLib.vctoolsversion') or makeNativeLib.vctoolsversion == ''}">
+      <property name="makeNativeLib.vctoolsversion" value="${setPlatform.originalvctoolsversion}" />
+    </if>
+
+    <!-- Start "are we building for this platform?" condition -->
+    <if test="${((makeNativeLib.platform == 'x86' and (property::exists('x86') and x86)) or (makeNativeLib.platform == 'x64' and (property::exists('x64') and x64)) or (makeNativeLib.platform == 'ia64' and (property::exists('ia64') and ia64))) and ((makeNativeLib.vctoolsversion == '8' and BuildVC8) or (makeNativeLib.vctoolsversion == '9' and BuildVC9) or (makeNativeLib.vctoolsversion == '10' and BuildVC10))}">
+
+      <!--If necessary, create temp variable to store the original state of the "platform" property
+          and switch to the requested platform -->
+      <property name="makeNativeLib.backupPlatform" value=""/>
+      <if test="${makeNativeLib.platform != platform or makeNativeLib.vctoolsversion != vctoolsversion}">
+        <property name="makeNativeLib.backupPlatform" value="${platform}" unless="${platform == makeNativeLib.platform}" />
+        <property name="platform" value="${makeNativeLib.platform}"/>
+        <property name="makeNativeLib.backupvctoolsversion" value="${vctoolsversion}" unless="${vctoolsversion == makeNativeLib.vctoolsversion}" />
+        <property name="vctoolsversion" value="${makeNativeLib.vctoolsversion}"/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- Compile the source files -->
+      <property name="compileCpp.preserveArgs" value="true" />
+      <property name="compileCpp.platform" value="${makeNativeLib.platform}"/>
+      <property name="compileCpp.vctoolsversion" value="${makeNativeLib.vctoolsversion}"/>
+      <call target="compileCpp" />
+
+      <!-- Create the target directory if necessary -->
+      <mkdir dir="${path::get-directory-name(makeNativeLib.file.target)}" />
+    
+      <!-- Link into a static library (.lib) file -->
+      <uptodate property="libuptodate">
+        <sourcefiles>
+          <include name="${compileCpp.dir.build}\*.obj" />
+        </sourcefiles>
+        <targetfiles>
+          <include name="${makeNativeLib.file.target}" />
+          <include name="${path::change-extension(makeNativeLib.file.target, '.exp')}" />
+        </targetfiles>
+      </uptodate>
+      <lib output="${makeNativeLib.file.target}" options="${lib.standardOptions}" unless="${libuptodate}">
+        <sources>
+          <include name="${compileCpp.dir.build}\*.obj" />
+        </sources>
+      </lib>
+
+      <!-- if we altered the build platform, revert it back and clear the temp variable -->
+      <if test="${property::exists('makeNativeLib.backupPlatform') and makeNativeLib.backupPlatform != ''}">
+        <property name="platform" value="${makeNativeLib.backupPlatform}"/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- if we altered vctoolsversion, revert it back and clear the temp variable -->
+      <if test="${property::exists('makeNativeLib.backupvctoolsversion') and makeNativeLib.backupvctoolsversion != ''}">
+        <property name="vctoolsversion" value="${makeNativeLib.backupvctoolsversion}"/>
+        <call target="setPlatform"/>
+      </if>
+
+    <!-- End "are we building for this platform?" condition -->
+    </if>
+
+    <!-- Clear the variables for the next call -->
+    <property name="args" value="${compileCpp.requiredArgs}, ${compileCpp.optionalArgs}, ${makeNativeLib.requiredArgs}, ${makeNativeLib.optionalArgs}, makeNativeLib.backupPlatform" />
+    <call target="clearArgs" />
+  </target>
+  
+  <!--
+    makeNativeDll
+    =============
+    Arguments:
+      All of the arguments from compileCpp plus
+      makeNativeDll.file.target      Required - The destination .dll file
+      makeNativeDll.file.def         Optional - The source .def file (if absent DLL will be linked with /NOENTRY)
+      makeNativeDll.additionalLibs   Optional - A list of additional .lib files to link in
+      makeNativeDll.platform         Optional - The CPU architecture to build for - default is "x86"
+      makeNativeDll.vctoolsversion   Optional - The version of VC tools to use - default is "9" (Visual Studio 2008)
+  -->
+  <property name="makeNativeDll.requiredArgs" value="makeNativeDll.file.target" />
+  <property name="makeNativeDll.optionalArgs" value="makeNativeDll.file.def, makeNativeDll.additionalLibs, makeNativeDll.platform, makeNativeDll.vctoolsversion" />
+  <target name="makeNativeDll" description="Makes a native DLL" >
+    <!-- Check the required arguments -->
+    <property name="args" value="${makeNativeDll.requiredArgs}" />
+    <call target="checkRequiredArgs" />
+
+    <!-- Set the default values for the optional parameters -->
+    <if test="${property::exists('makeNativeDll.file.def') and string::trim(makeNativeDll.file.def) != ''}">
+      <property name="makeNativeDll.entrypoint" value="-def:&quot;${makeNativeDll.file.def}&quot;" />
+    </if>
+    <if test="${not property::exists('makeNativeDll.file.def') or string::trim(makeNativeDll.file.def) == ''}">
+      <property name="makeNativeDll.entrypoint" value="-noentry" />
+    </if>
+
+    <if test="${not property::exists('makeNativeDll.additionalLibs')}">
+      <property name="makeNativeDll.additionalLibs" value="" />
+    </if>
+
+    <if test="${not property::exists('makeNativeDll.platform') or string::trim(makeNativeDll.platform) == ''}">
+      <property name="makeNativeDll.platform" value="x86" />
+    </if>
+
+    <if test="${not property::exists('makeNativeDll.vctoolsversion') or string::trim(makeNativeDll.vctoolsversion) == ''}">
+      <property name="makeNativeDll.vctoolsversion" value="${setPlatform.originalvctoolsversion}" />
+    </if>
+
+    <!-- Start "are we building for this platform?" condition -->
+    <if test="${((makeNativeDll.platform == 'x86' and (property::exists('x86') and x86)) or (makeNativeDll.platform == 'x64' and (property::exists('x64') and x64)) or (makeNativeDll.platform == 'ia64' and (property::exists('ia64') and ia64))) and ((makeNativeDll.vctoolsversion == '8' and BuildVC8) or (makeNativeDll.vctoolsversion == '9' and BuildVC9) or (makeNativeDll.vctoolsversion == '10' and BuildVC10))}">
+      
+      <!--If necessary, create temp variable to store the original state of the "platform" property
+          and switch to the requested platform -->
+      <property name="makeNativeDll.backupPlatform" value=""/>
+      <if test="${makeNativeDll.platform != platform or makeNativeDll.vctoolsversion != vctoolsversion}">
+        <property name="makeNativeDll.backupPlatform" value="${platform}" unless="${platform == makeNativeDll.platform}" />
+        <property name="platform" value="${makeNativeDll.platform}"/>
+        <property name="makeNativeDll.backupvctoolsversion" value="${vctoolsversion}" unless="${vctoolsversion == makeNativeDll.vctoolsversion}" />
+        <property name="vctoolsversion" value="${makeNativeDll.vctoolsversion}"/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- Compile the source files. -->
+      <property name="compileCpp.preserveArgs" value="true" />
+      <property name="compileCpp.platform" value="${makeNativeDll.platform}"/>
+      <property name="compileCpp.vctoolsversion" value="${makeNativeDll.vctoolsversion}"/>
+      <call target="compileCpp" />
+
+      <!-- Create the target directory if necessary -->
+      <mkdir dir="${path::get-directory-name(makeNativeDll.file.target)}" />
+
+      <!-- Link into a .dll file -->
+      <link output="${makeNativeDll.file.target}" options="${link.dll} ${makeNativeDll.entrypoint} ${makeNativeDll.additionalLibs}">
+        <sources>
+          <include name="${compileCpp.dir.build}\*.obj" />
+          <include name="${compileCpp.dir.build}\*.res" />
+        </sources>
+      </link>
+
+      <!-- if we altered the build platform, revert it back and clear the temp variable -->
+      <if test="${property::exists('makeNativeDll.backupPlatform') and makeNativeDll.backupPlatform != ''}">
+        <property name="platform" value="${makeNativeDll.backupPlatform}"/>
+        <property name="makeNativeDll.backupPlatform" value=""/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- if we altered the vctoolsversion, revert it back and clear the temp variable -->
+      <if test="${property::exists('makeNativeDll.backupvctoolsversion') and makeNativeDll.backupvctoolsversion != ''}">
+        <property name="vctoolsversion" value="${makeNativeDll.backupvctoolsversion}"/>
+        <property name="makeNativeDll.backupvctoolsversion" value=""/>
+        <call target="setPlatform"/>
+      </if>
+
+    <!-- End "are we building for this platform?" condition -->
+    </if>
+
+    <!-- Clear the variables for the next call -->
+    <property name="args" value="${compileCpp.requiredArgs}, ${compileCpp.optionalArgs}, ${makeNativeDll.requiredArgs}, ${makeNativeDll.optionalArgs}, makeNativeDll.entrypoint, makeNativeDll.backupPlatform" />
+    <call target="clearArgs" />
+  </target>
+
+  <!--
+    makeNativeExe
+    =============
+    Arguments:
+      All of the arguments from compileCpp plus
+      makeNativeExe.file.target      Required - The destination .exe file
+      makeNativeExe.additionalLibs   Optional - A list of additional .lib files to link in
+      makeNativeExe.platform         Optional - The CPU architecture to build for - default is "x86"
+      makeNativeExe.vctoolsversion   Optional - The version of VC tools to use - default is "9" (Visual Studio 2008)
+  -->
+  <property name="makeNativeExe.requiredArgs" value="makeNativeExe.file.target" />
+  <property name="makeNativeExe.optionalArgs" value="makeNativeExe.platform, makeNativeExe.vctoolsversion" />
+  <target name="makeNativeExe" description="Makes a native executable file (.exe)" >
+    <!-- Check the required arguments -->
+    <property name="args" value="${makeNativeExe.requiredArgs}" />
+    <call target="checkRequiredArgs" />
+
+    <!-- Set the default values for the optional parameters -->
+    <if test="${not property::exists('makeNativeExe.additionalLibs')}">
+      <property name="makeNativeExe.additionalLibs" value="" />
+    </if>
+
+    <if test="${not property::exists('makeNativeExe.platform') or makeNativeExe.platform == ''}">
+      <property name="makeNativeExe.platform" value="x86" />
+    </if>
+
+    <if test="${not property::exists('makeNativeExe.vctoolsversion') or makeNativeExe.vctoolsversion == ''}">
+      <property name="makeNativeExe.vctoolsversion" value="${setPlatform.originalvctoolsversion}" />
+    </if>
+
+    <!-- Start "are we building for this platform?" condition -->
+    <if test="${((makeNativeExe.platform == 'x86' and (property::exists('x86') and x86)) or (makeNativeExe.platform == 'x64' and (property::exists('x64') and x64)) or (makeNativeExe.platform == 'ia64' and (property::exists('ia64') and ia64))) and ((makeNativeExe.vctoolsversion == '8' and BuildVC8) or (makeNativeExe.vctoolsversion == '9' and BuildVC9) or (makeNativeExe.vctoolsversion == '10' and BuildVC10))}">
+
+      <!--If necessary, create temp variable to store the original state of the "platform" property
+          and switch to the requested platform -->
+      <property name="makeNativeExe.backupPlatform" value=""/>
+      <if test="${makeNativeExe.platform != platform or makeNativeExe.vctoolsversion != vctoolsversion}">
+        <property name="makeNativeExe.backupPlatform" value="${platform}" unless="${platform == makeNativeExe.platform}" />
+        <property name="platform" value="${makeNativeExe.platform}"/>
+        <property name="makeNativeExe.vctoolsversion" value="${vctoolsversion}" unless="${vctoolsversion == makeNativeExe.vctoolsversion}" />
+        <property name="vctoolsversion" value="${makeNativeExe.vctoolsversion}"/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- Compile the source files. -->
+      <property name="compileCpp.preserveArgs" value="true" />
+      <property name="compileCpp.platform" value="${makeNativeExe.platform}"/>
+      <property name="compileCpp.vctoolsversion" value="${makeNativeExe.vctoolsversion}"/>
+      <call target="compileCpp" />
+
+      <!-- Create the target directory if necessary -->
+      <mkdir dir="${path::get-directory-name(makeNativeExe.file.target)}" />
+
+      <!-- Link into a .dll file -->
+      <link output="${makeNativeExe.file.target}" options="${link.exe} ${makeNativeExe.additionalLibs}">
+        <sources>
+          <include name="${compileCpp.dir.build}\*.obj" />
+          <include name="${compileCpp.dir.build}\*.res" />
+        </sources>
+      </link>
+
+      <!-- if we altered the build platform, revert it back and clear the temp variable -->
+      <if test="${property::exists('makeNativeExe.backupPlatform') and makeNativeExe.backupPlatform != ''}">
+        <property name="platform" value="${makeNativeExe.backupPlatform}"/>
+        <property name="makeNativeExe.backupPlatform" value=""/>
+        <call target="setPlatform"/>
+      </if>
+
+      <!-- if we altered the vctoolsversion, revert it back and clear the temp variable -->
+      <if test="${property::exists('makeNativeExe.backupvctoolsversion') and makeNativeExe.backupvctoolsversion != ''}">
+        <property name="vctoolsversion" value="${makeNativeExe.backupvctoolsversion}"/>
+        <property name="makeNativeExe.backupvctoolsversion" value=""/>
+        <call target="setPlatform"/>
+      </if>
+
+    <!-- End "are we building for this platform?" condition -->
+    </if>
+
+    <!-- Clear the variables for the next call -->
+    <property name="args" value="${compileCpp.requiredArgs}, ${compileCpp.optionalArgs}, ${makeNativeExe.requiredArgs}, ${makeNativeExe.optionalArgs}, makeNativeExe.backupPlatform" />
+    <call target="clearArgs" />
+  </target>
+
+  <!--
+    global.initTools
+  -->
+  <target name="global.initTools" description="Sets tool properties for includes, libs, and PATH for binaries">
+    <!-- check registry for paths we're going to use -->
+    
+    <!-- Begin VC 8.0 -->
+    <readregistry key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VC\ProductDir" hive="LocalMachine" property="VC80Dir" failonerror="false" />
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('VC80Dir') or VC80Dir == '' or not directory::exists(VC80Dir)}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\Setup\VC\ProductDir" hive="LocalMachine" property="VC80Dir" failonerror="false" />
+    </if>
+
+    <property name="BuildVC8" value="true"/>
+
+    <if test="${not property::exists('VC80Dir') or VC80Dir == '' or not directory::exists(VC80Dir)}">
+      <echo message="Couldn't find the Visual Studio 2005 VC Directory. VS2005-compatible versions of libraries will be excluded from the build." />
+      <property name="BuildVC8" value="false"/>
+    </if>
+
+    <if test="${BuildVC8}">
+      <echo message="Found Visual Studio 2005 VC Directory : ${VC80Dir}" />
+      <property name="VCDir" value="${VC80Dir}" />
+    </if>
+    <!-- End VC 8.0 -->
+
+    <!-- Begin VC 10.0 -->
+    <readregistry key="SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VC\ProductDir" hive="LocalMachine" property="VC100Dir" failonerror="false" />
+    
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('VC100Dir') or VC100Dir == '' or not directory::exists(VC100Dir)}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\Setup\VC\ProductDir" hive="LocalMachine" property="VC100Dir" failonerror="false" />
+    </if>
+
+    <property name="BuildVC10" value="true" />
+
+    <if test="${not property::exists('VC100Dir') or VC100Dir == '' or not directory::exists(VC100Dir)}">
+      <echo message="Couldn't find the Visual Studio 2010 VC Directory." />
+      <property name="BuildVC10" value="false" />
+    </if>
+
+    <if test="${BuildVC10}">
+      <echo message="Found Visual Studio 2010 VC Directory : ${VC100Dir}" />
+      <property name="VCDir" value="${VC100Dir}" />
+    </if>
+    <!-- End VC 10.0 -->
+
+    <!-- Begin VC 9.0 -->
+    <readregistry key="SOFTWARE\Microsoft\VisualStudio\9.0\Setup\VC\ProductDir" hive="LocalMachine" property="VC90Dir" failonerror="false" />
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('VC90Dir') or VC90Dir == '' or not directory::exists(VC90Dir)}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\9.0\Setup\VC\ProductDir" hive="LocalMachine" property="VC90Dir" failonerror="false" />
+    </if>
+
+    <property name="BuildVC9" value="true" />
+
+    <if test="${not property::exists('VC90Dir') or VC90Dir == '' or not directory::exists(VC90Dir)}">
+      <echo message="Couldn't find the Visual Studio 2008 VC Directory. VS2008-compatible versions of libraries will be excluded from the build." />
+      <property name="BuildVC9" value="false" />
+    </if>
+
+    <if test="${BuildVC9}">
+      <echo message="Found Visual Studio 2008 VC Directory : ${VC90Dir}" />
+      <property name="VCDir" value="${VC90Dir}" />
+    </if>
+    <!-- End VC 9.0 -->
+
+    <if test="${not property::exists('VCDir') or VCDir == '' or not directory::exists(VCDir)}">
+      <fail message="Couldn't find VC Directory - please ensure the Windows Server 2008 and .NET Framework 3.5 SDK or Visual Studio 2008 or Visual Studio 2010 is installed" />
+    </if>
+    <echo message="Setting main VC directory to : ${VCDir}" />
+
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir)}">
+      <readregistry key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.1\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.0A\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.0\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.1\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v6.1\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0A\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <!-- If we failed, check again in the Wow6432Node just in case -->
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir) or not directory::exists(path::combine(PlatformSDKDir, 'lib'))}">
+      <readregistry key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v6.0A\InstallationFolder" hive="LocalMachine" property="PlatformSDKDir" failonerror="false" />
+    </if>
+
+    <if test="${not property::exists('PlatformSDKDir') or PlatformSDKDir == '' or not directory::exists(PlatformSDKDir)}">
+      <fail message="Couldn't find Platform SDK directory - please ensure the Windows Server 2008 and .NET Framework 3.5 SDK or Visual Studio 2008 is installed" />
+    </if>
+    <echo message="Setting PlatformSDKDir directory to : ${PlatformSDKDir}" />
+
+    <readregistry key="SOFTWARE\Microsoft\Microsoft SQL Server Compact Edition\v3.5\NativeDir" hive="LocalMachine" property="SQLCEDir" failonerror="false" />
+    <if test="${not property::exists('SQLCEDir') or SQLCEDir == '' or not directory::exists(SQLCEDir)}">
+      <readregistry key="SOFTWARE\Microsoft\Microsoft SQL Server Compact Edition\v3.5\NativeDir" hive="LocalMachine" property="SQLCEDir" failonerror="false" />
+    </if>
+
+    <if test="${not property::exists('SQLCEDir') or SQLCEDir == '' or not directory::exists(SQLCEDir)}">
+      <fail message="Couldn't find SQL CE directory - please ensure SQL CE is installed" />
+    </if>
+    <echo message="Setting SQLCEDir directory to : ${SQLCEDir}" />
+
+    <!-- set SQL CE properties -->
+    <property name="dir.sqlce.inc" value="${string::to-lower(path::combine(SQLCEDir, 'include'))}" />
+
+    <foreach property="singlepath" item="String" delim=";" in="${environment::get-variable('PATH')}">
+      <do>
+        <!-- Trim any spaces from the single path -->
+        <property name="singlepath" value="${string::replace(string::trim(singlepath), '&quot;', '')}" />
+        <property name="nantexe" value="${singlepath}\nant.exe" />
+        <if test="${file::exists(nantexe)}">
+          <property name="NantPath" value="${singlepath}" />
+        </if>
+      </do>
+    </foreach>
+
+    <!-- Ensure the NantPath doesn't end in a backslash -->
+    <if test="${string::ends-with(NantPath, '\')}">
+      <property name="NantPath" value="${string::substring(NantPath, 0, string::get-length(NantPath)-1)}" />
+    </if>
+
+    <!-- set VC2005 LIB properties -->
+    <property name="dir.vs2005.bin.x86" value="${string::to-lower(path::combine(VC80Dir, 'bin'))}" if="${BuildVC8}" />
+    <property name="dir.vs2005.bin.x64" value="${string::to-lower(path::combine(VC80Dir, 'bin\x86_amd64'))}" if="${BuildVC8}" />
+    <property name="dir.vs2005.bin.ia64" value="${string::to-lower(path::combine(VC80Dir, 'bin\x86_ia64'))}" if="${BuildVC8}" />
+    <property name="dir.vs2005.lib.x86" value="${string::to-lower(path::combine(VC80Dir, 'lib\'))}" if="${BuildVC8}" />
+    <property name="dir.vs2005.lib.x64" value="${string::to-lower(path::combine(VC80Dir, 'lib\amd64'))}" if="${BuildVC8}" />
+    <property name="dir.vs2005.lib.ia64" value="${string::to-lower(path::combine(VC80Dir, 'lib\ia64'))}" if="${BuildVC8}" />
+    <!-- override unversioned VC directories if VC2005 is installed -->
+    <property name="dir.vc.bin.x86" value="${string::to-lower(path::combine(VC80Dir, 'bin'))}" if="${BuildVC8}" />
+    <property name="dir.vc.bin.x64" value="${string::to-lower(path::combine(VC80Dir, 'bin\x86_amd64'))}" if="${BuildVC8}" />
+    <property name="dir.vc.bin.ia64" value="${string::to-lower(path::combine(VC80Dir, 'bin\x86_ia64'))}" if="${BuildVC8}" />
+    <property name="dir.vc.lib.x86" value="${string::to-lower(path::combine(VC80Dir, 'lib\'))}" if="${BuildVC8}" />
+    <property name="dir.vc.lib.x64" value="${string::to-lower(path::combine(VC80Dir, 'lib\amd64'))}" if="${BuildVC8}" />
+    <property name="dir.vc.lib.ia64" value="${string::to-lower(path::combine(VC80Dir, 'lib\ia64'))}" if="${BuildVC8}" />
+
+    <!-- set VC2010 LIB properties -->
+    <property name="dir.vs2010.bin.x86" value="${string::to-lower(path::combine(VC100Dir, 'bin'))}" if="${BuildVC10}" />
+    <property name="dir.vs2010.bin.x64" value="${string::to-lower(path::combine(VC100Dir, 'bin\x86_amd64'))}" if="${BuildVC10}" />
+    <property name="dir.vs2010.bin.ia64" value="${string::to-lower(path::combine(VC100Dir, 'bin\x86_ia64'))}" if="${BuildVC10}" />
+    <property name="dir.vs2010.lib.x86" value="${string::to-lower(path::combine(VC100Dir, 'lib\'))}" if="${BuildVC10}" />
+    <property name="dir.vs2010.lib.x64" value="${string::to-lower(path::combine(VC100Dir, 'lib\amd64'))}" if="${BuildVC10}" />
+    <property name="dir.vs2010.lib.ia64" value="${string::to-lower(path::combine(VC100Dir, 'lib\ia64'))}" if="${BuildVC10}" />
+    <!-- override unversioned VC directories if VC2010 is installed -->
+    <property name="dir.vc.bin.x86" value="${string::to-lower(path::combine(VC100Dir, 'bin'))}" if="${BuildVC10}" />
+    <property name="dir.vc.bin.x64" value="${string::to-lower(path::combine(VC100Dir, 'bin\x86_amd64'))}" if="${BuildVC10}" />
+    <property name="dir.vc.bin.ia64" value="${string::to-lower(path::combine(VC100Dir, 'bin\x86_ia64'))}" if="${BuildVC10}" />
+    <property name="dir.vc.lib.x86" value="${string::to-lower(path::combine(VC100Dir, 'lib\'))}" if="${BuildVC10}" />
+    <property name="dir.vc.lib.x64" value="${string::to-lower(path::combine(VC100Dir, 'lib\amd64'))}" if="${BuildVC10}" />
+    <property name="dir.vc.lib.ia64" value="${string::to-lower(path::combine(VC100Dir, 'lib\ia64'))}" if="${BuildVC10}" />
+
+    <!-- set VC2008 LIB properties -->
+    <property name="dir.vs2008.bin.x86" value="${string::to-lower(path::combine(VC90Dir, 'bin'))}" if="${BuildVC9}" />
+    <property name="dir.vs2008.bin.x64" value="${string::to-lower(path::combine(VC90Dir, 'bin\x86_amd64'))}" if="${BuildVC9}" />
+    <property name="dir.vs2008.bin.ia64" value="${string::to-lower(path::combine(VC90Dir, 'bin\x86_ia64'))}" if="${BuildVC9}" />
+    <property name="dir.vs2008.lib.x86" value="${string::to-lower(path::combine(VC90Dir, 'lib\'))}" if="${BuildVC9}" />
+    <property name="dir.vs2008.lib.x64" value="${string::to-lower(path::combine(VC90Dir, 'lib\amd64'))}" if="${BuildVC9}" />
+    <property name="dir.vs2008.lib.ia64" value="${string::to-lower(path::combine(VC90Dir, 'lib\ia64'))}" if="${BuildVC9}" />
+    <!-- override unversioned VC directories if VC2008 is installed -->
+    <property name="dir.vc.bin.x86" value="${string::to-lower(path::combine(VC90Dir, 'bin'))}" if="${BuildVC9}" />
+    <property name="dir.vc.bin.x64" value="${string::to-lower(path::combine(VC90Dir, 'bin\x86_amd64'))}" if="${BuildVC9}" />
+    <property name="dir.vc.bin.ia64" value="${string::to-lower(path::combine(VC90Dir, 'bin\x86_ia64'))}" if="${BuildVC9}" />
+    <property name="dir.vc.lib.x86" value="${string::to-lower(path::combine(VC90Dir, 'lib\'))}" if="${BuildVC9}" />
+    <property name="dir.vc.lib.x64" value="${string::to-lower(path::combine(VC90Dir, 'lib\amd64'))}" if="${BuildVC9}" />
+    <property name="dir.vc.lib.ia64" value="${string::to-lower(path::combine(VC90Dir, 'lib\ia64'))}" if="${BuildVC9}" />
+
+    <!-- set LIB properties -->
+    <property name="dir.platformsdk.lib.x86" value="${string::to-lower(path::combine(PlatformSDKDir, 'lib'))}" />
+    <property name="dir.platformsdk.lib.x64" value="${string::to-lower(path::combine(PlatformSDKDir, 'lib\x64'))}" />
+    <property name="dir.platformsdk.lib.ia64" value="${string::to-lower(path::combine(PlatformSDKDir, 'lib\IA64'))}" />
+    <property name="dir.netfxsdk2.lib.x86" value="${string::to-lower(path::combine(PlatformSDKDir, 'lib'))}" />
+    <property name="dir.netfxsdk2.lib.x64" value="${string::to-lower(path::combine(PlatformSDKDir, 'lib\x64'))}" />
+    <property name="dir.netfxsdk2.lib.ia64" value="${string::to-lower(path::combine(PlatformSDKDir, 'lib\IA64'))}" />
+
+    <if test="${not directory::exists(dir.vc.bin.x64) or not directory::exists(dir.vc.lib.x64)
+              or not directory::exists(dir.platformsdk.lib.x64) or not directory::exists(dir.netfxsdk2.lib.x64)
+              or not file::exists(path::combine(dir.vc.bin.x64, 'cl.exe'))}">
+      <fail message="Some x64 components necessary for compilation were not found. Ensure you have installed the x64 components in the Windows Server 2008 and .NET Framework 3.5 SDK or Visual Studio 2008." />
+    </if>
+
+    <if test="${BuildVC8 and (not directory::exists(dir.vs2005.bin.x64) or not directory::exists(dir.vs2005.lib.x64)
+              or not file::exists(path::combine(dir.vs2005.bin.x64, 'cl.exe')))}">
+      <echo message="The x64 components necessary for compilation were found in Visual Studio 2008, but not Visual Studio 2005. Visual Studio 2005-specific portions of the build will be excluded from the build." />
+      <property name="BuildVC8" value="false"/>
+    </if>
+
+    <if test="${ia64 and
+              ((BuildVC8 and (not directory::exists(dir.vs2005.bin.ia64) or not directory::exists(dir.vs2005.lib.ia64) or not file::exists(path::combine(dir.vs2005.bin.ia64, 'cl.exe')))) or
+              (BuildVC9 and (not directory::exists(dir.vs2008.bin.ia64) or not directory::exists(dir.vs2008.lib.ia64) or not file::exists(path::combine(dir.vs2008.bin.ia64, 'cl.exe')))) or
+              (BuildVC10 and (not directory::exists(dir.vs2010.bin.ia64) or not directory::exists(dir.vs2010.lib.ia64) or not file::exists(path::combine(dir.vs2010.bin.ia64, 'cl.exe')))))
+              or not directory::exists(dir.platformsdk.lib.ia64) or not directory::exists(dir.netfxsdk2.lib.ia64)
+              or not file::exists(path::combine(dir.platformsdk.lib.ia64, 'advapi32.lib'))
+              or not file::exists(path::combine(dir.vc.bin.ia64, 'cl.exe'))}">
+      <echo message="Some IA-64 components necessary for compilation were not found. IA-64 portions of the build will be skipped. Ensure you have installed the IA-64 components in the Windows Server 2008 and .NET Framework 3.5 SDK or Visual Studio 2008." />
+      <property name="ia64" value="false" />
+    </if>
+
+    <if test="${BuildVC8 and (ia64 and not directory::exists(dir.vs2005.bin.ia64) or not directory::exists(dir.vs2005.lib.ia64)
+              or not file::exists(path::combine(dir.vs2005.bin.ia64, 'cl.exe')))}">
+      <echo message="Visual Studio 2005 portions of the build are enabled, and although the VS2008 IA-64 components are installed, the VS2005 IA-64 components necessary for compilation were not found. IA-64 portions of the build (for both VS2005 and VS2008) will be excluded from the build. Ensure you have installed the IA-64 components in Visual Studio 2005." />
+      <property name="ia64" value="false" />
+    </if>
+
+    <if test="${flavor == 'ship' and ia64 and not file::exists(path::combine(dir.vc.bin.ia64, 'sched.dll'))}">
+      <echo message="The IA-64 components of Visual Studio 2008 must be installed to enable compiling optimized IA-64 binaries. Compiler optimization for IA-64 binaries has been disabled." />
+      <property name="cl.optimization.ia64" value="-Od" />
+    </if>
+
+    <property name="dir.OACR.x86" value="${string::to-lower(path::combine(dir.externalroot, 'OACR\x86\bin'))}" />
+    <property name="dir.OACR.x86" value="" unless="${directory::exists(dir.OACR.x86)}" />
+    <property name="dir.OACR.x64" value="" />
+
+    <!-- set INC properties -->
+    <property name="dir.vc.inc" value="${string::to-lower(path::combine(VCDir, 'include'))}" />
+    <property name="dir.platformsdk.inc" value="${string::to-lower(path::combine(PlatformSDKDir, 'include'))}" />
+    <property name="dir.netfxsdk2.inc" value="${string::to-lower(path::combine(PlatformSDKDir, 'include'))}" />
+
+    <!-- C/C++ standard include directories -->
+    <!--
+      What we really want to do is to have these in a <dirset> and then use that. However, there
+      is either a bug in NAnt or bad design because NAnt ignores the order of the elements specified
+      in the XML and orders them alphabetically according to directory name. This is bad because
+      we can't specify the order in which the include directories will be searched. So instead
+      we'll just build a big string.
+    -->
+    <property name="cl.standardIncludes" value="" />
+    <foreach property="incDir" item="String" delim=";" in="${dir.platformsdk.inc};${dir.vc.inc};${dir.netfxsdk2.inc};${dir.inc.dutil};${dir.sqlce.inc}">
+      <property name="cl.standardIncludes" value="${cl.standardIncludes} /I &quot;${incDir}&quot;"/>
+    </foreach>
+
+    <!--
+      JRock: What I'd really like to do is use these in a <sources refid=this> and then have
+      all of the other files <included> that need to be linked. I'm not sure if it's a bug in
+      NAnt or just bad design, but if you use refid in the <sources> element, then it ignores
+      everything else and just uses the files defined in the refid. The next best design is
+      to have the property link.standardLibs which is passed in via the <link options> attribute.
+    -->
+    <property name="link.standardLibs.x86" value="" />
+    <foreach property="libFile" item="String" delim=" " in="advapi32.lib kernel32.lib oleaut32.lib ole32.lib uuid.lib user32.lib version.lib">
+      <property name="link.standardLibs.x86" value="${link.standardLibs.x86} &quot;${dir.platformsdk.lib.x86}\${libFile}&quot;" />
+    </foreach>
+    <property name="link.standardLibs.x64" value="" />
+    <foreach property="libFile" item="String" delim=" " in="advapi32.lib kernel32.lib oleaut32.lib ole32.lib uuid.lib user32.lib version.lib">
+      <property name="link.standardLibs.x64" value="${link.standardLibs.x64} &quot;${dir.platformsdk.lib.x64}\${libFile}&quot;" />
+    </foreach>
+    <property name="link.standardLibs.ia64" value="" />
+    <foreach property="libFile" item="String" delim=" " in="advapi32.lib kernel32.lib oleaut32.lib ole32.lib uuid.lib user32.lib version.lib">
+      <property name="link.standardLibs.ia64" value="${link.standardLibs.ia64} &quot;${dir.platformsdk.lib.ia64}\${libFile}&quot;" />
+    </foreach>
+
+    <!-- ensure tools are in Path -->
+    <setenv name="PATH" value="${dir.OACR.x86};${dir.vc.bin.x86};${environment::get-variable('PATH')}" />
+    <property name="setPlatform.OriginalPath" value="${string::to-lower(environment::get-variable('PATH'))}" />
+
+    <!-- set platform initially to x86 -->
+    <property name="platform" value="x86" />
+    <property if="${BuildVC10}" name="vctoolsversion" value="10" />
+    <property if="${not property::exists('vctoolsversion')}" name="vctoolsversion" value="9" />
+    <property name="setPlatform.originalvctoolsversion" value="${vctoolsversion}" />
+
+    <if test="${BuildVC10}">
+      <property name="file.target.dutil" value="${file.target.dutil.vs2010}" />
+      <property name="file.target.dutil.x86"  value="${file.target.dutil.vs2010.x86}" />
+      <property name="file.target.dutil.x64"  value="${file.target.dutil.vs2010.x64}" />
+      <property name="file.target.dutil.ia64" value="${file.target.dutil.vs2010.ia64}" />
+
+      <property name="file.target.wcautil" value="${file.target.wcautil.vs2010}" />
+      <property name="file.target.wcautil.x86"  value="${file.target.wcautil.vs2010.x86}" />
+      <property name="file.target.wcautil.x64"  value="${file.target.wcautil.vs2010.x64}" />
+      <property name="file.target.wcautil.ia64" value="${file.target.wcautil.vs2010.ia64}" />
+
+      <property name="file.target.balutil" value="${file.target.balutil.vs2010}" />
+      <property name="file.target.balutil.x86"  value="${file.target.balutil.vs2010.x86}" />
+      <property name="file.target.balutil.x64"  value="${file.target.balutil.vs2010.x64}" />
+
+      <property name="file.target.deputil" value="${file.target.deputil.vs2010}" />
+      <property name="file.target.deputil.x86" value="${file.target.deputil.vs2010.x86}" />
+    </if>
+
+    <if test="${BuildVC9 and not property::exists('file.target.dutil')}">
+      <property name="file.target.dutil" value="${file.target.dutil.vs2008}" />
+      <property name="file.target.dutil.x86"  value="${file.target.dutil.vs2008.x86}"  />
+      <property name="file.target.dutil.x64"  value="${file.target.dutil.vs2008.x64}"  />
+      <property name="file.target.dutil.ia64" value="${file.target.dutil.vs2008.ia64}" />
+
+      <property name="file.target.wcautil" value="${file.target.wcautil.vs2008}" />
+      <property name="file.target.wcautil.x86"  value="${file.target.wcautil.vs2008.x86}" />
+      <property name="file.target.wcautil.x64"  value="${file.target.wcautil.vs2008.x64}" />
+      <property name="file.target.wcautil.ia64" value="${file.target.wcautil.vs2008.ia64}" />
+
+      <property name="file.target.balutil" value="${file.target.balutil.vs2008}" />
+      <property name="file.target.balutil.x86"  value="${file.target.balutil.vs2008.x86}" />
+      <property name="file.target.balutil.x64"  value="${file.target.balutil.vs2008.x64}" />
+
+      <property name="file.target.deputil" value="${file.target.deputil.vs2008}" />
+      <property name="file.target.deputil.x86" value="${file.target.deputil.vs2008.x86}" />
+    </if>
+
+    <if test="${BuildVC8 and not property::exists('file.target.dutil')}">
+      <property name="file.target.dutil" value="${file.target.dutil.vs2005}" />
+      <property name="file.target.dutil.x86"  value="${file.target.dutil.vs2005.x86}"  />
+      <property name="file.target.dutil.x64"  value="${file.target.dutil.vs2005.x64}"  />
+      <property name="file.target.dutil.ia64" value="${file.target.dutil.vs2005.ia64}" />
+
+      <property name="file.target.wcautil" value="${file.target.wcautil.vs2005}" />
+      <property name="file.target.wcautil.x86"  value="${file.target.wcautil.vs2005.x86}" />
+      <property name="file.target.wcautil.x64"  value="${file.target.wcautil.vs2005.x64}" />
+      <property name="file.target.wcautil.ia64" value="${file.target.wcautil.vs2005.ia64}" />
+
+      <property name="file.target.balutil" value="${file.target.balutil.vs2005}" />
+      <property name="file.target.balutil.x86"  value="${file.target.balutil.vs2005.x86}" />
+      <property name="file.target.balutil.x64"  value="${file.target.balutil.vs2005.x64}" />
+
+      <property name="file.target.deputil" value="${file.target.deputil.vs2005}" />
+      <property name="file.target.deputil.x86" value="${file.target.deputil.vs2005.x86}" />
+    </if>
+
+    <call target="setPlatform" />
+  </target>
+
+  <!--
+    setPlatform
+  -->
+  <target name="setPlatform" description="Sets the current build architecture based on the 'platform' property">
+    <fail unless="${platform == 'x86' or platform == 'x64' or platform == 'ia64'}" message="Build was switched to an unsupported platform: '${platform}'"/>
+    <fail unless="${(vctoolsversion == '8' and BuildVC8) or (vctoolsversion == '9' and BuildVC9) or (vctoolsversion == '10' and BuildVC10)}" message="Build was switched to an unsupported vctoolsversion: '${vctoolsversion}'"/>
+
+    <if test="${platform == 'x86'}">
+      <!-- set LIB properties -->
+      <property name="dir.vc.lib.switch" value="${dir.vc.lib.x86}" dynamic="true" />
+      <property name="dir.platformsdk.lib.switch" value="${dir.platformsdk.lib.x86}" dynamic="true" />
+      <property name="dir.netfxsdk2.lib.switch" value="${dir.netfxsdk2.lib.x86}" dynamic="true" />
+
+      <property name="cl.standardoptions" value="${cl.standardoptions.x86} ${cl.optimization.x86} ${cl.analysis.x86}" />
+      <property name="cl.defines" value="${cl.defines.x86}" />
+      <property name="rc.defines" value="${rc.defines.x86}" />
+      <property name="link.standardOptions.switch" value="${link.standardOptions.x86}" />
+      <property name="link.dll" value="${link.dll.x86}" />
+      <property name="link.exe" value="${link.exe.x86}" />
+
+      <property name="newPath" value="${setPlatform.OriginalPath}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vc.bin.x86,dir.vs2005.bin.x86)}" if="${vctoolsversion == '8'}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vc.bin.x86,dir.vs2008.bin.x86)}" if="${vctoolsversion == '9'}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vc.bin.x86,dir.vs2010.bin.x86)}" if="${vctoolsversion == '10'}" />
+
+      <setenv name="OACRPROJECT" value="wix:${flavor}" />
+      <setenv name="PATH" value="${newPath}" />
+    </if>
+    <if test="${platform == 'x64'}">
+      <!-- set LIB properties -->
+      <property name="dir.vc.lib.switch" value="${dir.vc.lib.x64}" dynamic="true" />
+      <property name="dir.platformsdk.lib.switch" value="${dir.platformsdk.lib.x64}" dynamic="true" />
+      <property name="dir.netfxsdk2.lib.switch" value="${dir.netfxsdk2.lib.x64}" dynamic="true" />
+
+      <property name="cl.standardoptions" value="${cl.standardoptions.x64} ${cl.optimization.x64}" />
+      <property name="cl.defines" value="${cl.defines.x64}" />
+      <property name="rc.defines" value="${rc.defines.x64}" />
+      <property name="link.standardOptions.switch" value="${link.standardOptions.x64}" />
+      <property name="link.dll" value="${link.dll.x64}" />
+      <property name="link.exe" value="${link.exe.x64}" />
+
+      <property name="newBin" value="${dir.vs2005.bin.x64}" if="${vctoolsversion == '8'}" />
+      <property name="newBin" value="${dir.vs2008.bin.x64}" if="${vctoolsversion == '9'}" />
+      <property name="newBin" value="${dir.vs2010.bin.x64}" if="${vctoolsversion == '10'}" />
+
+      <property name="newPath" value="${setPlatform.OriginalPath}" />
+      <property name="newPath" value="${string::replace(newPath,dir.OACR.x86,dir.OACR.x64)}" if="${string::get-length(dir.OACR.x86) != 0}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2005.bin.x86,newBin)}" if="${BuildVC8}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2005.bin.ia64,newBin)}" if="${BuildVC8}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2008.bin.x86,newBin)}" if="${BuildVC9}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2008.bin.ia64,newBin)}" if="${BuildVC9}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2010.bin.x86,newBin)}" if="${BuildVC10}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2010.bin.ia64,newBin)}" if="${BuildVC10}" />
+
+      <setenv name="OACRPROJECT" value="wix:${flavor}_${platform}" />
+      <setenv name="PATH" value="${newPath}" />
+    </if>
+    <if test="${platform == 'ia64'}">
+      <!-- set LIB properties -->
+      <property name="dir.vc.lib.switch" value="${dir.vc.lib.ia64}" dynamic="true" />
+      <property name="dir.platformsdk.lib.switch" value="${dir.platformsdk.lib.ia64}" dynamic="true" />
+      <property name="dir.netfxsdk2.lib.switch" value="${dir.netfxsdk2.lib.ia64}" dynamic="true" />
+
+      <property name="cl.standardoptions" value="${cl.standardoptions.ia64} ${cl.optimization.ia64}" />
+      <property name="cl.defines" value="${cl.defines.ia64}" />
+      <property name="rc.defines" value="${rc.defines.ia64}" />
+      <property name="link.standardOptions.switch" value="${link.standardOptions.ia64}" />
+      <property name="link.dll" value="${link.dll.ia64}" />
+      <property name="link.exe" value="${link.exe.ia64}" />
+
+      <property name="newBin" value="${dir.vs2005.bin.ia64}" if="${vctoolsversion == '8'}" />
+      <property name="newBin" value="${dir.vs2008.bin.ia64}" if="${vctoolsversion == '9'}" />
+      <property name="newBin" value="${dir.vs2010.bin.ia64}" if="${vctoolsversion == '10'}" />
+
+      <property name="newPath" value="${setPlatform.OriginalPath}" />
+      <property name="newPath" value="${string::replace(newPath,dir.OACR.x86,'')}" if="${string::get-length(dir.OACR.x86) != 0}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2005.bin.x86,newBin)}" if="${BuildVC8}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2005.bin.x64,newBin)}" if="${BuildVC8}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2008.bin.x86,newBin)}" if="${BuildVC9}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2008.bin.x64,newBin)}" if="${BuildVC9}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2010.bin.x86,newBin)}" if="${BuildVC10}" />
+      <property name="newPath" value="${string::replace(newPath,dir.vs2010.bin.x64,newBin)}" if="${BuildVC10}" />
+
+      <setenv name="OACRPROJECT" value="" />
+      <setenv name="PATH" value="${newPath}" />
+    </if>
+
+    <property name="newPath" value="" />
+    <property name="newBin" value="" />
+
+    <echo message="Setting architecture to ${platform} with VC tools version ${vctoolsversion}" />
+
+  </target>
+
+  <!--
+    msbuild
+    ==========
+    Arguments:
+      msbuild.project               Required - The project file to build.
+      msbuild.platform              Optional - The platform to build, defaults to current platform.
+      msbuild.target                Optional - The target to build in the project.
+  -->
+  <property name="msbuild.requiredArgs" value="msbuild.project" />
+  <property name="msbuild.optionalArgs" value="msbuild.platform, msbuild.target, msbuild.preserveArgs" />
+  <target name="msbuild" description="Compiles a C++ project by correctly using a precompiled header (if supplied)" >
+    <!-- Check the required arguments -->
+    <property name="args" value="${msbuild.requiredArgs}" />
+    <call target="checkRequiredArgs" />
+
+    <if test="${not property::exists('msbuild.platform')}">
+      <property name="msbuild.platform" value="" />
+    </if>
+    <if test="${not property::exists('msbuild.target')}">
+      <property name="msbuild.target" value="" />
+    </if>
+    <if test="${not property::exists('msbuild.preserveArgs')}">
+      <property name="msbuild.preserveArgs" value="false" />
+    </if>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:NantPath=&quot;${NantPath}&quot;" />
+      <arg value="/property:Platform=${msbuild.platform}" if="${msbuild.platform != ''}" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/property:Build2005=${BuildVC8}" />
+      <arg value="/property:Build2008=${BuildVC9}" />
+      <arg value="/property:Build2010=${BuildVC10}" />
+      <arg value="/property:BuildVotive2010=true" if="${vsip2010.installed}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:${msbuild.target}" if="${msbuild.target != ''}" />
+      <arg file="${msbuild.project}" />
+    </exec>
+
+    <!-- Clear the variables for the next call -->
+    <if test="${not property::exists(msbuild.preserveArgs) or not msbuild.preserveArgs}">
+      <property name="args" value="${msbuild.requiredArgs}, ${msbuild.optionalArgs}" />
+      <call target="clearArgs" />
+    </if>
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="global.properties.defined" value="true" readonly="true" />
+
+</project>

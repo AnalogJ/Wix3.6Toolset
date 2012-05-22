@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="complusextension" default="complusextension.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+	<description>
+		Copyright (c) Microsoft Corporation.  All rights reserved.
+		
+		The use and distribution terms for this software are covered by the
+		Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+		which can be found in the file CPL.TXT at the root of this distribution.
+		By using this software in any fashion, you are agreeing to be bound by
+		the terms of this license.
+		
+		You must not remove this notice, or any other, from this software.
+
+		complusextension.build - Builds the complusextension project
+	</description>
+
+	<!--
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	// Properties
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	-->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- extension directories -->
+	<property name="complusextension.cpexec.dir.src" value="${dir.src.ext}\complusextension\ca\cpexec" readonly="true" />
+	<property name="complusextension.cpsched.dir.src" value="${dir.src.ext}\complusextension\ca\cpsched" readonly="true" />
+
+	<!-- targets -->
+	<property name="file.target.cpexecdll.x86" value="${dir.target.wix.x86}\cpexec.dll" readonly="true" />
+  <property name="file.target.cpscheddll.x86" value="${dir.target.wix.x86}\cpsched.dll" readonly="true" />
+  <property name="file.target.cpexecdll.x64" value="${dir.target.wix.x64}\cpexec.dll" readonly="true" />
+  <property name="file.target.cpscheddll.x64" value="${dir.target.wix.x64}\cpsched.dll" readonly="true" />
+  <property name="file.target.cpexecdll.ia64" value="${dir.target.wix.ia64}\cpexec.dll" readonly="true" />
+  <property name="file.target.cpscheddll.ia64" value="${dir.target.wix.ia64}\cpsched.dll" readonly="true" />
+
+  <!--
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	// Targets
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	-->
+
+	<!-- Build -->
+	<target name="complusextension.build" description="Peforms a full rebuild (clean then build)" depends="complusextension.clean, complusextension.inc" />
+
+	<!-- Clean -->
+	<target name="complusextension.clean" description="Cleans the build">
+		<delete dir="${dir.build.ext.complusextension}" failonerror="false" if="${directory::exists(dir.build.ext.complusextension)}" />
+		<delete failonerror="false">
+			<fileset basedir="${dir.target.wix.x86}">
+				<include name="WixComPlusExtension.dll" />
+				<include name="WixComPlusExtension.pdb" />
+				<include name="complus.wixlib" />
+				<include name="complus.xsd" />
+			</fileset>
+		</delete>
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix.x64}">
+        <include name="WixComPlusExtension.dll" />
+        <include name="WixComPlusExtension.pdb" />
+        <include name="complus.wixlib" />
+        <include name="complus.xsd" />
+      </fileset>
+    </delete>
+  </target>
+
+	<!-- Inc -->
+	<target name="complusextension.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile">
+
+    <!-- Make cpexec.dll -->
+    <fileset id="compileCpp.fileset.sources" basedir="${complusextension.cpexec.dir.src}">
+      <include name="cpappexec.cpp" />
+      <include name="cpapproleexec.cpp" />
+      <include name="cpasmexec.cpp" />
+      <include name="cppartexec.cpp" />
+      <include name="cppartroleexec.cpp" />
+      <include name="cpsubsexec.cpp" />
+      <include name="cputilexec.cpp" />
+      <include name="cpexec.cpp" />
+      <include name="dllmain.cpp" />
+    </fileset>
+
+    <property name="compileCpp.dir.build" value="${dir.build.ext.complusextension}\cpexec\x86" />
+    <property name="compileCpp.file.precomp.h" value="${complusextension.cpexec.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${complusextension.cpexec.dir.src}\cpexec.rc" />
+    <property name="makeNativeDll.file.def" value="${complusextension.cpexec.dir.src}\cpexec.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.x86}&quot; &quot;${file.target.dutil.x86}&quot; &quot;${dir.platformsdk.lib.x86}\msi.lib&quot; &quot;${dir.platformsdk.lib.x86}\shell32.lib&quot; &quot;${dir.platformsdk.lib.x86}\uuid.lib&quot;" />
+    <property name="makeNativeDll.file.target" value="${file.target.cpexecdll.x86}" />
+    <property name="makeNativeDll.platform" value="x86" />
+    <call target="makeNativeDll" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.ext.complusextension}\cpexec\x64" />
+    <property name="compileCpp.file.precomp.h" value="${complusextension.cpexec.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${complusextension.cpexec.dir.src}\cpexec.rc" />
+    <property name="makeNativeDll.file.def" value="${complusextension.cpexec.dir.src}\cpexec.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.x64}&quot; &quot;${file.target.dutil.x64}&quot; &quot;${dir.platformsdk.lib.x64}\msi.lib&quot; &quot;${dir.platformsdk.lib.x64}\shell32.lib&quot; &quot;${dir.platformsdk.lib.x64}\uuid.lib&quot;" />
+    <property name="makeNativeDll.file.target" value="${file.target.cpexecdll.x64}" />
+    <property name="makeNativeDll.platform" value="x64" />
+    <call target="makeNativeDll" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.ext.complusextension}\cpexec\ia64" />
+    <property name="compileCpp.file.precomp.h" value="${complusextension.cpexec.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${complusextension.cpexec.dir.src}\cpexec.rc" />
+    <property name="makeNativeDll.file.def" value="${complusextension.cpexec.dir.src}\cpexec.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.ia64}&quot; &quot;${file.target.dutil.ia64}&quot; &quot;${dir.platformsdk.lib.ia64}\msi.lib&quot; &quot;${dir.platformsdk.lib.ia64}\shell32.lib&quot; &quot;${dir.platformsdk.lib.ia64}\uuid.lib&quot;" />
+    <property name="makeNativeDll.file.target" value="${file.target.cpexecdll.ia64}" />
+    <property name="makeNativeDll.platform" value="ia64" />
+    <call target="makeNativeDll" />
+
+    <!-- Make cpsched.dll -->
+    <fileset id="compileCpp.fileset.sources" basedir="${complusextension.cpsched.dir.src}">
+      <include name="cpapprolesched.cpp" />
+      <include name="cpappsched.cpp" />
+      <include name="cpasmsched.cpp" />
+      <include name="cppartrolesched.cpp" />
+      <include name="cppartsched.cpp" />
+      <include name="cpsubssched.cpp" />
+      <include name="cputilsched.cpp" />
+      <include name="cpsched.cpp" />
+      <include name="dllmain.cpp" />
+    </fileset>
+
+    <property name="compileCpp.dir.build" value="${dir.build.ext.complusextension}\cpsched\x86" />
+    <property name="compileCpp.file.precomp.h" value="${complusextension.cpsched.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${complusextension.cpsched.dir.src}\cpsched.rc" />
+    <property name="makeNativeDll.file.def" value="${complusextension.cpsched.dir.src}\cpsched.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.x86}&quot; &quot;${file.target.dutil.x86}&quot; &quot;${dir.platformsdk.lib.x86}\msi.lib&quot; &quot;${dir.platformsdk.lib.x86}\shell32.lib&quot; &quot;${dir.platformsdk.lib.x86}\uuid.lib&quot;" />
+    <property name="makeNativeDll.file.target" value="${file.target.cpscheddll.x86}" />
+    <property name="makeNativeDll.platform" value="x86" />
+    <call target="makeNativeDll" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.ext.complusextension}\cpsched\x64" />
+    <property name="compileCpp.file.precomp.h" value="${complusextension.cpsched.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${complusextension.cpsched.dir.src}\cpsched.rc" />
+    <property name="makeNativeDll.file.def" value="${complusextension.cpsched.dir.src}\cpsched.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.x64}&quot; &quot;${file.target.dutil.x64}&quot; &quot;${dir.platformsdk.lib.x64}\msi.lib&quot; &quot;${dir.platformsdk.lib.x64}\shell32.lib&quot; &quot;${dir.platformsdk.lib.x64}\uuid.lib&quot;" />
+    <property name="makeNativeDll.file.target" value="${file.target.cpscheddll.x64}" />
+    <property name="makeNativeDll.platform" value="x64" />
+    <call target="makeNativeDll" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.ext.complusextension}\cpsched\ia64" />
+    <property name="compileCpp.file.precomp.h" value="${complusextension.cpsched.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${complusextension.cpsched.dir.src}\cpsched.rc" />
+    <property name="makeNativeDll.file.def" value="${complusextension.cpsched.dir.src}\cpsched.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.ia64}&quot; &quot;${file.target.dutil.ia64}&quot; &quot;${dir.platformsdk.lib.ia64}\msi.lib&quot; &quot;${dir.platformsdk.lib.ia64}\shell32.lib&quot; &quot;${dir.platformsdk.lib.ia64}\uuid.lib&quot;" />
+    <property name="makeNativeDll.file.target" value="${file.target.cpscheddll.ia64}" />
+    <property name="makeNativeDll.platform" value="ia64" />
+    <call target="makeNativeDll" />
+  </target>
+</project>

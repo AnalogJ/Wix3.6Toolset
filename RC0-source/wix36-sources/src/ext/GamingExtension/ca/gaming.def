@@ -1,0 +1,8 @@
+; gaming.def : declares the module parameters for gaming.dll
+
+LIBRARY      "gaming"
+
+EXPORTS
+	SchedGameExplorerInstall
+	SchedGameExplorerUninstall
+	ExecGameExplorer

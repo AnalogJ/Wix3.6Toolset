@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="votive2010.inc" default="votive2010.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    votive2010.build - Builds the votive project.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="votive2010.build" description="Peforms a full rebuild (clean then build)" if="${vsip2010.installed and property::exists('dir.netfx4')}">
+    <exec program="msbuild.exe" basedir="${dir.netfx4}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:OutDir=${dir.target.project.x86}\" />
+      <arg value="/property:OutputPath=${dir.target.project.x86}\" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.votive}\votive\Votive2010.csproj" />
+    </exec>
+  </target>
+
+  <!-- Clean -->
+  <target name="votive2010.clean" description="Cleans the build" if="${vsip2010.installed and property::exists('dir.netfx4')}">
+    <exec program="msbuild.exe" basedir="${dir.netfx4}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:OutDir=${dir.target.project.x86}\" />
+      <arg value="/property:OutputPath=${dir.target.project.x86}\" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.votive}\votive\Votive2010.csproj" />
+    </exec>
+  </target>
+
+  <!-- Inc -->
+  <target name="votive2010.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile" if="${vsip2010.installed and property::exists('dir.netfx4')}">
+    <exec program="msbuild.exe" basedir="${dir.netfx4}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:OutDir=${dir.target.project.x86}\" />
+      <arg value="/property:OutputPath=${dir.target.project.x86}\" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.votive}\votive\Votive2010.csproj" />
+    </exec>
+
+    <zip zipfile="${dir.target.wix}\wixProject2010.zip">
+      <fileset basedir="${dir.src.votive}\votive2010\templates\projects\WixProject\">
+          <include name="WixProject.vstemplate"/>
+          <include name="SetupProject.wixproj"/>
+          <include name="WixProject.ico"/>
+          <include name="Product.wxs"/>
+      </fileset>
+    </zip>
+
+    <zip zipfile="${dir.target.wix}\wixMergeModule2010.zip">
+      <fileset basedir="${dir.src.votive}\votive2010\templates\projects\WixMergeModule\">
+          <include name="WixMergeModule.vstemplate"/>
+          <include name="MergeModule.wixproj"/>
+          <include name="WixMergeModule.ico"/>
+          <include name="MergeModule.wxs"/>
+      </fileset>
+    </zip>
+
+    <zip zipfile="${dir.target.wix}\WixLibrary2010.zip">
+      <fileset basedir="${dir.src.votive}\votive2010\templates\projects\WixLibrary\">
+          <include name="WixLibrary.vstemplate"/>
+          <include name="SetupLibrary.wixproj"/>
+          <include name="WixLibrary.ico"/>
+          <include name="Library.wxs"/>
+      </fileset>
+    </zip>
+
+    <zip zipfile="${dir.target.wix}\wixBundleProject2010.zip">
+      <fileset basedir="${dir.src.votive}\votive2010\templates\projects\WixBundleProject\">
+          <include name="WixBundle.vstemplate"/>
+          <include name="BundleProject.wixproj"/>
+          <include name="WixBundle.ico"/>
+          <include name="Bundle.wxs"/>
+      </fileset>
+    </zip>
+    
+    <copy todir="${dir.target.wix}">
+      <fileset basedir="${dir.src.votive}\Icons">
+        <include name="ProjectFile.ico" />
+        <include name="ProductFile.ico" />
+        <include name="IncludeFile.ico" />
+        <include name="LocalizationFile.ico" />
+        <include name="WixLibraryFile.ico" />
+      </fileset>
+    </copy>
+  </target>
+</project>

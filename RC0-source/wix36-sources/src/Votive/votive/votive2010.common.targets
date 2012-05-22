@@ -1,0 +1,411 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.VisualStudio</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>DEBUG;TRACE;CCI_TRACING;Enable_CCIDiagnostics;Enable_CCIFileOutput</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MSBuildProjectExtension)' == '.csproj' ">
+    <Compile Include="$(WIX_ROOT)\inc\$(VersionCS)">
+      <Link>Properties\$(VersionCS)</Link>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(WIX_ROOT)\inc\$(DistCS)">
+      <Link>Properties\$(DistCS)</Link>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <Visible>true</Visible>
+    </Compile>
+      <!--Provide support for setting type (BuildAction) from VS-->
+    <AvailableItemName Include="EmbeddedFlattenedResource" />
+    <AvailableItemName Include="EmbeddedNativeResource" />
+    <AvailableItemName Include="MsgGenSource" />
+    <AvailableItemName Include="XsdGenSource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\FolderBrowserTextBox.cs">
+      <SubType>UserControl</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Controls\FolderBrowserTextBox.Designer.cs">
+      <DependentUpon>FolderBrowserTextBox.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Controls\WixBuildEventEditor.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\Controls\WixBuildEventEditor.Designer.cs">
+      <DependentUpon>WixBuildEventEditor.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Controls\WixBuildEventTextBox.cs">
+      <SubType>Component</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Controls\WixFoldersSelector.cs">
+      <Visible>true</Visible>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\WixFoldersSelector.Designer.cs">
+      <DependentUpon>WixFoldersSelector.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Controls\WixGroupBox.cs">
+      <SubType>Component</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Controls\WixGroupLabel.cs">
+      <SubType>Component</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\Controls\WixColorUserControl.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\Controls\WixColorUserControl.Designer.cs">
+      <DependentUpon>WixColorUserControl.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <EmbeddedResource Include="..\votive2010\Controls\WixColorUserControl.resx">
+      <DependentUpon>WixColorUserControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <Compile Include="..\votive2010\Forms\WixBuildEventEditorForm.cs">
+      <SubType>Form</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="Forms\WixBuildEventEditorForm.Designer.cs">
+      <DependentUpon>WixBuildEventEditorForm.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixBuildEventsPropertyPage.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixBuildEventsPropertyPagePanel.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\PropertyPages\WixBuildEventsPropertyPagePanel.Designer.cs">
+      <DependentUpon>WixBuildEventsPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixInstallerPropertyPage.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="IProjectSourceNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixInstallerPropertyPagePanel.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\PropertyPages\WixInstallerPropertyPagePanel.Designer.cs">
+      <DependentUpon>WixInstallerPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixBuildPropertyPage.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixBuildPropertyPagePanel.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\PropertyPages\WixBuildPropertyPagePanel.Designer.cs">
+      <DependentUpon>WixBuildPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixPathsPropertyPage.cs" >
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixPathsPropertyPagePanel.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixPathsPropertyPagePanel.Designer.cs">
+      <DependentUpon>WixPathsPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixPropertyPage.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\PropertyPages\WixPropertyPagePanel.cs">
+      <SubType>UserControl</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixPropertyPagePanel.Designer.cs">
+      <DependentUpon>WixPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixToolsSettingsPropertyPage.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyPages\WixToolsSettingsPropertyPagePanel.cs">
+      <Visible>true</Visible>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyPages\WixToolsSettingsPropertyPagePanel.Designer.cs">
+      <DependentUpon>WixToolsSettingsPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="IsolatedDomain.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="OAWixProject.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="ProjectPropertyArgumentException.cs" >
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\ProjectProperty.cs" >
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="PropertyValidator.cs" >
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="FileSearchHelperMethods.cs">
+      <Visible>true</Visible>
+      <Link>FileSearchHelperMethods.cs</Link>
+    </Compile>
+    <Compile Include="RunPostBuildEvent.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixBuildMacroCollection.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixConfigProvider.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixDesignPropertyDescriptor.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixFileNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixFileNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLinkedFileNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixFileNodeNonMemberProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixExtensionReferenceNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixExtensionReferenceNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixReferenceContainerNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixReferenceValidator.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixFolderNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixFolderNodeNonMemberProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixFolderNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLibraryReferenceNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLibraryReferenceNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLocalizedCategoryAttribute.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLocalizedControlTextAttribute.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLocalizedDescriptionAttribute.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixLocalizedDisplayNameAttribute.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixNonMemberDesignPropertyDescriptor.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixOutputType.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixPackageSettings.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixProjectConfig.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixProjectFileConstants.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixProjectNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixProjectReferenceNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixProjectReferenceNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixHelperMethods.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixProjectNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixProjectMembers.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixProjectFactory.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixPackage.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixReferenceNode.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixReferenceNodeProperties.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixVsConstants.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="WixWarningLevel.cs">
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="..\votive2010\WixStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WixStrings.resx</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\votive2010\WixStrings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WixStrings.Designer.cs</LastGenOutput>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\votive2010\Controls\FolderBrowserTextBox.resx">
+      <DependentUpon>FolderBrowserTextBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\Controls\WixBuildEventEditor.resx">
+      <DependentUpon>WixBuildEventEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\Forms\WixBuildEventEditorForm.resx">
+      <DependentUpon>WixBuildEventEditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\PropertyPages\WixBuildEventsPropertyPagePanel.resx">
+      <DependentUpon>WixBuildEventsPropertyPagePanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\PropertyPages\WixBuildPropertyPagePanel.resx">
+      <DependentUpon>WixBuildPropertyPagePanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\Controls\WixFoldersSelector.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WixFoldersSelector.cs</DependentUpon>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\PropertyPages\WixPropertyPagePanel.resx">
+      <DependentUpon>WixPropertyPagePanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\Controls\WixBuildEventTextBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WixBuildEventTextBox.cs</DependentUpon>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\Controls\WixGroupBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WixGroupBox.cs</DependentUpon>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\Controls\WixGroupLabel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WixGroupLabel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\PropertyPages\WixInstallerPropertyPagePanel.resx">
+      <DependentUpon>WixInstallerPropertyPagePanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\PropertyPages\WixPathsPropertyPagePanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WixPathsPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\votive2010\PropertyPages\WixToolsSettingsPropertyPagePanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WixToolsSettingsPropertyPagePanel.cs</DependentUpon>
+      <Visible>true</Visible>
+    </EmbeddedResource>
+    <Content Include="..\votive2010\Icons\ProjectFile.ico">
+      <Link>Resources\ProjectFile.ico</Link>
+      <Visible>true</Visible>
+    </Content>
+    <Content Include="..\votive2010\Resources\Delete.png">
+      <Visible>true</Visible>
+    </Content>
+    <Content Include="..\votive2010\Resources\DownArrow.png">
+      <Visible>true</Visible>
+    </Content>
+    <Content Include="..\votive2010\Resources\Macro.ico">
+      <Visible>true</Visible>
+    </Content>
+    <Content Include="..\votive2010\Resources\Splash.bmp">
+      <Visible>true</Visible>
+    </Content>
+    <Content Include="..\votive2010\Resources\UpArrow.png">
+      <Visible>true</Visible>
+    </Content>
+  </ItemGroup>
+  <!--
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\votive2010\CustomDictionary.xml">
+      <Visible>true</Visible>
+    </CodeAnalysisDictionary>
+  </ItemGroup> 
+  <PropertyGroup>
+    <RegisterOutputPackage>false</RegisterOutputPackage>
+    <RegisterWithCodebase>true</RegisterWithCodebase>
+    <VsTemplateLanguage>WiX</VsTemplateLanguage>
+  </PropertyGroup>
+  <Target Name="AfterBuild" Inputs="@(IntermediateZipProject);@(IntermediateZipItem)" Outputs="@(IntermediateZipProject->'$(OutDir)%(Filename)%(Extension)');@(IntermediateZipItem->'$(OutDir)%(Filename)%(Extension)')" Condition=" '@(IntermediateZipProject)@(IntermediateZipItem)' != '' ">
+    <Copy SourceFiles="@(IntermediateZipProject);@(IntermediateZipItem)" DestinationFolder="$(OutDir)" />
+  </Target>-->
+</Project>

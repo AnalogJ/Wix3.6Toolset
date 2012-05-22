@@ -1,0 +1,5 @@
+﻿<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?define platform=ia64 ?>
+    <?include UtilExtension_Platform.wxi ?>
+</Wix>

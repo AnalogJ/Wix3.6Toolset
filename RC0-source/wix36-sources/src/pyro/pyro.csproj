@@ -1,0 +1,48 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{EC5BD7DE-29C4-4FDC-9953-8707B6DBDB00}</ProjectGuid>
+    <AssemblyName>pyro</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Tools</RootNamespace>
+    <PlatformTarget>x86</PlatformTarget>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="pyro.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="PyroStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PyroStrings.resx</DependentUpon>
+    </Compile>
+    <Content Include="App.ico" />
+    <None Include="app.config" />
+    <EmbeddedNativeResource Include="pyro.rc" />
+    <None Include="mspatchc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PyroStrings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PyroStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

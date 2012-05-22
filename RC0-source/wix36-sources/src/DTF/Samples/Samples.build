@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="samples" default="samples.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    samples.build - Builds DTF samples.
+  </description>
+
+  <!-- Includes -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  <include buildfile="${dir.src.dtf.libraries}\Libraries.build" unless="${property::exists('dtflibraries.properties.defined')}" />
+
+    <!-- Properties -->
+  <property name="dir.src.dtf.samples.ddiff" value="${dir.src.dtf.samples}\ddiff" readonly="true" />
+  <property name="dir.src.dtf.samples.embeddedui" value="${dir.src.dtf.samples}\embeddedui" readonly="true" />
+  <property name="dir.src.dtf.samples.inventory" value="${dir.src.dtf.samples}\inventory" readonly="true" />
+  <property name="dir.src.dtf.samples.managedca" value="${dir.src.dtf.samples}\managedca" readonly="true" />
+  <property name="dir.src.dtf.samples.wifile" value="${dir.src.dtf.samples}\wifile" readonly="true" />
+  <property name="dir.src.dtf.samples.xpack" value="${dir.src.dtf.samples}\xpack" readonly="true" />
+  <property name="file.target.dtf.ddiff" value="${dir.target.wix}\ddiff.dll" readonly="true" />
+  <property name="file.target.dtf.embeddedui" value="${dir.target.wix}\embeddedui.dll" readonly="true" />
+  <property name="file.target.dtf.inventory" value="${dir.target.wix}\inventory.dll" readonly="true" />
+  <property name="file.target.dtf.managedca" value="${dir.target.wix}\managedca.dll" readonly="true" />
+  <property name="file.target.dtf.wifile" value="${dir.target.wix}\wifile.dll" readonly="true" />
+  <property name="file.target.dtf.xpack" value="${dir.target.wix}\xpack.dll" readonly="true" />
+
+  <!-- Build -->
+  <target name="samples.build" description="Peforms a full rebuild (clean then build)" depends="samples.clean, samples.inc" />
+
+  <!-- Clean -->
+  <target name="samples.clean" description="Cleans the build"
+          depends="ddiff.clean,
+                   embeddedui.clean,
+                   inventory.clean,
+                   managedca.clean,
+                   wifile.clean,
+                   xpack.clean" />
+
+  <!-- Inc -->
+  <target name="samples.inc" description="Performs an incremental build"
+          depends="ddiff.inc,
+                   embeddedui.inc,
+                   inventory.inc,
+                   managedca.inc,
+                   wifile.inc,
+                   xpack.inc" />
+
+  <!-- Begin DDif -->
+  <target name="ddiff" depends="ddiff.inc" />
+
+  <target name="ddiff.build" description="Rebuild ddiff" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.samples.ddiff}\ddiff.csproj" />
+    </exec>
+  </target>
+
+  <target name="ddiff.clean" description="Cleans ddiff" depends="compression.clean, compression.cab.clean, compression.zip.clean, windowsinstaller.clean, windowsinstaller.package.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.samples.ddiff}\ddiff.csproj" />
+    </exec>
+  </target>
+
+  <target name="ddiff.inc" description="Incremental ddiff build" depends="makeDirs, createKeyFile, compression.inc, compression.cab.inc, compression.zip.inc, windowsinstaller.inc, windowsinstaller.package.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.samples.ddiff}\ddiff.csproj" />
+    </exec>
+  </target>
+  <!-- End DDiff -->
+
+  <!-- Begin EmbeddedUI -->
+  <target name="embeddedui" depends="embeddedui.inc" />
+
+  <target name="embeddedui.build" description="Rebuild embeddedui" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.samples.embeddedui}\embeddedui.csproj" />
+    </exec>
+  </target>
+
+  <target name="embeddedui.clean" description="Cleans embeddedui" depends="windowsinstaller.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.samples.embeddedui}\embeddedui.csproj" />
+    </exec>
+  </target>
+
+  <target name="embeddedui.inc" description="Incremental embeddedui build" depends="makeDirs, createKeyFile, windowsinstaller.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.samples.embeddedui}\embeddedui.csproj" />
+    </exec>
+  </target>
+  <!-- End EmbeddedUI -->
+
+  <!-- Begin Inventory -->
+  <target name="inventory" depends="inventory.inc" />
+
+  <target name="inventory.build" description="Rebuild inventory" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.samples.inventory}\inventory.csproj" />
+    </exec>
+  </target>
+
+  <target name="inventory.clean" description="Cleans inventory" depends="windowsinstaller.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.samples.inventory}\inventory.csproj" />
+    </exec>
+  </target>
+
+  <target name="inventory.inc" description="Incremental inventory build" depends="makeDirs, createKeyFile, windowsinstaller.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.samples.inventory}\inventory.csproj" />
+    </exec>
+  </target>
+  <!-- End Inventory -->
+
+  <!-- Begin ManagedCA -->
+  <target name="managedca" depends="managedca.inc" />
+
+  <target name="managedca.build" description="Rebuild managedca" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.samples.managedca}\managedca.csproj" />
+    </exec>
+  </target>
+
+  <target name="managedca.clean" description="Cleans managedca" depends="windowsinstaller.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.samples.managedca}\managedca.csproj" />
+    </exec>
+  </target>
+
+  <target name="managedca.inc" description="Incremental managedca build" depends="makeDirs, createKeyFile, windowsinstaller.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.samples.managedca}\managedca.csproj" />
+    </exec>
+  </target>
+  <!-- End ManagedCA -->
+
+  <!-- Begin WiFile -->
+  <target name="wifile" depends="wifile.inc" />
+
+  <target name="wifile.build" description="Rebuild wifile" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.samples.wifile}\wifile.csproj" />
+    </exec>
+  </target>
+
+  <target name="wifile.clean" description="Cleans wifile" depends="windowsinstaller.clean, windowsinstaller.package.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.samples.wifile}\wifile.csproj" />
+    </exec>
+  </target>
+
+  <target name="wifile.inc" description="Incremental wifile build" depends="makeDirs, createKeyFile, windowsinstaller.inc, windowsinstaller.package.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.samples.wifile}\wifile.csproj" />
+    </exec>
+  </target>
+  <!-- End WiFile -->
+
+  <!-- Begin XPack -->
+  <target name="xpack" depends="xpack.inc" />
+
+  <target name="xpack.build" description="Rebuild xpack" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.samples.xpack}\xpack.csproj" />
+    </exec>
+  </target>
+
+  <target name="xpack.clean" description="Cleans xpack" depends="compression.clean, compression.cab.clean, compression.zip.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.samples.xpack}\xpack.csproj" />
+    </exec>
+  </target>
+
+  <target name="xpack.inc" description="Incremental xpack build" depends="makeDirs, createKeyFile, compression.inc, compression.cab.inc, compression.zip.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.samples.xpack}\xpack.csproj" />
+    </exec>
+  </target>
+  <!-- End XPack -->
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="dtfsamples.properties.defined" value="true" readonly="true" />
+
+</project>

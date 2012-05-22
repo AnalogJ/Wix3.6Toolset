@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>How To: Read a Registry Entry During Installation</title>
+</head>
+<body>
+<h1>How To: Read a Registry Entry During Installation</h1>
+<p>Installers often need to look up the value of a registry entry during the installation process. The resulting registry value is often used in a conditional statement later in install, such as to install a specific component if a registry entry is not found. This how to demonstrates reading an integer value from the registry and verifying that it exists in a <a href="http://msdn.microsoft.com/library/aa369752.aspx" target="_blank">launch condition</a>.</p>
+<h2>Step 1: Read the registry entry into a property</h2>
+<p>Registry entries are read using the <a href="wix_xsd_registrysearch.htm">&lt;RegistrySearch&gt;</a> element. The following snippet looks for the the presence of the key that identifies the installation of .NET Framework 2.0 on the target machine*.</p>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">Property</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">NETFRAMEWORK20</font><font size="2">"</font><font size="2" color="#0000FF">&gt;
+    &lt;</font><font size="2" color="#A31515">RegistrySearch</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">NetFramework20</font><font size="2">"
+                    </font><font size="2" color="#FF0000">Root</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">HKLM</font><font size="2">"
+                    </font><font size="2" color="#FF0000">Key</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">Software\Microsoft\NET Framework Setup\NDP\v2.0.50727</font><font size="2">"</font>
+<font size="2" color="#FF0000">             Name</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">Install</font><font size="2">"
+                    </font><font size="2" color="#FF0000">Type</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">raw</font><font size="2">"</font><font size="2" color="#0000FF"> /&gt;
+&lt;/</font><font size="2" color="#A31515">Property</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p>The RegistrySearch element specifies a unique id, the root in the registry to search, and the key to look under. The name attribute specifies the specific value to query. The type attribute specifies how the value should be treated. Raw indicates that the value should be prefixed according to the data type of the value. In this case, since Install is a DWORD, the resulting value will be prepended with a #.</p>
+<p>The above sample will set the NETFRAMEWORK20 property to "#1" if the registry key was found, and to nothing if it wasn't.</p>
+<h2>Step 2: Use the property in a condition</h2>
+<p>After the property is set you can use it in a condition anywhere in your WiX project. The following snippet demonstrates how to use it to block installation if .NET Framework 2.0 is not installed.</p>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">Condition</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Message</font><font size="2" color="#0000FF">=</font><font size="2">"This application requires .NET Framework 2.0. Please install the .NET Framework then run this installer again."</font><font size="2" color="#0000FF">&gt;
+    &lt;![CDATA[</font><font size="2" color="#808080">Installed OR</font> <font size="2" color="#0000FF">NETFRAMEWORK20]]&gt;
+&lt;/</font><font size="2" color="#A31515">Condition</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p><a href="http://msdn.microsoft.com/library/aa369297.aspx" target="_blank">Installed</a> is a Windows Installer property that ensures the check is only done when the user is installing the application, rather than on a repair or remove. The NETFRAMEWORK20 part of the condition will pass if the property was set. If it is not set the installer will display the error message then abort the installation process.</p>
+<p>* This registry entry is used for sample purposes only. If you want to detect the installed version of .NET Framework you can use the built-in WiX support. For more information see <a href="check_for_dotnet.htm">How To: Check for .NET Framework Versions</a>.</p>
+</body>
+</html>

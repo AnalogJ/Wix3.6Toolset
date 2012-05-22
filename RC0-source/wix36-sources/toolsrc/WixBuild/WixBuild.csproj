@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{EB323B05-8822-4645-A0E6-ACF401ED92F7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.WixBuild</RootNamespace>
+    <AssemblyName>WixBuild</AssemblyName>
+    <UseDocumentationFile>true</UseDocumentationFile>
+    <StyleCopEnabled>true</StyleCopEnabled>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DeleteRegistry.cs" />
+    <Compile Include="DocCompiler.cs" />
+    <Compile Include="FlattenXml.cs" />
+    <Compile Include="GenerateUploadMetadata.cs" />
+    <Compile Include="MsgGen.cs" />
+    <Compile Include="Rc.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ReadRegistry.cs" />
+    <Compile Include="RegistryBase.cs" />
+    <Compile Include="WriteRegistry.cs" />
+    <Compile Include="XsdGen.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\WixBuild.Common.targets">
+      <Link>WixBuild.Common.targets</Link>
+    </None>
+    <None Include="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\Microsoft.Common.targets">
+      <Link>Microsoft.Common.targets</Link>
+    </None>
+    <None Include="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\Microsoft.CSharp.targets">
+      <Link>Microsoft.CSharp.targets</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- Include this before the CSharp targets file -->
+  <Import Project="..\..\WixBuild.Common.targets" />
+</Project>

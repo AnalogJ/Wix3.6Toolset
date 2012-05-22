@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Code Pages</title>
+</head>
+
+<body>
+  <h1>Code Pages</h1>
+
+  <p>Code pages map character codes to actual characters, or graphemes. Code pages are also used to convert from one encoding to another.</p>
+
+  <h2>Code Pages in Windows Installer</h2>
+
+  <p>Windows Installer stores strings in a package according to a particular code page. A separate code page is used for the summary information stream and the rest of the package database, which includes the ActionText, Error, Property, and other tables.</p>
+
+  <p>For more information about code pages in Windows Installer, read <a href="http://msdn2.microsoft.com/library/aa367867.aspx" target="_blank">Code Page Handling</a>.</p>
+
+  <h2>Setting the Code Page using WiX</h2>
+
+  <p>Top-level elements like <a href="wix_xsd_Product.htm">Product</a>, <a href="wix_xsd_Module.htm">Module</a>, <a href="wix_xsd_Patch.htm">Patch</a>, and <a href="wix_xsd_PatchCreation.htm">PatchCreation</a> support a Codepage attribute. You can set this to a valid Windows code page by integer like 1252, or by web name like Windows-1252. UTF-7 and UTF-8 are not officially supported because of user interface issues. Unicode is not supported.</p>
+
+  <p>To support authoring a single package that can be localized into multiple languages, you can set the <a href="wix_xsd_Package.htm">Package</a>/@SummaryCodepage or <a href="wix_xsd_PatchInformation.htm">PatchInformation</a>/@SummaryCodepage element to an localization expression like !(loc.SummaryCodepage). You then define the SummaryCodepage value in a <a href="wxl.htm">localization file</a>, typically ending in a .wxl extension. The root WixLocalization element also supports a Codepage attribute that is used to encode the rest of the package database.</p>
+
+  <p>You can also set the code page to 0. In this case, Windows Installer treats strings as neutral, meaning that you can only safely use ASCII characters - the first 128 ANSI characters - but the database will be supported across Windows platforms. See <a href="http://msdn2.microsoft.com/library/aa368057.aspx" target="_blank">Creating a Database with a Neutral Code Page</a> for more information.</p>
+
+  <p>For a walkthrough about how to author a build localized packages using WiX see <a href="make_installer_localizable.htm">How To: Make your installer localizable</a> and <a href="build_a_localized_version.htm">How To: Build a localized version of your installer</a>.</p>
+</body>
+</html>

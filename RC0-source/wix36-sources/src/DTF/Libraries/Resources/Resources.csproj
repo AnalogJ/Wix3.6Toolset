@@ -1,0 +1,45 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{44931ECB-8D6F-4C12-A872-64E261B6A98E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Deployment.Resources</RootNamespace>
+    <AssemblyName>Microsoft.Deployment.Resources</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.Resources.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.Resources.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="BitmapResource.cs" />
+    <Compile Include="FixedFileVersionInfo.cs" />
+    <Compile Include="GroupIconInfo.cs" />
+    <Compile Include="GroupIconResource.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="ResourceCollection.cs" />
+    <Compile Include="ResourceType.cs" />
+    <Compile Include="VersionEnums.cs" />
+    <Compile Include="VersionInfo.cs" />
+    <Compile Include="VersionResource.cs" />
+    <Compile Include="VersionStringTable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+</Project>

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="dtfref" default="dtfref.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    dtfref.build - Builds the Deployment Tools Foundation reference CHM.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  
+  <!-- Help tools directories -->
+  <property name="dir.sandcastle" value="${dir.externalroot}\Sandcastle" readonly="true" />
+  <property name="dir.sandcastlebuilder" value="${dir.externalroot}\SandcastleBuilder" readonly="true" />
+  <property name="dir.hhw" value="${environment::get-variable('ProgramFiles(x86)')}\HTML Help Workshop" readonly="true" if="${environment::variable-exists('ProgramFiles(x86)')}" />
+  <property name="dir.hhw" value="${environment::get-variable('ProgramFiles')}\HTML Help Workshop" readonly="true" unless="${environment::variable-exists('ProgramFiles(x86)')}" />
+  
+  <property name="sandcastle-found" value="${directory::exists(dir.sandcastle)}" readonly="true" />
+  <property name="sandcastlebuilder-found" value="${directory::exists(dir.sandcastlebuilder)}" readonly="true" />
+  <property name="hhw-found" value="${directory::exists(dir.hhw)}" readonly="true" />
+
+  <!-- dtfref-specific properties -->
+  <property name="dir.src.dtfref" value="${dir.wixroot.src}\dtf\Documents\Reference" readonly="true" />
+  <property name="dir.target.dtfref" value="${dir.target.project}\dtfref" readonly="true" />
+  <property name="dir.build.dtfref" value="${dir.build.project}\dtfref" readonly="true" />
+  
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="dtfref.build" description="Peforms a full rebuild (clean then build)" depends="dtfref.clean dtfref.inc">
+  </target>
+
+  <!-- Clean -->
+  <target name="dtfref.clean" description="Cleans the build">
+    <delete dir="${dir.build.dtfref}" />
+    <delete dir="${dir.target.dtfref}" />
+    <delete file="${dir.target.wix}\DTFAPI.chm" />
+  </target>
+
+  <!-- Inc -->
+  <target name="dtfref.inc" description="Performs an incremental build">
+    <if test="${not ship}">
+      <echo message="Skipping DTF reference CHM build because build flavor is not 'ship'." />
+    </if>
+    <if test="${not hhw-found}">
+      <echo message="Skipping DTF reference CHM build because HTML Help Workshop was not found at '${dir.hhw}'." />
+    </if>
+    <if test="${not sandcastle-found}">
+      <echo message="Skipping DTF reference CHM build because Sandcastle was not found at '${dir.sandcastle}'." />
+    </if>
+    <if test="${not sandcastlebuilder-found}">
+      <echo message="Skipping DTF reference CHM build because Sandcastle Builder was not found at '${dir.sandcastlebuilder}'." />
+    </if>
+    <if test="${ship and hhw-found and sandcastle-found and sandcastlebuilder-found}">
+      <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+        <arg value="/property:Configuration=Debug" if="${debug}" />
+        <arg value="/property:Configuration=Release" if="${ship}" />
+        <arg value="/property:SHFBROOT=${dir.sandcastlebuilder}" />
+        <arg value="/property:OutputPath=${dir.target.dtfref}" />
+        <arg value="/property:WorkingPath=${dir.build.dtfref}" />
+        <arg value="/property:SandcastlePath=${dir.sandcastle}" />
+        <arg value="/property:HtmlHelp1xCompilerPath=${dir.hhw}" />
+        <arg value="/property:DirTargetWix=${dir.target.wix}" />
+        <arg value="/verbosity:${msbuildverbosity}" />
+        <arg value="/target:Rebuild" />
+        <arg file="${dir.src.dtfref}\dtfref.shfbproj" />
+      </exec>
+      <copy file="${dir.target.dtfref}\DTFAPI.chm" todir="${dir.target.wix}" />
+    </if>
+  </target>
+</project>

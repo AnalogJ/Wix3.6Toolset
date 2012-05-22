@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Using Purely WiX</title>
+</head>
+
+<body>
+  <h1>Using Purely WiX</h1>
+
+  <p>A patch can be created purely in WiX using the tools named Torch.exe and Pyro.exe. Using these tools eliminates the need to perform administrative installs or even to bind the upgrade product which, for large products, can be exhausting.</p>
+
+  <h2>Setting Up the Sample</h2>
+
+  <p>A sample product is created which puts different resources into fragments. You put resources into separate fragments so that the resources in each fragment can be filtered out of a patch. You might filter some resources out of a patch if you want to limit the patch to update only parts of your product or products.</p>
+
+  <h3>Create a directory that will contain the sample</h3>
+
+  <p>Create a directory from which you plan to run the sample. This will be the sample root.</p>
+  <pre>
+md C:\sample
+</pre>
+
+  <h3>Create two subdirectories</h3>
+
+  <p>Under the sample root create two subdirectories called "1.0" and "1.1".</p>
+  <pre>
+md C:\sample\1.0
+md C:\sample\1.1
+</pre>
+
+  <h3>Create a text file called Sample.txt for 1.0</h3>
+
+  <p>Create a text file in the "1.0" directory called Sample.txt and put some text in it telling you that it is the 1.0 version of the file.</p>
+  <pre>
+echo This is version 1.0 &gt; C:\sample\1.0\Sample.txt
+</pre>
+
+  <h3>Create a text file called Sample.txt for 1.1</h3>
+
+  <p>Create a text file in the "1.1" directory called Sample.txt and put some text in it telling you that it is the 1.1 version of the file.</p>
+  <pre>
+echo This is version 1.1 &gt; C:\sample\1.1\Sample.txt
+</pre>
+
+  <h3>Create your product authoring in the sample root folder</h3>
+
+  <p>Create your product authoring in the sample root folder called Product.wxs with the following contents:</p>
+  <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"&gt;
+    &lt;Product Id="48C49ACE-90CF-4161-9C6E-9162115A54DD"
+        Name="WiX Patch Example Product"
+        Language="1033"
+        Version="1.0.0"
+        Manufacturer="Dynamo Corporation"
+        UpgradeCode="48C49ACE-90CF-4161-9C6E-9162115A54DD"&gt;
+        &lt;Package Description="Installs a file that will be patched."
+            Comments="This Product does not install any executables"
+            InstallerVersion="200"
+            Compressed="yes" /&gt;
+ 
+        &lt;Media Id="1" Cabinet="product.cab" EmbedCab="yes" /&gt;
+        &lt;FeatureRef Id="SampleProductFeature"/&gt;
+    &lt;/Product&gt;
+ 
+    &lt;Fragment&gt;
+        &lt;Feature Id="SampleProductFeature" Title="Sample Product Feature" Level="1"&gt;
+            &lt;ComponentRef Id="SampleComponent" /&gt;
+        &lt;/Feature&gt;
+    &lt;/Fragment&gt;
+ 
+    &lt;Fragment&gt;
+        &lt;DirectoryRef Id="SampleProductFolder"&gt;
+            &lt;Component Id="SampleComponent" Guid="{C28843DA-EF08-41CC-BA75-D2B99D8A1983}" DiskId="1"&gt;
+                &lt;File Id="SampleFile" Name="Sample.txt" Source=".\$(var.Version)\Sample.txt" /&gt;
+            &lt;/Component&gt;
+        &lt;/DirectoryRef&gt;
+    &lt;/Fragment&gt;
+ 
+    &lt;Fragment&gt;
+        &lt;Directory Id="TARGETDIR" Name="SourceDir"&gt;
+            &lt;Directory Id="ProgramFilesFolder" Name="PFiles"&gt;
+                &lt;Directory Id="SampleProductFolder" Name="Patch Sample Directory"&gt;
+                &lt;/Directory&gt;
+            &lt;/Directory&gt;
+        &lt;/Directory&gt;
+    &lt;/Fragment&gt;
+&lt;/Wix&gt;
+</pre>
+
+  <h3>Create your patch authoring in the sample root</h3>
+
+  <p>Create your patch authoring in the sample root called Patch.wxs with the following content:</p>
+  <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"&gt;
+    &lt;Patch 
+        AllowRemoval="yes"
+        Manufacturer="Dynamo Corp" 
+        MoreInfoURL="http://www.dynamocorp.com/"
+        DisplayName="Sample Patch" 
+        Description="Small Update Patch" 
+        Classification="Update"
+        &gt;
+ 
+        &lt;Media Id="5000" Cabinet="RTM.cab"&gt;
+            &lt;PatchBaseline Id="RTM"/&gt;
+        &lt;/Media&gt;
+ 
+        &lt;PatchFamilyRef Id="SamplePatchFamily"/&gt;
+    &lt;/Patch&gt;
+ 
+    &lt;Fragment&gt;    
+        &lt;PatchFamily Id='SamplePatchFamily' Version='1.0.0.0' Supersede='yes'&gt;
+            &lt;ComponentRef Id="SampleComponent"/&gt;
+        &lt;/PatchFamily&gt;
+    &lt;/Fragment&gt;
+&lt;/Wix&gt;
+</pre>
+
+  <h2>Building the Patch Sample</h2>
+
+  <p>Open a command prompt and make sure that the following WiX tools are in your PATH.</p>
+
+  <ul>
+    <li>Candle.exe</li>
+
+    <li>Light.exe</li>
+
+    <li>Torch.exe</li>
+
+    <li>Pyro.exe</li>
+  </ul>
+
+  <p>Your WiX toolset version should be at least 3.0.3001.0</p>
+
+  <h3>Build the target layout</h3>
+
+  <p>While only the .wixout is needed, the target product layout is created to test installing the patch. The product must also be installed before or along with the patch.</p>
+  <pre>
+cd C:\sample
+candle.exe -dVersion=1.0 product.wxs
+light.exe product.wixobj -out 1.0\product.msi
+</pre>
+
+  <h3>Build the upgrade layout</h3>
+  <pre>
+candle.exe -dVersion=1.1 product.wxs
+light.exe product.wixobj -out 1.1\product.msi
+</pre>
+
+  <h3>Create the transform between your products</h3>
+  <pre>
+torch.exe -p -xi 1.0\product.wixpdb 1.1\product.wixpdb -out patch\diff.wixmst
+</pre>
+
+  <h3>Build the patch</h3>
+
+  <p>The patch.wxs file is compiled and linked like a product, but then it is processed along with any number of transforms that you want the patch to contain. That produces an MSP file that targets any of the products from which transforms were created after filtering.</p>
+  <pre>
+candle.exe patch.wxs
+light.exe patch.wixobj -out patch\patch.wixmsp
+pyro.exe patch\patch.wixmsp -out patch\patch.msp -t RTM patch\diff.wixmst
+</pre>
+
+  <h2>Verify the Patch</h2>
+
+  <p>To verify that the patch works, install the product and then the patch.</p>
+
+  <h3>Install the 1.0 product</h3>
+  <pre>
+msiexec.exe /i 1.0\product.msi /l*vx install.log
+</pre>
+
+  <h3>Verify version 1.0</h3>
+
+  <p>Go to "Program Files\Patch Sample Directory" and open Sample.txt. Verify that this is the 1.0 version. Close Sample.txt.</p>
+
+  <h3>Install the patch</h3>
+  <pre>
+msiexec.exe /p patch\patch.msp /l*vx patch.log
+</pre>
+
+  <h3>Verify version 1.1</h3>
+
+  <p>Go to "Program Files\Patch Sample Directory" and open Sample.txt. Verify that this is now the 1.1 version. Close Sample.txt.</p>
+
+  <h3>Uninstall the patch</h3>
+
+  <p>On Windows XP Service Pack 2 and Windows Server 2003, go to "Add/Remove Programs" in the Control Panel and make sure that Show Updates is checked. On Windows Vista and newer, go to "Programs" then "View installed updates" in the Control Panel. Select "Sample Patch" from under "WiX Patch Example Product" and click the Uninstall button.</p>
+
+  <p>Go to "Program files\Patch Sample Directory" and open Sample.txt. Verify that this is again the 1.0 version. Close Sample.txt.</p>
+
+  <h3>Uninstall the product</h3>
+
+  <p>On Windows XP Service Pack 2 and Windows Server 2003, go to "Add/Remove Programs" in the Control Panel. On Windows Vista and newer, go to "Programs" then "Uninstall a program" in the Control Panel. Select "WiX Patch Example Product" and click the Uninstall button.</p>
+
+  <h2>Restrictions</h2>
+
+  <p>In addition to <a href="patch_restrictions.htm">restrictions</a> about what can be in a patch in order for it to install and uninstall correctly, the following restrictions ensure that your patch works correctly.</p>
+
+  <h3>Patch families can only grow</h3>
+
+  <p>Patch families are used to filter resources that should end up in a patch. Once the patch is created, these patch families dictate which patches are superseded. If a resource is removed from a patch family in a newer patch and that resource is contained in an older patch with the same patch family, then when the older patch is superseded, that resource will be regressed back to its previous state before the older patch was installed.</p>
+
+  <p>Note that in order for one patch to supersede any other patches, all patch families must be superseded. A single patch family is referenced in the example above for simplicity.</p>
+
+  <h3>Certain elements cannot be added to uninstallable patches</h3>
+
+  <p>There are certain elements referenced in <a href="patch_restrictions.htm">restrictions</a> that cannot be added or modified if the patch is to be uninstallable. If a Patch/@AllowRemoval is set to "yes" and any of these elements are added or modified, Pyro.exe will return an error. These elements compile into tables that Windows Installer restricts in patches, so WiX informs you and prevents you from creating a patch that is not uninstallable when you want it to be uninstallable.</p>
+</body>
+</html>

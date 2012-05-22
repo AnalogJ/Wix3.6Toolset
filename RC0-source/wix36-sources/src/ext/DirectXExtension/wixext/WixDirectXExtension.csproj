@@ -1,0 +1,27 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{6182DBCA-146A-4F37-8406-3139BBE04636}</ProjectGuid>
+    <AssemblyName>WixDirectXExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DirectXDecompiler.cs" />
+    <Compile Include="DirectXExtension.cs" />
+    <EmbeddedResource Include="$(OutputPath)\DirectX.wixlib">
+      <Link>Data\DirectX.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

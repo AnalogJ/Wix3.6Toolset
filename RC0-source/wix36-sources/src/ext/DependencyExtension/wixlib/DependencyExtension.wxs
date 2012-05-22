@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?include $(var.caerrwxi)?>
+
+    <Fragment>
+        <UI Id="WixDependencyErrors">
+            <Error Id="$(var.msierrDependencyMissingDependencies)">!(loc.msierrDependencyMissingDependencies)</Error>
+            <Error Id="$(var.msierrDependencyHasDependents)">!(loc.msierrDependencyHasDependents)</Error>
+        </UI>
+    </Fragment>
+
+    <Fragment>
+        <Property Id="DISABLEDEPENDENCYCHECK" Secure="yes" SuppressModularization="yes"/>
+    </Fragment>
+
+    <Fragment>
+        <Property Id="IGNOREDEPENDENCIES" Secure="yes" SuppressModularization="yes"/>
+    </Fragment>
+</Wix>

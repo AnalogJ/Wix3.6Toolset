@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProjectGuid>{7B9119A3-AE78-4D8B-81EC-F3C7D1E81109}</ProjectGuid>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyName>VotivePP</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.VisualStudio.Tools</RootNamespace>
+    <FxCopEnabled>false</FxCopEnabled>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.ico" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="VotivePP.cs" />
+    <Compile Include="VotivePPReturnValue.cs" />
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+</Project>

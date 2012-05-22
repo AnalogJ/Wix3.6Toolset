@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="dtf" default="dtf.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    dtf.build - Builds the Deployment Tools Foundation solution.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  
+  <!-- Include solution projects -->
+  <include buildfile="${dir.src.dtf.libraries}\Libraries.build" />
+  <include buildfile="${dir.src.dtf.samples}\Samples.build" />
+  <include buildfile="${dir.src.dtf.tools}\Tools.build" />
+  <include buildfile="${dir.src.dtf}\Templates\dtftemplates.build" />
+  
+  <!-- Include the build files for DTF documentation. -->
+  <include buildfile="${dir.src.dtf}\Documents\Reference\dtfref.build" />
+  <include buildfile="${dir.src.dtf}\Documents\Guide\dtfguide.build" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="dtfmain.build" description="Peforms a full rebuild (clean then build)" depends="dtfmain.clean, dtfmain.inc" />
+
+  <!-- Clean -->
+  <target name="dtfmain.clean" description="Cleans the build" depends="libraries.clean, tools.clean, samples.clean, dtftemplates.clean" />
+
+  <!-- Inc -->
+  <target name="dtfmain.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile, libraries.inc, tools.inc, samples.inc, dtftemplates.inc" />
+  
+
+  <!-- Chain the documentation build targets. -->
+  <target name="dtf.build" description="Peforms a full rebuild (clean then build)" depends="dtf.clean, dtf.inc" />
+  <target name="dtf.clean" description="Cleans the build" depends="dtfmain.clean, dtfref.clean, dtfguide.clean" />
+  <target name="dtf.inc" description="Performs an incremental build" depends="dtfmain.inc, dtfref.inc, dtfguide.inc" />
+</project>

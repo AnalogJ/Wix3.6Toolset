@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Working with NAnt</title>
+</head>
+
+<body>
+  <h1>Working with NAnt</h1>
+
+  <p>To include the NAnt build tasks in you NAnt project include the following code:</p>
+
+  <!-- WiX 3 folder -->
+  <property name="wix.dir" value="${path::combine(environment::get-variable('WIX'), 'bin')}" readonly="true" />
+  <!-- Load the WiX3 tasks -->
+  <loadtasks assembly="${wix.dir}\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" />
+
+<pre>
+&lt;!--<font SIZE="2" COLOR="#008000"> WiX 3 folder </font><font SIZE="2" COLOR="#0000ff">--&gt;
+&lt;</font><font SIZE="2" COLOR="#a31515">property</font><font SIZE="2" COLOR="#0000ff"> </font><font SIZE="2" COLOR="#ff0000">name</font><font SIZE="2" COLOR="#0000ff">=</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff">wix.dir</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff"> </font><font SIZE="2" COLOR="#ff0000">value</font><font SIZE="2" COLOR="#0000ff">=</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff">${path::combine(environment::get-variable('WIX'), 'bin')}</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff"> </font><font SIZE="2" COLOR="#ff0000">readonly</font><font SIZE="2" COLOR="#0000ff">=</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff">true</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff"> /&gt;
+&lt;!--</font><font SIZE="2" COLOR="#008000"> Load the WiX3 tasks</font><font COLOR="#0000ff"> </font><font SIZE="2" COLOR="#0000ff">--&gt;
+&lt;</font><font SIZE="2" COLOR="#a31515">loadtasks </font><font SIZE="2" COLOR="#ff0000">assembly</font><font SIZE="2" COLOR="#0000ff">=</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff">${wix.dir}\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll</font><font SIZE="2">&quot;</font><font SIZE="2" COLOR="#0000ff"> /&gt;</font>
+</pre>
+
+<p>For more information see the following topics:</p>
+
+  <ul>
+    <li><a href="nant_task_reference_candle.htm">Candle task</a></li>
+    <li><a href="nant_task_reference_light.htm">Light task</a></li>
+    <li><a href="nant_task_reference_lit.htm">Lit Task</a></li>
+  </ul>
+</body>
+</html>

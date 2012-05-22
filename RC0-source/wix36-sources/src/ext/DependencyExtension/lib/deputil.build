@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="deputil" default="deputil.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+      Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+      deputil.build - Builds the DependencyExtension library project
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- deputil-specific properties -->
+  <property name="deputil.additionalOptions" value="/I &quot;${dir.inc.deputil}&quot;" />
+
+  <!-- Build -->
+  <target name="deputil.build" description="Peforms a full rebuild (clean then build)" depends="deputil.clean, deputil.inc" />
+
+  <!-- Clean -->
+  <target name="deputil.clean" description="Cleans the build">
+    <delete dir="${dir.build.deputil.x86}" failonerror="false" if="${directory::exists(dir.build.deputil.x86)}" />
+
+    <delete file="${file.target.deputil.vs2010.x86}" failonerror="false" if="${file::exists(file.target.deputil.vs2010.x86)}" />
+    <delete file="${file.target.deputil.vs2008.x86}" failonerror="false" if="${file::exists(file.target.deputil.vs2008.x86)}" />
+    <delete file="${file.target.deputil.vs2005.x86}" failonerror="false" if="${file::exists(file.target.deputil.vs2005.x86)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="deputil.inc" description="Performs an incremental build" depends="makeDirs">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.deputil}">
+      <include name="deputil.cpp" />
+    </fileset>
+
+    <property name="compileCpp.dir.build" value="${dir.build.deputil.vs2010.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.deputil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="${deputil.additionalOptions}" />
+    <property name="makeNativeLib.file.target" value="${file.target.deputil.vs2010.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make deputil_2010.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.deputil.vs2008.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.deputil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="${deputil.additionalOptions}" />
+    <property name="makeNativeLib.file.target" value="${file.target.deputil.vs2008.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make deputil_2008.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.deputil.vs2005.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.deputil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="${deputil.additionalOptions}" />
+    <property name="makeNativeLib.file.target" value="${file.target.deputil.vs2005.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make deputil_2005.lib -->
+    <call target="makeNativeLib" />
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="deputil.properties.defined" value="true" readonly="true" />
+</project>

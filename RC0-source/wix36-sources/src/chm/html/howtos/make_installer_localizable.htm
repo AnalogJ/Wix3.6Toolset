@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>How To: Make your installer localizable</title>
+</head>
+<body>
+<h1>How To: Make your installer localizable</h1>
+<p>WiX supports building localized installers through the use of language files that include localized strings. It is a good practice to put all your strings in a language file as you create your setup, even if you do not currently plan on shipping localized versions of your installer. This how to describes how to create a language file and use its strings in your WiX project.</p>
+<h2>Step 1: Create the language file</h2>
+<p>Language files end in the .wxl extension and specify their culture using the <a href="wixloc_xsd_WixLocalization.htm">&lt;WixLocalization&gt;</a> element. To create a language file on the command line create a new file with the appropriate name and add the following:</p>
+<pre>
+<font size="2" color="#0000FF">&lt;?</font><font size="2" color="#A31515">xml</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">version</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">1.0</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">encoding</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">utf-8</font><font size="2">"</font><font size="2" color="#0000FF">?&gt;
+&lt;</font><font size="2" color="#A31515">WixLocalization</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Culture</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">en-us</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">xmlns</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">http://schemas.microsoft.com/wix/2006/localization</font><font size="2">"</font><font size="2" color="#0000FF">&gt;
+&lt;/<font size="2" color="#A31515">WixLocalization</font>&gt;</font>
+</pre>
+<p>If you are using Visual Studio you can add a new language file to your project by doing the following:</p>
+<ol>
+<li>Right click on your project in Solution Explorer and select Add &gt; New Item...</li>
+<li>Select WiX Localization File, give the file an appropriate name, and select Add</li>
+</ol>
+<p>By default Visual Studio creates language files in the en-us culture. To create a language file for a different culture change the Culture attribute to the appropriate culture string.</p>
+<h2>Step 2: Add the localized strings</h2>
+<p>Localized strings are defined using the <a href="wixloc_xsd_string.htm">&lt;String&gt;</a> element. Each element consists of a unique id for later reference in your WiX project and the string value. For example:</p>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">String</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"ApplicationName"</font><font size="2" color="#0000FF">&gt;My Application Name&lt;/</font><font size="2" color="#A31515">String</font><font size="2" color="#0000FF">&gt;
+&lt;</font><font size="2" color="#A31515">String</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"ManufacturerName"</font><font size="2" color="#0000FF">&gt;My Manufacturer Name&lt;/</font><font size="2" color="#A31515">String</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p>The String element goes inside the WixLocalization element, and you should add one String element for each piece of text you need to localize.</p>
+<h2>Step 3: Use the localized strings in your project</h2>
+<p>Once you have defined the strings you can use them in your project wherever you would normally use text. For example, to set your product's Name and Manufacturer to the localized strings do the following:</p>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">Product</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">*"
+         </font><font size="2" color="#FF0000">UpgradeCode</font><font size="2" color="#0000FF">=</font><font size="2">"<a href="generate_guids.htm">PUT-GUID-HERE</a>"</font>
+<font size="2" color="#FF0000">  Version</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">1.0.0.0</font><font size="2">"</font>
+<font size="2" color="#FF0000">  Language</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">1033</font><font size="2">"</font>
+<font size="2" color="#FF0000">  Name</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">!(loc.ApplicationName)</font><font size="2">"
+         </font><font size="2" color="#FF0000">Manufacturer</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">!(loc.ManufacturerName)</font><font size="2">"</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p>Localization strings are referenced using the <strong>!(loc.stringname)</strong> syntax. These references will be replaced with the actual strings for the appropriate locale at build time.</p>
+<p>For information on how to compile localized versions of your installer once you have the necessary language files see <a href="build_a_localized_version.htm">How To: Build a localized version of your installer</a>.</p>
+</body>
+</html>

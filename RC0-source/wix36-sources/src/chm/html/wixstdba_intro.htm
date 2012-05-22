@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Working with WiX Standard Bootstrapper Application</title>
+</head>
+
+<body>
+<h1>Working with WiX Standard Bootstrapper Application</h1>
+
+<p>As described in the introduction to <a href="authoring_bundle_intro.htm">building installation package bundles</a>, every bundle requires a bootstrapper application DLL to drive the Burn engine. Custom bootstrapper applications can be created but require the developer to write native or managed code. Therefore the WiX toolset provides a standard bootstrapper application that developers can use and customize in particular ways.</p>
+
+<p>There are three variants of the WiX Standard Bootstrapper Application.</p>
+
+<ol>
+  <li>WixStandardBootstrapperApplication.RtfLicense - the first variant displays the license in the welcome dialog similar to the WixUI Advanced.</li>
+
+  <li>WixStandardBootstrapperApplication.HyperlinkLicense - the second variant provides an optional hyperlink to the license agreement on the welcome dialog providing a more modern and streamlined look.</li>
+
+  <li>WixStandardBootstrapperApplication.Foundation - the final variant is blank and requires the developer to provide a theme file that can completely customize the look and feel</li>
+</ol>
+
+<p>To include use the WiX Standard Bootstrapper Application, a <a href="wix_xsd_bootstrapperapplicationref.htm">&lt;BootstrapperApplicationRef&gt;</a> element should reference one of the above identifiers. The following example uses the bootstrapper application that displays the license: </p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;&gt;
+      &lt;Bundle&gt;
+<strong class="highlight">        &lt;BootstrapperApplicationRef Id=&quot;WixStandardBootstrapperApplication.RtfLicense&quot; /&gt;</strong>
+        &lt;Chain&gt;
+        &lt;/Chain&gt;
+      &lt;/Bundle&gt;
+    &lt;/Wix&gt;</pre>
+
+<p>When building the bundle, the WixBalExtension must be provided. If the above code was in a file called &quot;example.wxs&quot; the following steps would create an &quot;example.exe&quot; bundle:</p>
+
+<pre>    candle.exe example.wxs -ext WixBalExtension
+    light.exe example.wixobj -ext WixBalExtension</pre>
+
+<p>The following topics provide information how to customize the WiX Standard Bootstrapper Application:</p>
+
+<ul>
+  <li><a href="wixstdba_license.htm">Specifying the WiX Standard Bootstrapper Application License</a></li>
+
+  <li><a href="wixstdba_branding.htm">Changing the WiX Standard Bootstrapper Application Branding</a></li>
+
+  <li><a href="wixstdba_foundation_customization.htm">Completely Customizing the WiX Standard Bootstrapper Application</a></li>
+</ul>
+</body>
+</html>

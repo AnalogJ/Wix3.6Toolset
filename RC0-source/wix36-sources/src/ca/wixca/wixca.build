@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="wixca" default="wixca.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    wixca.build - Builds the WiX custom actions dll (wixca.dll).
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- wixca-specific properties -->
+  <property name="wixca.file.target.x86" value="${dir.target.wix.x86}\wixca.dll" dynamic="true" readonly="true" />
+  <property name="wixca.file.target.x64" value="${dir.target.wix.x64}\wixca_x64.dll" dynamic="true" readonly="true" />
+  <property name="wixca.file.target.ia64" value="${dir.target.wix.ia64}\wixca_ia64.dll" dynamic="true" readonly="true" />
+  <property name="wixca.file.targetpdb.x86" value="${dir.target.wix.x86}\wixca.pdb" dynamic="true" readonly="true" />
+  <property name="wixca.file.targetpdb.x64" value="${dir.target.wix.x64}\wixca_x64.pdb" dynamic="true" readonly="true" />
+  <property name="wixca.file.targetpdb.ia64" value="${dir.target.wix.ia64}\wixca_ia64.pdb" dynamic="true" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="wixca.build" description="Peforms a full rebuild (clean then build)" depends="wixca.clean, wixca.inc" />
+  
+  <!-- Clean -->
+  <target name="wixca.clean" description="Cleans the build">
+    <delete dir="${dir.build.wixca.x86}" failonerror="false" if="${directory::exists(dir.build.wixca.x86)}" />
+    <delete dir="${dir.build.wixca.x64}" failonerror="false" if="${directory::exists(dir.build.wixca.x64)}" />
+    <delete dir="${dir.build.wixca.ia64}" failonerror="false" if="${directory::exists(dir.build.wixca.ia64)}" />
+    <delete file="${wixca.file.target.x86}" failonerror="false" if="${file::exists(wixca.file.target.x86)}" />
+    <delete file="${wixca.file.target.x64}" failonerror="false" if="${file::exists(wixca.file.target.x64)}" />
+    <delete file="${wixca.file.target.ia64}" failonerror="false" if="${file::exists(wixca.file.target.ia64)}" />
+    <delete file="${wixca.file.targetpdb.x86}" failonerror="false" if="${file::exists(wixca.file.targetpdb.x86)}" />
+    <delete file="${wixca.file.targetpdb.x64}" failonerror="false" if="${file::exists(wixca.file.targetpdb.x64)}" />
+    <delete file="${wixca.file.targetpdb.ia64}" failonerror="false" if="${file::exists(wixca.file.targetpdb.ia64)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="wixca.inc" description="Performs an incremental build" depends="makeDirs">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.ca.wixca.dll}">
+      <include name="cacleanup.cpp" />
+      <include name="CheckReboot.cpp" />
+      <include name="CloseApps.cpp" />
+      <include name="exitearlywithsuccess.cpp" />
+      <include name="netshortcuts.cpp" />
+      <include name="osinfo.cpp" />
+      <include name="qtexecca.cpp" />
+      <include name="RestartManager.cpp" />
+      <include name="RemoveFoldersEx.cpp" />
+      <include name="secureobj.cpp" />
+      <include name="serviceconfig.cpp" />
+      <include name="shellexecca.cpp" />
+      <include name="test.cpp" />
+      <include name="wixca.cpp" />
+      <include name="XmlFile.cpp" />
+      <include name="XmlConfig.cpp" />
+    </fileset>
+
+    <!-- Build the x86 version of wixca.dll -->
+    <property name="compileCpp.dir.build" value="${dir.build.wixca}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wixca.dll}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.ca.wixca.dll}\wixca.rc" />
+    <property name="compileCpp.additionalOptions" value="/I &quot;${dir.src.wcautil}&quot;"/>
+    <property name="makeNativeDll.file.target" value="${wixca.file.target.x86}" dynamic="true" />
+    <property name="makeNativeDll.file.def" value="${dir.src.ca.wixca.dll}\wixca.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.x86}&quot; &quot;${file.target.dutil.x86}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\comdlg32.lib&quot; &quot;${dir.platformsdk.lib}\gdi32.lib&quot; &quot;${dir.platformsdk.lib}\psapi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" dynamic="true" />
+    <property name="makeNativeDll.platform" value="x86" />
+
+    <!-- Make wixca.dll -->
+    <call target="makeNativeDll" />
+
+    <!-- Nant doesn't seem to allow you to create filesets within an if, so we'll do it outside -->
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.ca.wixca.dll}">
+      <include name="secureobj.cpp" />
+      <include name="wixca.cpp" />
+    </fileset>
+
+    <!-- Build the x64 version of wixca.dll -->
+    <property name="compileCpp.dir.build" value="${dir.build.wixca}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wixca.dll}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.ca.wixca.dll}\wixca.rc" />
+    <property name="compileCpp.additionalOptions" value="/I &quot;${dir.src.wcautil}&quot;"/>
+    <property name="makeNativeDll.file.target" value="${wixca.file.target.x64}" dynamic="true" />
+    <property name="makeNativeDll.file.def" value="${dir.src.ca.wixca.dll}\wixca_x64.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.x64}&quot; &quot;${file.target.dutil.x64}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\comdlg32.lib&quot; &quot;${dir.platformsdk.lib}\gdi32.lib&quot; &quot;${dir.platformsdk.lib}\psapi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" dynamic="true" />
+    <property name="makeNativeDll.platform" value="x64" />
+
+    <!-- Make SetupBuilder.dll -->
+    <call target="makeNativeDll" />
+
+    <!-- Build the IA-64 version of wixca.dll -->
+    <property name="compileCpp.dir.build" value="${dir.build.wixca}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wixca.dll}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.ca.wixca.dll}\wixca.rc" />
+    <!-- Our winnt.h defines functions as intrinsic for ia-64 which don't exist in the VS2005 compiler.
+         the following "/wd4163" switch can likely be removed if using the VS2008 compiler -->
+    <property name="compileCpp.additionalOptions" value="/I &quot;${dir.src.wcautil}&quot;"/>
+    <property name="makeNativeDll.file.target" value="${wixca.file.target.ia64}" dynamic="true" />
+    <property name="makeNativeDll.file.def" value="${dir.src.ca.wixca.dll}\wixca_ia64.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil.ia64}&quot; &quot;${file.target.dutil.ia64}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\comdlg32.lib&quot; &quot;${dir.platformsdk.lib}\gdi32.lib&quot; &quot;${dir.platformsdk.lib}\psapi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" dynamic="true" />
+    <property name="makeNativeDll.platform" value="ia64" />
+
+    <!-- Make SetupBuilder.dll -->
+    <call target="makeNativeDll" />
+
+  </target>
+
+</project>

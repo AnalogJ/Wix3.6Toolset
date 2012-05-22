@@ -1,0 +1,28 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{14345c9d-8af8-435a-bb1b-e067ce7eb321}</ProjectGuid>
+    <OutputName>vs</OutputName>
+    <OutputType>Library</OutputType>
+    <BindFiles>True</BindFiles>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>en-us</Cultures>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="HTML_Help_Registration__RTL_X86_---.wxs" />
+    <Compile Include="Vs2003.wxs" />
+    <Compile Include="Vs2005.wxs" />
+    <Compile Include="Vs2008.wxs" />
+    <Compile Include="Vs2010.wxs" />
+    <Compile Include="Vs11.wxs" />
+    <Compile Include="VsixPackage.wxs" />
+    <Compile Include="vs2005\vs2005_VSIPCC_Collection_Files_RTL_---_---.wxs" />
+    <Compile Include="vs2008\vs2008_VSIPCC_Collection_Files_RTL_---_---.wxs" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <ItemGroup>
+    <Folder Include="vs2005\" />
+    <Folder Include="vs2008\" />
+  </ItemGroup>
+</Project>

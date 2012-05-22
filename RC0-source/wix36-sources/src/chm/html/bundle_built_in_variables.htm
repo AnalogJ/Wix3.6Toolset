@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Burn Built-in Variables</title>
+</head>
+
+<body>
+  <h1>Burn Built-in Variables</h1>
+    <p>The Burn engine offers a set of commonly-used variables so you can use them without defining your own. Here is the list of 
+        the built-in variable names:</p>
+    <ul>
+        <li>AdminToolsFolder - gets the well-known folder for CSIDL_ADMINTOOLS.</li>
+        <li>AppDataFolder - gets the well-known folder for CSIDL_APPDATA.</li>
+        <li>CommonAppDataFolder - gets the well-known folder for CSIDL_COMMON_APPDATA.</li>
+        <li>CommonFiles64Folder - gets the well-known folder for CSIDL_PROGRAM_FILES_COMMON.</li>
+        <li>CommonFilesFolder - gets the well-known folder for CSIDL_PROGRAM_FILES_COMMONX86.</li>
+        <li>CompatibilityMode - non-zero if the operating system launched the bootstrapper in compatibility mode.</li>
+        <li>Date - gets the current date using the short date format of the current user locale.</li>
+        <li>DesktopFolder - gets the well-known folder for CSIDL_DESKTOP.</li>
+        <li>FavoritesFolder - gets the well-known folder for CSIDL_FAVORITES.</li>
+        <li>FontsFolder - gets the well-known folder for CSIDL_FONTS.</li>
+        <li>InstallerName - gets the name of the installer engine ("WiX Burn").</li>
+        <li>InstallerVersion - gets the version of the installer engine.</li>
+        <li>LocalAppDataFolder - gets the well-known folder for CSIDL_LOCAL_APPDATA.</li>
+        <li>LogonUser - gets the current user name.</li>
+        <li>MyPicturesFolder - gets the well-known folder for CSIDL_MYPICTURES.</li>
+        <li>NTProductType - numeric product type from OS version information.</li>
+        <li>NTSuiteBackOffice - non-zero if OS version suite is Back Office.</li>
+        <li>NTSuiteDataCenter - non-zero if OS version suite is Datacenter.</li>
+        <li>NTSuiteEnterprise - non-zero if OS version suite is Enterprise.</li>
+        <li>NTSuitePersonal - non-zero if OS version suite is Personal.</li>
+        <li>NTSuiteSmallBusiness - non-zero if OS version suite is Small Business.</li>
+        <li>NTSuiteSmallBusinessRestricted - non-zero if OS version suite is Restricted Small Business.</li>
+        <li>NTSuiteWebServer - non-zero if OS version suite is Web Server.</li>
+        <li>PersonalFolder - gets the well-known folder for CSIDL_PERSONAL.</li>
+        <li>Privileged - non-zero if the process is running elevated (on Vista+) or as an Administrator (on Windows XP).</li>
+        <li>ProgramFiles64Folder - gets the well-known folder for CSIDL_PROGRAM_FILES.</li>
+        <li>ProgramFilesFolder - gets the well-known folder for CSIDL_PROGRAM_FILESX86</li>
+        <li>ProgramMenuFolder - gets the well-known folder for CSIDL_PROGRAMS.</li>
+        <li>RebootPending - non-zero if the system requires a reboot. Note that this value will reflect the reboot status of the system when the variable is first requested.</li>
+        <li>SendToFolder - gets the well-known folder for CSIDL_SENDTO.</li>
+        <li>ServicePackLevel - numeric value representing the installed OS service pack.</li>
+        <li>StartMenuFolder - gets the well-known folder for CSIDL_STARTMENU.</li>
+        <li>StartupFolder - gets the well-known folder for CSIDL_STARTUP.</li>
+        <li>SystemFolder - gets the well-known folder for CSIDL_SYSTEMX86.</li>
+        <li>SystemLanguageID - gets the language ID for the system locale.</li>
+        <li>TempFolder - gets the well-known folder for temp location</li>
+        <li>TemplateFolder - gets the well-known folder for CSIDL_TEMPLATES.</li>
+        <li>TerminalServer - non-zero if the system is running in application server mode of Remote Desktop Services.</li>
+        <li>UserLanguageID - gets the language ID for the current user locale.</li>
+        <li>VersionMsi - version value representing the Windows Installer engine version.</li>
+        <li>VersionNT - version value representing the OS version.</li>
+        <li>VersionNT64 - version value representing the OS version if 64-bit. Undefined if running a 32-bit operating system.</li>
+        <li>WindowsFolder - gets the well-known folder for CSIDL_WINDOWS.</li>
+        <li>WindowsVolume - gets the well-known folder for the windows volume.</li>
+        <li>WixBundleAction - set to the numeric value of BOOTSTRAPPER_ACTION from the command-line and updated during the call to IBootstrapperEngine::Plan().</li>
+        <li>WixBundleDirectoryLayout - set to the folder provided to the -layout switch (default is directory containin the bundle executable). This variable can also be set by the bootstrapper application to modify where files will be laid out.</li>
+        <li>WixBundleElevated - gets whether the bundle was launched elevated and will be set to 1 once the bundle is elevated. Use this variable, for example, to show or hide the elevation shield in the bootstrapper application UI.</li>
+        <li>WixBundleInstalled - gets whether the bundle was already installed and will be set to 1 once the bundle is installed.</li>
+        <li>WixBundleLastUsedSource - gets the path of the last successful source resolution for a container or payload.</li>
+        <li>WixBundleName - gets the name of the bundle (from Bundle/@Name). This variable can also be set by the bootstrapper application to modify the bundle name at runtime.</li>
+        <li>WixBundleOriginalSource - gets the source path from where the bundle was originally installed.</li>
+        <li>WixBundleProviderKey - gets the bundle dependency provider key.</li>
+        <li>WixBundleTag - gets the developer-defined tag string for this bundle (from Bundle/@Tag).</li>
+    </ul>
+</body>
+</html>

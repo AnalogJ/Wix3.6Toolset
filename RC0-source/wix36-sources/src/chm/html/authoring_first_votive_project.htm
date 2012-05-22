@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Creating a simple setup</title>
+</head>
+
+<body>
+  <h1>Creating a Simple Setup</h1>
+    <p>In this tutorial, we will create a C# Windows Form Application and then use WiX 
+        to create an installer for the application.</p>
+
+  <h2>Step 1: Create the C# Windows Form Application </h2>
+
+  <ol>
+    <li>Click <b>File</b>, then select <b>New</b>, then select <b>Project</b>.</li>
+
+    <li>Choose the <b>Visual C#</b> node in the <b>Project Types</b> tree, then select <b>Windows Forms Application</b>.</li>
+
+    <li>Name your application &quot;MyApplication&quot; and press OK.</li>
+
+  </ol>
+
+    <h2>Step 2: Create the installer for the application</h2>
+
+  <ol>
+    <li>Click <b>File</b>, then click <b>New</b>, then click <b>Project.</b></li>
+
+    <li>Choose the <b>Windows Installer XML</b> node in the <b>Project types</b> tree, then select <b>WiX Project</b></li>
+      <li>Name your project &quot;MySetup&quot; and press OK.</li>
+      <li>In the <b>MySetup</b> project, right-click on the <b>References</b> node and choose <b>Add Reference...</b>. </li>
+      <li>Navigate to the <b>Projects</b> tab, click on the <b>MyApplication</b> project, and click the <b>Add</b> 
+          button, and then press OK. </li>
+      <li>Build the WiX project.</li>
+  </ol>
+
+    <p>
+        That&#39;s it! Now you have a working installer that installs and uninstalls the 
+        application.</p>
+    <p>
+        <strong>Note:</strong> After step 5, the appropriate WiX authoring is 
+        auto-generated to reference the application project. To disable auto-generation, 
+        right-click on the <b>MyApplication</b> 
+        project reference and go to Properties, then set the Harvest property to False. 
+        To manually add the project reference into the WiX source file, open MySetup.wxs and you will see a comment that says:</p>
+  <pre>
+    &lt;!-- TODO: Insert your files, registry keys, and other resources here. --&gt;</pre>
+
+  <p>Delete this line and replace it with the following lines of code:</p>
+  <pre>
+    &lt;File Id="MyApplicationFile" Name="$(var.MyApplication.TargetFileName)" Source="$(var.MyApplication.TargetPath)"
+          DiskId="1" KeyPath="yes" /&gt;
+    </pre>
+
+  <p>If you type that code into the editor (instead of copying and pasting from this example) you will notice that IntelliSense picks up the valid elements and attributes. IntelliSense with WiX in Visual Studio can save you significant amounts of typing and time when searching for the name of the elements or attributes as you become more comfortable with the WiX language.</p>
+
+  <p>That line of code instructs the WiX toolset to add a file resource to the setup package using "MyApplicationFile" as its package identifier. The Name attribute specifies the name for your file when it is installed and the Source attribute specifies where to find the file for packaging during the build. Rather than hard-code values for these attributes into our source code, we use the WiX preprocessor variables that are passed to the WiX compiler. More information about using preprocessor variables, including a table of all supported values, can be found in the <a href='votive_project_references.htm'>Adding Project References topic</a>.</p>
+
+  <p>The DiskId attribute instructs the WiX toolset to add this file to the Media element with matching Id attribute. In this example, the MyApplication executable is added to the MySetup.cab cabinet and that cabinet is embedded in the setup package. The KeyPath attribute instructs the WiX toolset to use this file as the key path for the component that contains the file.</p>
+    <p>&nbsp;</p>
+
+  </body>
+</html>

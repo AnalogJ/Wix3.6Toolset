@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="tools" default="tools.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    tools.build - Builds DTF tools.
+  </description>
+
+  <!-- Includes -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  <include buildfile="${dir.src.dtf.libraries}\Libraries.build" unless="${property::exists('dtflibraries.properties.defined')}" />
+  <include buildfile="${dir.src.dtf.tools}\SfxCA\SfxCA.build" unless="${property::exists('sfxca.properties.defined')}" />
+
+  <!-- Properties -->
+  <property name="dir.src.dtf.tools.makesfxca" value="${dir.src.dtf.tools}\makesfxca" readonly="true" />
+  <property name="file.target.dtf.makesfxca" value="${dir.target.wix}\makesfxca.dll" readonly="true" />
+
+  <!-- Build -->
+  <target name="tools.build" description="Peforms a full rebuild (clean then build)" depends="tools.clean, tools.inc" />
+
+  <!-- Clean -->
+  <target name="tools.clean" description="Cleans the build"
+          depends="sfxca.clean,
+                   makesfxca.clean" />
+
+  <!-- Inc -->
+  <target name="tools.inc" description="Performs an incremental build"
+          depends="sfxca.inc,
+                   makesfxca.inc" />
+
+  <!-- Begin MakeSfxCA -->
+  <target name="makesfxca" depends="makesfxca.inc" />
+
+  <target name="makesfxca.build" description="Rebuild makesfxca" depends="makeDirs, createKeyFile">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.dtf.tools.makesfxca}\makesfxca.csproj" />
+    </exec>
+  </target>
+
+  <target name="makesfxca.clean" description="Cleans makesfxca" depends="compression.clean, compression.cab.clean, resources.clean">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.dtf.tools.makesfxca}\makesfxca.csproj" />
+    </exec>
+  </target>
+
+  <target name="makesfxca.inc" description="Incremental makesfxca build" depends="makeDirs, createKeyFile, compression.inc, compression.cab.inc, resources.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.dtf.tools.makesfxca}\makesfxca.csproj" />
+    </exec>
+  </target>
+  <!-- End MakeSfxCA -->
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="dtftools.properties.defined" value="true" readonly="true" />
+
+</project>

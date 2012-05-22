@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<WixLocalization Culture="ro-ro" Codepage="1250" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+
+
+  <!--
+        Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+    -->
+
+  <String Id="WixUIBack" Overridable="yes">Î&amp;napoi</String>
+  <String Id="WixUINext" Overridable="yes">&amp;Următorul</String>
+  <String Id="WixUICancel" Overridable="yes">Revocare</String>
+  <String Id="WixUIFinish" Overridable="yes">&amp;Terminare</String>
+  <String Id="WixUIRetry" Overridable="yes">&amp;Reîncercare</String>
+  <String Id="WixUIIgnore" Overridable="yes">&amp;Ignorare</String>
+  <String Id="WixUIYes" Overridable="yes">&amp;Da</String>
+  <String Id="WixUINo" Overridable="yes">&amp;Nu</String>
+  <String Id="WixUIOK" Overridable="yes">OK</String>
+  <String Id="WixUIPrint" Overridable="yes">Im&amp;primare</String>
+
+  <String Id="AdvancedWelcomeEulaDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="AdvancedWelcomeEulaDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="AdvancedWelcomeEulaDlgTitle" Overridable="yes">{\WixUI_Font_Title}Citiţi Acordul de licenţă pentru [ProductName]</String>
+  <String Id="AdvancedWelcomeEulaDlgLicenseAcceptedCheckBox" Overridable="yes">&amp;Accept termenii din Acordul de licenţă</String>
+  <String Id="AdvancedWelcomeEulaDlgDescriptionPerMachine" Overridable="yes">Faceţi clic pe Instalare dacă doriţi să instalaţi produsul cu opţiunile implicite pentru toţi utilizatorii. Faceţi clic pe Complex pentru a modifica opţiunile de instalare.</String>
+  <String Id="AdvancedWelcomeEulaDlgDescriptionPerUser" Overridable="yes">Faceţi clic pe Instalare dacă doriţi să instalaţi produsul cu opţiunile implicite numai pentru dvs. Faceţi clic pe Complex pentru a modifica opţiunile de instalare.</String>
+  <String Id="AdvancedWelcomeEulaDlgInstall" Overridable="yes">&amp;Instalare</String>
+  <String Id="AdvancedWelcomeEulaDlgAdvanced" Overridable="yes">C&amp;omplex</String>
+  <String Id="Advanced_Font_Normal_Size" Overridable="yes">8</String>
+  <String Id="Advanced_Font_Bigger_Size" Overridable="yes">12</String>
+  <String Id="Advanced_Font_Title_Size" Overridable="yes">9</String>
+  <String Id="Advanced_Font_Emphasized_Size" Overridable="yes">8</String>
+  <String Id="Advanced_Font_FaceName" Overridable="yes">Tahoma</String>
+
+  <String Id="BrowseDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="BrowseDlgComboLabel" Overridable="yes">&amp;Privire în:</String>
+  <String Id="BrowseDlgWixUI_Bmp_Up" Overridable="yes">WixUI_Bmp_Up</String>
+  <String Id="BrowseDlgWixUI_Bmp_UpTooltip" Overridable="yes">Mai sus cu un nivel</String>
+  <String Id="BrowseDlgNewFolder" Overridable="yes">WixUI_Bmp_New</String>
+  <String Id="BrowseDlgNewFolderTooltip" Overridable="yes">Creare folder nou</String>
+  <String Id="BrowseDlgPathLabel" Overridable="yes">&amp;Nume folder:</String>
+  <String Id="BrowseDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="BrowseDlgDescription" Overridable="yes">Răsfoire la folderul destinaţie</String>
+  <String Id="BrowseDlgTitle" Overridable="yes">{\WixUI_Font_Title}Modificarea folderului de destinaţie</String>
+
+  <String Id="CancelDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="CancelDlgText" Overridable="yes">Sigur revocaţi instalarea [ProductName]?</String>
+  <String Id="CancelDlgIcon" Overridable="yes">WixUI_Ico_Info</String>
+  <String Id="CancelDlgIconTooltip" Overridable="yes">Pictogramă informaţii</String>
+
+  <String Id="CustomizeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="CustomizeDlgTree" Overridable="yes">Arbore de selecţii</String>
+  <String Id="CustomizeDlgBrowse" Overridable="yes">&amp;Răsfoire...</String>
+  <String Id="CustomizeDlgReset" Overridable="yes">Re&amp;setare</String>
+  <String Id="CustomizeDlgDiskCost" Overridable="yes">&amp;Utilizare disc</String>
+  <String Id="CustomizeDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="CustomizeDlgText" Overridable="yes">Faceţi clic pe pictogramele din arborele de mai jos pentru a modifica modul de instalare a caracteristicilor.</String>
+  <String Id="CustomizeDlgDescription" Overridable="yes">Selectaţi modalitatea în care doriţi să se instaleze caracteristicile.</String>
+  <String Id="CustomizeDlgTitle" Overridable="yes">{\WixUI_Font_Title}Instalare particularizată</String>
+  <String Id="CustomizeDlgItemDescription" Overridable="yes">CustomizeDlgItemDescription-CustomizeDlgItemDescription</String>
+  <String Id="CustomizeDlgItemSize" Overridable="yes">CustomizeDlgItemSize-CustomizeDlgItemSize</String>
+  <String Id="CustomizeDlgLocation" Overridable="yes">CustomizeDlgLocation-CustomizeDlgLocation</String>
+  <String Id="CustomizeDlgLocationLabel" Overridable="yes">Locaţie:</String>
+
+  <String Id="DiskCostDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="DiskCostDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="DiskCostDlgText" Overridable="yes">Pe volumele evidenţiate nu există suficient spaţiu-disc disponibil pentru caracteristicile selectate. Puteţi să eliminaţi câteva fişiere de pe volumele evidenţiate, să instalaţi mai puţine caracteristici sau să selectaţi alte unităţi de destinaţie.</String>
+  <String Id="DiskCostDlgDescription" Overridable="yes">Spaţiul-disc necesar instalării caracteristicilor selectate.</String>
+  <String Id="DiskCostDlgTitle" Overridable="yes">{\WixUI_Font_Title}Cerinţe de spaţiu-disc</String>
+  <String Id="DiskCostDlgVolumeList" Overridable="yes">{120}{70}{70}{70}{70}</String>
+
+  <String Id="ErrorDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="ErrorDlgErrorText" Overridable="yes">Text informativ</String>
+  <String Id="ErrorDlgErrorIcon" Overridable="yes">WixUI_Ico_Info</String>
+  <String Id="ErrorDlgErrorIconTooltip" Overridable="yes">Pictogramă informaţii</String>
+
+  <String Id="ExitDialog_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="ExitDialogBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="ExitDialogDescription" Overridable="yes">Faceţi clic pe Terminare pentru a ieşi din Expertul de instalare.</String>
+  <String Id="ExitDialogTitle" Overridable="yes">{\WixUI_Font_Bigger}Expertul de instalare [ProductName] s-a încheiat</String>
+
+  <String Id="FatalError_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="FatalErrorBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="FatalErrorTitle" Overridable="yes">{\WixUI_Font_Bigger}Expertul de instalare [ProductName] s-a încheiat prematur</String>
+  <String Id="FatalErrorDescription1" Overridable="yes">Expertul de instalare [ProductName] s-a încheiat prematur, din cauza unei erori. Sistemul nu a fost modificat. Pentru a instala acest program ulterior, executaţi din nou Expertul de instalare.</String>
+  <String Id="FatalErrorDescription2" Overridable="yes">Faceţi clic pe Terminare pentru a ieşi din Expertul de instalare.</String>
+
+  <String Id="FeaturesDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="FeaturesDlgTree" Overridable="yes">Caracteristici produs</String>
+  <String Id="FeaturesDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="FeaturesDlgDescription" Overridable="yes">Selectaţi modalitatea în care doriţi să se instaleze caracteristicile.</String>
+  <String Id="FeaturesDlgTitle" Overridable="yes">{\WixUI_Font_Title}Caracteristicile produsului</String>
+  <String Id="FeaturesDlgItemDescription" Overridable="yes">FeaturesDlgItemDescription</String>
+  <String Id="FeaturesDlgItemSize" Overridable="yes">FeaturesDlgItemSize</String>
+  <String Id="FeaturesDlgInstall" Overridable="yes">&amp;Instalare</String>
+  <String Id="FeaturesDlgChange" Overridable="yes">&amp;Modificare</String>
+
+  <String Id="FilesInUse_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="FilesInUseExit" Overridable="yes">I&amp;eşire</String>
+  <String Id="FilesInUseBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="FilesInUseText" Overridable="yes">Aplicaţiile următoare utilizează fişiere care trebuie actualizate de această instalare. Închideţi aceste aplicaţii şi faceţi clic pe &amp;Reîncercare pentru a continua instalarea sau pe Ieşire pentru a ieşi.</String>
+  <String Id="FilesInUseDescription" Overridable="yes">Unele fişiere care trebuie actualizate sunt momentan în uz.</String>
+  <String Id="FilesInUseTitle" Overridable="yes">{\WixUI_Font_Title}Fişiere în uz</String>
+
+  <String Id="InstallDirDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="InstallDirDlgChange" Overridable="yes">&amp;Modificare...</String>
+  <String Id="InstallDirDlgTitle" Overridable="yes">{\WixUI_Font_Title}Folderul de destinaţie</String>
+  <String Id="InstallDirDlgDescription" Overridable="yes">Faceţi clic pe Următorul pentru a instala în folderul implicit sau pe Modificare pentru a selecta un alt folder.</String>
+  <String Id="InstallDirDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="InstallDirDlgFolderLabel" Overridable="yes">Instalare [ProductName] la:</String>
+
+  <String Id="InstallScopeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="InstallScopeDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="InstallScopeDlgDescription" Overridable="yes">Alegeţi aria de instalare şi folderul</String>
+  <String Id="InstallScopeDlgTitle" Overridable="yes">{\WixUI_Font_Title}Aria de instalare</String>
+  <String Id="InstallScopeDlgPerUser" Overridable="yes">{\WixUI_Font_Emphasized}Se instalează &amp;numai pentru dvs. ([USERNAME])</String>
+  <String Id="InstallScopeDlgPerUserDescription" Overridable="yes">[ProductName] va fi instalat într-un folder la nivel de utilizator şi va fi disponibil numai pentru contul dvs. de utilizator. Nu sunt necesare privilegii de administrator local.</String>
+  <String Id="InstallScopeDlgNoPerUserDescription" Overridable="yes">[ProductName] nu acceptă instalarea la nivel de utilizator.</String>
+  <String Id="InstallScopeDlgPerMachine" Overridable="yes">{\WixUI_Font_Emphasized}Se instalează pentru toţi utilizatorii acestui co&amp;mputer</String>
+  <String Id="InstallScopeDlgPerMachineDescription" Overridable="yes">[ProductName] va fi instalat implicit într-un folder la nivel de computer şi va fi disponibil pentru toţi utilizatorii. Aveţi posibilitatea să modificaţi folderul de instalare implicit. Sunt necesare privilegii de administrator local.</String>
+  <String Id="InstallScopeDlgFolderLabel" Overridable="yes">&amp;Folder de instalare:</String>
+  <String Id="InstallScopeDlgChange" Overridable="yes">&amp;Modificare...</String>
+
+  <String Id="InvalidDirDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="InvalidDirDlgText" Overridable="yes">Directorul de instalare trebuie să fie pe o unitate de disc locală.</String>
+  <String Id="InvalidDirDlgIcon" Overridable="yes">WixUI_Ico_Info</String>
+  <String Id="InvalidDirDlgIconTooltip" Overridable="yes">Pictogramă informaţii</String>
+
+  <String Id="LicenseAgreementDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="LicenseAgreementDlgLicenseAcceptedCheckBox" Overridable="yes">&amp;Accept termenii din Acordul de licenţă</String>
+  <String Id="LicenseAgreementDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="LicenseAgreementDlgDescription" Overridable="yes">Citiţi cu atenţie următorul acord de licenţă</String>
+  <String Id="LicenseAgreementDlgTitle" Overridable="yes">{\WixUI_Font_Title}Termenii licenţei pentru software Microsoft</String>
+
+  <String Id="MaintenanceTypeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="MaintenanceTypeDlgChangeButton" Overridable="yes">&amp;Modificare</String>
+  <String Id="MaintenanceTypeDlgChangeButtonTooltip" Overridable="yes">Modificare instalare</String>
+  <String Id="MaintenanceTypeDlgRepairButton" Overridable="yes">Re&amp;parare</String>
+  <String Id="MaintenanceTypeDlgRepairButtonTooltip" Overridable="yes">Reparare instalare</String>
+  <String Id="MaintenanceTypeDlgRemoveButton" Overridable="yes">&amp;Eliminare</String>
+  <String Id="MaintenanceTypeDlgRemoveButtonTooltip" Overridable="yes">Eliminare instalare</String>
+  <String Id="MaintenanceTypeDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="MaintenanceTypeDlgDescription" Overridable="yes">Selectaţi operaţia pe care doriţi să o efectuaţi.</String>
+  <String Id="MaintenanceTypeDlgTitle" Overridable="yes">{\WixUI_Font_Title}Modificaţi, reparaţi sau eliminaţi instalarea</String>
+  <String Id="MaintenanceTypeDlgChangeText" Overridable="yes">Vă permite să modificaţi modul în care sunt instalate caracteristicile.</String>
+  <String Id="MaintenanceTypeDlgChangeDisabledText" Overridable="yes">[ProductName] nu are caracteristici ce se pot selecta în mod independent.</String>
+  <String Id="MaintenanceTypeDlgRemoveText" Overridable="yes">Elimină [ProductName] de pe computer.</String>
+  <String Id="MaintenanceTypeDlgRemoveDisabledText" Overridable="yes">[ProductName] nu poate fi eliminat.</String>
+  <String Id="MaintenanceTypeDlgRepairText" Overridable="yes">Repară erorile celei mai recente instalări, prin remedierea fişierelor, comenzilor rapide şi intrărilor de registry care lipsesc sau sunt deteriorate.</String>
+  <String Id="MaintenanceTypeDlgRepairDisabledText" Overridable="yes">[ProductName] nu poate fi reparat.</String>
+
+  <String Id="MaintenanceWelcomeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="MaintenanceWelcomeDlgBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="MaintenanceWelcomeDlgDescription" Overridable="yes">Expertul de instalare vă permite să modificaţi modul în care sunt instalate caracteristicile [ProductName] pe computer sau să eliminaţi produsul de pe computer. Faceţi clic pe Următorul pentru a continua sau pe Revocare pentru a ieşi din Expertul de instalare.</String>
+  <String Id="MaintenanceWelcomeDlgTitle" Overridable="yes">{\WixUI_Font_Bigger}Bun venit la Expertul de instalare [ProductName]</String>
+
+  <String Id="MsiRMFilesInUse_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="MsiRMFilesInUseBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="MsiRMFilesInUseText" Overridable="yes">Aplicaţiile următoare utilizează fişiere care trebuie actualizate de această instalare. Lăsaţi Expertul de instalare să le închidă, apoi încercaţi să le reporniţi sau reporniţi computerul mai târziu.</String>
+  <String Id="MsiRMFilesInUseDescription" Overridable="yes">Unele fişiere care trebuie actualizate sunt momentan în uz.</String>
+  <String Id="MsiRMFilesInUseTitle" Overridable="yes">{\WixUI_Font_Title}Fişiere în uz</String>
+  <String Id="MsiRMFilesInUseUseRM" Overridable="yes">&amp;Se închid aplicaţiile şi se încearcă repornirea lor.</String>
+  <String Id="MsiRMFilesInUseDontUseRM" Overridable="yes">&amp;Nu se închid aplicaţiile. Va fi necesară o repornire.</String>
+
+  <String Id="OutOfDiskDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="OutOfDiskDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="OutOfDiskDlgText" Overridable="yes">Volumele evidenţiate nu au suficient spaţiu-disc disponibil pentru caracteristicile selectate momentan. Aveţi posibilitatea să eliminaţi unele fişiere din volumele evidenţiate, să instalaţi mai puţine caracteristici sau să selectaţi altă unitate de destinaţie.</String>
+  <String Id="OutOfDiskDlgDescription" Overridable="yes">Spaţiul-disc necesar instalării depăşeşte spaţiul disponibil pe disc.</String>
+  <String Id="OutOfDiskDlgTitle" Overridable="yes">{\WixUI_Font_Title}Spaţiu-disc insuficient</String>
+  <String Id="OutOfDiskDlgVolumeList" Overridable="yes">{120}{70}{70}{70}{70}</String>
+
+  <String Id="OutOfRbDiskDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="OutOfRbDiskDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="OutOfRbDiskDlgText" Overridable="yes">Volumele evidenţiate nu au suficient spaţiu-disc disponibil pentru caracteristicile selectate momentan. Aveţi posibilitatea să eliminaţi unele fişiere din volumele evidenţiate, să instalaţi mai puţine caracteristici sau să selectaţi altă unitate de destinaţie.</String>
+  <String Id="OutOfRbDiskDlgDescription" Overridable="yes">Spaţiul-disc necesar instalării depăşeşte spaţiul disponibil pe disc.</String>
+  <String Id="OutOfRbDiskDlgTitle" Overridable="yes">{\WixUI_Font_Title}Spaţiu-disc insuficient</String>
+  <String Id="OutOfRbDiskDlgVolumeList" Overridable="yes">{120}{70}{70}{70}{70}</String>
+  <String Id="OutOfRbDiskDlgText2" Overridable="yes">De asemenea, puteţi opta pentru dezactivarea funcţionalităţii de revenire a programului de instalare. Dezactivarea funcţionalităţii de revenire împiedică programul de instalare să restaureze starea originală a computerului în cazul în care instalarea este întreruptă din vreun motiv. Faceţi clic pe Da dacă vă asumaţi riscul de a dezactiva revenirea.</String>
+
+  <String Id="PrepareDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="PrepareDlgBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="PrepareDlgDescription" Overridable="yes">Aşteptaţi. Expertul de instalare se pregăteşte să vă ghideze pe parcursul instalării.</String>
+  <String Id="PrepareDlgTitle" Overridable="yes">{\WixUI_Font_Bigger}Bun venit la Expertul de instalare [ProductName]</String>
+
+  <String Id="ProgressDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="ProgressDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="ProgressDlgTextInstalling" Overridable="yes">Aşteptaţi, Expertul de instalare instalează [ProductName].</String>
+  <String Id="ProgressDlgTitleInstalling" Overridable="yes">{\WixUI_Font_Title}Se instalează [ProductName]</String>
+  <String Id="ProgressDlgTextChanging" Overridable="yes">Aşteptaţi, Expertul de instalare modifică [ProductName].</String>
+  <String Id="ProgressDlgTitleChanging" Overridable="yes">{\WixUI_Font_Title}Se modifică [ProductName]</String>
+  <String Id="ProgressDlgTextRepairing" Overridable="yes">Aşteptaţi, Expertul de instalare repară [ProductName].</String>
+  <String Id="ProgressDlgTitleRepairing" Overridable="yes">{\WixUI_Font_Title}Se repară [ProductName]</String>
+  <String Id="ProgressDlgTextRemoving" Overridable="yes">Aşteptaţi, Expertul de instalare elimină [ProductName].</String>
+  <String Id="ProgressDlgTitleRemoving" Overridable="yes">{\WixUI_Font_Title}Se elimină [ProductName]</String>
+  <String Id="ProgressDlgTextUpdating" Overridable="yes">Aşteptaţi, Expertul de instalare actualizează [ProductName].</String>
+  <String Id="ProgressDlgTitleUpdating" Overridable="yes">{\WixUI_Font_Title}Se actualizează [ProductName]</String>
+  <String Id="ProgressDlgProgressBar" Overridable="yes">Etapă finalizată</String>
+  <String Id="ProgressDlgStatusLabel" Overridable="yes">Stare:</String>
+
+  <String Id="ResumeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="ResumeDlgInstall" Overridable="yes">&amp;Instalare</String>
+  <String Id="ResumeDlgBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="ResumeDlgDescription" Overridable="yes">Expertul de instalare va finaliza instalarea [ProductName] pe computer. Faceţi clic pe Instalare pentru a continua sau pe Revocare pentru a ieşi din Expertul de instalare.</String>
+  <String Id="ResumeDlgTitle" Overridable="yes">{\WixUI_Font_Bigger}Se reia Expertul de instalare [ProductName]</String>
+
+  <String Id="SetupTypeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="SetupTypeDlgTypicalButton" Overridable="yes">&amp;Tipică</String>
+  <String Id="SetupTypeDlgTypicalButtonTooltip" Overridable="yes">Instalare tipică</String>
+  <String Id="SetupTypeDlgCustomButton" Overridable="yes">Partic&amp;ularizată</String>
+  <String Id="SetupTypeDlgCustomButtonTooltip" Overridable="yes">Instalare particularizată</String>
+  <String Id="SetupTypeDlgCompleteButton" Overridable="yes">C&amp;ompletă</String>
+  <String Id="SetupTypeDlgCompleteButtonTooltip" Overridable="yes">Instalare completă</String>
+  <String Id="SetupTypeDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="SetupTypeDlgTitle" Overridable="yes">{\WixUI_Font_Title}Alegeţi tipul instalării</String>
+  <String Id="SetupTypeDlgDescription" Overridable="yes">Alegeţi tipul de instalare care corespunde cel mai bine necesităţilor dvs.</String>
+  <String Id="SetupTypeDlgTypicalText" Overridable="yes">Instalează cele mai utilizate caracteristici ale programului. Recomandat pentru majoritatea utilizatorilor.</String>
+  <String Id="SetupTypeDlgCustomText" Overridable="yes">Permite utilizatorilor să aleagă ce caracteristici de program să se instaleze şi unde să se instaleze. Recomandat utilizatorilor avansaţi.</String>
+  <String Id="SetupTypeDlgCompleteText" Overridable="yes">Se vor instala toate caracteristicile programului. Necesită cel mai mult spaţiu pe disc.</String>
+
+  <String Id="UserExit_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="UserExitBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="UserExitTitle" Overridable="yes">{\WixUI_Font_Bigger}Expertul de instalare [ProductName] a fost întrerupt</String>
+  <String Id="UserExitDescription1" Overridable="yes">Instalarea [ProductName] a fost întreruptă. Sistemul nu a fost modificat. Pentru a instala ulterior acest program, executaţi din nou instalarea.</String>
+  <String Id="UserExitDescription2" Overridable="yes">Faceţi clic pe Terminare pentru a ieşi din Expertul de instalare.</String>
+
+  <String Id="VerifyReadyDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="VerifyReadyDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
+  <String Id="VerifyReadyDlgInstall" Overridable="yes">&amp;Instalare</String>
+  <String Id="VerifyReadyDlgInstallText" Overridable="yes">Faceţi clic pe Instalare pentru a începe instalarea. Faceţi clic pe Înapoi pentru a examina sau a modifica oricare dintre setările de instalare. Faceţi clic pe Revocare pentru a ieşi din expert.</String>
+  <String Id="VerifyReadyDlgInstallTitle" Overridable="yes">{\WixUI_Font_Title}Pregătit pentru instalarea [ProductName]</String>
+  <String Id="VerifyReadyDlgChange" Overridable="yes">&amp;Modificare</String>
+  <String Id="VerifyReadyDlgChangeText" Overridable="yes">Faceţi clic pe Modificare pentru a începe instalarea. Faceţi clic pe Înapoi pentru a examina sau a modifica oricare dintre setările de instalare. Faceţi clic pe Revocare pentru a ieşi din expert.</String>
+  <String Id="VerifyReadyDlgChangeTitle" Overridable="yes">{\WixUI_Font_Title}Pregătit pentru modificarea [ProductName]</String>
+  <String Id="VerifyReadyDlgRepair" Overridable="yes">Re&amp;parare</String>
+  <String Id="VerifyReadyDlgRepairText" Overridable="yes">Faceţi clic pe Reparare pentru a repara instalarea [ProductName]. Faceţi clic pe Înapoi pentru a examina sau a modifica oricare dintre setările de instalare. Faceţi clic pe Revocare pentru a ieşi din expert.</String>
+  <String Id="VerifyReadyDlgRepairTitle" Overridable="yes">{\WixUI_Font_Title}Pregătit pentru repararea [ProductName]</String>
+  <String Id="VerifyReadyDlgRemove" Overridable="yes">&amp;Eliminare</String>
+  <String Id="VerifyReadyDlgRemoveText" Overridable="yes">Faceţi clic pe Eliminare pentru a elimina [ProductName] de pe computer. Faceţi clic pe Înapoi pentru a examina sau a modifica oricare dintre setările de instalare. Faceţi clic pe Revocare pentru a ieşi din expert.</String>
+  <String Id="VerifyReadyDlgRemoveTitle" Overridable="yes">{\WixUI_Font_Title}Pregătit pentru eliminarea [ProductName]</String>
+  <String Id="VerifyReadyDlgUpdate" Overridable="yes">Act&amp;ualizare</String>
+  <String Id="VerifyReadyDlgUpdateText" Overridable="yes">Faceţi clic pe Actualizare pentru a actualiza [ProductName] de pe computer. Faceţi clic pe Înapoi pentru a examina sau a modifica oricare dintre setările de instalare. Faceţi clic pe Revocare pentru a ieşi din expert.</String>
+  <String Id="VerifyReadyDlgUpdateTitle" Overridable="yes">{\WixUI_Font_Title}Pregătit pentru actualizarea [ProductName]</String>
+
+  <String Id="WaitForCostingDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="WaitForCostingDlgReturn" Overridable="yes">&amp;Revenire</String>
+  <String Id="WaitForCostingDlgText" Overridable="yes">Aşteptaţi, programul de instalare stabileşte cerinţele de spaţiu-disc.</String>
+  <String Id="WaitForCostingDlgIcon" Overridable="yes">WixUI_Ico_Exclam</String>
+  <String Id="WaitForCostingDlgIconTooltip" Overridable="yes">Pictogramă semn de exclamare</String>
+
+  <String Id="WelcomeDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="WelcomeDlgBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="WelcomeDlgDescription" Overridable="yes">Expertul de instalare va instala [ProductName] pe computer. Faceţi clic pe Următorul pentru a continua sau pe Revocare pentru a ieşi din Expertul de instalare.</String>
+  <String Id="WelcomeUpdateDlgDescriptionUpdate" Overridable="yes">Expertul de instalare va actualiza [ProductName] pe computer. Faceţi clic pe Următorul pentru a continua sau pe Revocare pentru a ieşi din Expertul de instalare.</String>
+  <String Id="WelcomeDlgTitle" Overridable="yes">{\WixUI_Font_Bigger}Bun venit la Expertul de instalare [ProductName]</String>
+
+  <String Id="WelcomeEulaDlg_Title" Overridable="yes">Programul de instalare [ProductName]</String>
+  <String Id="WelcomeEulaDlgBitmap" Overridable="yes">WixUI_Bmp_Dialog</String>
+  <String Id="WelcomeEulaDlgLicenseAcceptedCheckBox" Overridable="yes">&amp;Accept termenii din Acordul de licenţă</String>
+  <String Id="WelcomeEulaDlgInstall" Overridable="yes">&amp;Instalare</String>
+  <String Id="WelcomeEulaDlgUpdate" Overridable="yes">Act&amp;ualizare</String>
+  <String Id="WelcomeEulaDlgTitle" Overridable="yes">{\WixUI_Font_Title}Citiţi Acordul de licenţă pentru [ProductName]</String>
+
+  <String Id="ProgressTextInstallValidate" Overridable="yes">Se validează instalarea</String>
+  <String Id="ProgressTextInstallFiles" Overridable="yes">Se copiază fişierele noi</String>
+  <String Id="ProgressTextInstallFilesTemplate" Overridable="yes">Fişier: [1], Director: [9], Dimensiune: [6]</String>
+  <String Id="ProgressTextInstallAdminPackage" Overridable="yes">Se copiază fişierele de instalare în reţea</String>
+  <String Id="ProgressTextInstallAdminPackageTemplate" Overridable="yes">Fişier: [1], Director: [9], Dimensiune: [6]</String>
+  <String Id="ProgressTextFileCost" Overridable="yes">Se calculează cerinţele de spaţiu</String>
+  <String Id="ProgressTextCostInitialize" Overridable="yes">Se calculează cerinţele de spaţiu</String>
+  <String Id="ProgressTextCostFinalize" Overridable="yes">Se calculează cerinţele de spaţiu</String>
+  <String Id="ProgressTextCreateShortcuts" Overridable="yes">Se creează comenzile rapide</String>
+  <String Id="ProgressTextCreateShortcutsTemplate" Overridable="yes">Comandă rapidă: [1]</String>
+  <String Id="ProgressTextPublishComponents" Overridable="yes">Se efectuează publicarea componentelor calificate</String>
+  <String Id="ProgressTextPublishComponentsTemplate" Overridable="yes">ID componentă: [1], Calificator: [2]</String>
+  <String Id="ProgressTextPublishFeatures" Overridable="yes">Se efectuează publicarea caracteristicilor produsului</String>
+  <String Id="ProgressTextPublishFeaturesTemplate" Overridable="yes">Caracteristică: [1]</String>
+  <String Id="ProgressTextPublishProduct" Overridable="yes">Se publică informaţiile despre produs</String>
+  <String Id="ProgressTextRegisterClassInfo" Overridable="yes">Se înregistrează serverele de clasă</String>
+  <String Id="ProgressTextRegisterClassInfoTemplate" Overridable="yes">ID clasă: [1]</String>
+  <String Id="ProgressTextRegisterExtensionInfo" Overridable="yes">Se înregistrează serverele de extensie</String>
+  <String Id="ProgressTextRegisterExtensionInfoTemplate" Overridable="yes">Extensie: [1]</String>
+  <String Id="ProgressTextRegisterMIMEInfo" Overridable="yes">Se înregistrează informaţiile MIME</String>
+  <String Id="ProgressTextRegisterMIMEInfoTemplate" Overridable="yes">Tip conţinut MIME: [1], Extensie: [2]</String>
+  <String Id="ProgressTextRegisterProgIdInfo" Overridable="yes">Se înregistrează identificatorii de program</String>
+  <String Id="ProgressTextRegisterProgIdInfoTemplate" Overridable="yes">ID program: [1]</String>
+  <String Id="ProgressTextAllocateRegistrySpace" Overridable="yes">Se alocă spaţiu în registry</String>
+  <String Id="ProgressTextAllocateRegistrySpaceTemplate" Overridable="yes">Spaţiu liber: [1]</String>
+  <String Id="ProgressTextAppSearch" Overridable="yes">Se caută aplicaţiile instalate</String>
+  <String Id="ProgressTextAppSearchTemplate" Overridable="yes">Proprietate: [1], Semnătură: [2]</String>
+  <String Id="ProgressTextBindImage" Overridable="yes">Se leagă fişierele executabile</String>
+  <String Id="ProgressTextBindImageTemplate" Overridable="yes">Fişier: [1]</String>
+  <String Id="ProgressTextCCPSearch" Overridable="yes">Se caută produsele calificate</String>
+  <String Id="ProgressTextCreateFolders" Overridable="yes">Se creează folderele</String>
+  <String Id="ProgressTextCreateFoldersTemplate" Overridable="yes">Folder: [1]</String>
+  <String Id="ProgressTextDeleteServices" Overridable="yes">Se şterg serviciile</String>
+  <String Id="ProgressTextDeleteServicesTemplate" Overridable="yes">Serviciu: [1]</String>
+  <String Id="ProgressTextDuplicateFiles" Overridable="yes">Se creează fişierele duplicat</String>
+  <String Id="ProgressTextDuplicateFilesTemplate" Overridable="yes">Fişier: [1], Director: [9], Dimensiune: [6]</String>
+  <String Id="ProgressTextFindRelatedProducts" Overridable="yes">Se caută aplicaţiile corelate</String>
+  <String Id="ProgressTextFindRelatedProductsTemplate" Overridable="yes">Aplicaţie găsită: [1]</String>
+  <String Id="ProgressTextInstallODBC" Overridable="yes">Se instalează componentele ODBC</String>
+  <String Id="ProgressTextInstallServices" Overridable="yes">Se instalează serviciile noi</String>
+  <String Id="ProgressTextInstallServicesTemplate" Overridable="yes">Serviciu: [2]</String>
+  <String Id="ProgressTextLaunchConditions" Overridable="yes">Se evaluează condiţiile de lansare</String>
+  <String Id="ProgressTextMigrateFeatureStates" Overridable="yes">Se migrează stările caracteristicilor din aplicaţiile corelate</String>
+  <String Id="ProgressTextMigrateFeatureStatesTemplate" Overridable="yes">Aplicaţie: [1]</String>
+  <String Id="ProgressTextMoveFiles" Overridable="yes">Se mută fişierele</String>
+  <String Id="ProgressTextMoveFilesTemplate" Overridable="yes">Fişier: [1], Director: [9], Dimensiune: [6]</String>
+  <String Id="ProgressTextPatchFiles" Overridable="yes">Se corectează fişierele</String>
+  <String Id="ProgressTextPatchFilesTemplate" Overridable="yes">Fişier: [1], Director: [2], Dimensiune: [3]</String>
+  <String Id="ProgressTextProcessComponents" Overridable="yes">Se actualizează înregistrarea componentelor</String>
+  <String Id="ProgressTextRegisterComPlus" Overridable="yes">Se înregistrează componentele şi aplicaţiile COM+</String>
+  <String Id="ProgressTextRegisterComPlusTemplate" Overridable="yes">ID aplicaţie: [1]{{, Tip aplicaţie: [2], Utilizatori: [3], RSN: [4]}}</String>
+  <String Id="ProgressTextRegisterFonts" Overridable="yes">Se înregistrează fonturile</String>
+  <String Id="ProgressTextRegisterFontsTemplate" Overridable="yes">Font: [1]</String>
+  <String Id="ProgressTextRegisterProduct" Overridable="yes">Se înregistrează produsul</String>
+  <String Id="ProgressTextRegisterProductTemplate" Overridable="yes">[1]</String>
+  <String Id="ProgressTextRegisterTypeLibraries" Overridable="yes">Se înregistrează bibliotecile de tipuri</String>
+  <String Id="ProgressTextRegisterTypeLibrariesTemplate" Overridable="yes">ID bibliotecă: [1]</String>
+  <String Id="ProgressTextRegisterUser" Overridable="yes">Se înregistrează utilizatorul</String>
+  <String Id="ProgressTextRegisterUserTemplate" Overridable="yes">[1]</String>
+  <String Id="ProgressTextRemoveDuplicateFiles" Overridable="yes">Se elimină fişierele duplicat</String>
+  <String Id="ProgressTextRemoveDuplicateFilesTemplate" Overridable="yes">Fişier: [1], Director: [9]</String>
+  <String Id="ProgressTextRemoveEnvironmentStrings" Overridable="yes">Se actualizează şirurile de mediu</String>
+  <String Id="ProgressTextRemoveEnvironmentStringsTemplate" Overridable="yes">Nume: [1], Valoare: [2], Acţiune [3]</String>
+  <String Id="ProgressTextRemoveExistingProducts" Overridable="yes">Se elimină aplicaţiile</String>
+  <String Id="ProgressTextRemoveExistingProductsTemplate" Overridable="yes">Aplicaţie: [1], Linie de comandă: [2]</String>
+  <String Id="ProgressTextRemoveFiles" Overridable="yes">Se elimină fişierele</String>
+  <String Id="ProgressTextRemoveFilesTemplate" Overridable="yes">Fişier: [1], Director: [9]</String>
+  <String Id="ProgressTextRemoveFolders" Overridable="yes">Se elimină folderele</String>
+  <String Id="ProgressTextRemoveFoldersTemplate" Overridable="yes">Folder: [1]</String>
+  <String Id="ProgressTextRemoveIniValues" Overridable="yes">Se elimină intrările fişierelor INI</String>
+  <String Id="ProgressTextRemoveIniValuesTemplate" Overridable="yes">Fişier: [1], Secţiune: [2], Cheie: [3], Valoare: [4]</String>
+  <String Id="ProgressTextRemoveODBC" Overridable="yes">Se elimină componentele ODBC</String>
+  <String Id="ProgressTextRemoveRegistryValues" Overridable="yes">Se elimină valorile din registry de sistem</String>
+  <String Id="ProgressTextRemoveRegistryValuesTemplate" Overridable="yes">Cheie: [1], Nume: [2]</String>
+  <String Id="ProgressTextRemoveShortcuts" Overridable="yes">Se elimină comenzile rapide</String>
+  <String Id="ProgressTextRemoveShortcutsTemplate" Overridable="yes">Comandă rapidă: [1]</String>
+  <String Id="ProgressTextRMCCPSearch" Overridable="yes">Se caută produsele calificate</String>
+  <String Id="ProgressTextSelfRegModules" Overridable="yes">Se înregistrează modulele</String>
+  <String Id="ProgressTextSelfRegModulesTemplate" Overridable="yes">Fişier: [1], Folder: [2]</String>
+  <String Id="ProgressTextSelfUnregModules" Overridable="yes">Se anulează înregistrarea modulelor</String>
+  <String Id="ProgressTextSelfUnregModulesTemplate" Overridable="yes">Fişier: [1], Folder: [2]</String>
+  <String Id="ProgressTextSetODBCFolders" Overridable="yes">Se iniţializează directoarele ODBC</String>
+  <String Id="ProgressTextStartServices" Overridable="yes">Se pornesc serviciile</String>
+  <String Id="ProgressTextStartServicesTemplate" Overridable="yes">Serviciu: [1]</String>
+  <String Id="ProgressTextStopServices" Overridable="yes">Se opresc serviciile</String>
+  <String Id="ProgressTextStopServicesTemplate" Overridable="yes">Serviciu: [1]</String>
+  <String Id="ProgressTextUnpublishComponents" Overridable="yes">Se anulează publicarea componentelor calificate</String>
+  <String Id="ProgressTextUnpublishComponentsTemplate" Overridable="yes">ID componentă: [1], Calificator: [2]</String>
+  <String Id="ProgressTextUnpublishFeatures" Overridable="yes">Se anulează publicarea caracteristicilor produsului</String>
+  <String Id="ProgressTextUnpublishFeaturesTemplate" Overridable="yes">Caracteristică: [1]</String>
+  <String Id="ProgressTextUnregisterClassInfo" Overridable="yes">Se anulează înregistrarea serverelor de clasă</String>
+  <String Id="ProgressTextUnregisterClassInfoTemplate" Overridable="yes">ID clasă: [1]</String>
+  <String Id="ProgressTextUnregisterComPlus" Overridable="yes">Se anulează înregistrarea aplicaţiilor şi componentelor COM+</String>
+  <String Id="ProgressTextUnregisterComPlusTemplate" Overridable="yes">ID aplicaţie: [1]{{, Tip aplicaţie: [2]}}</String>
+  <String Id="ProgressTextUnregisterExtensionInfo" Overridable="yes">Se anulează înregistrarea serverelor de extensie</String>
+  <String Id="ProgressTextUnregisterExtensionInfoTemplate" Overridable="yes">Extensie: [1]</String>
+  <String Id="ProgressTextUnregisterFonts" Overridable="yes">Se anulează înregistrarea fonturilor</String>
+  <String Id="ProgressTextUnregisterFontsTemplate" Overridable="yes">Font: [1]</String>
+  <String Id="ProgressTextUnregisterMIMEInfo" Overridable="yes">Se anulează înregistrarea informaţiilor MIME</String>
+  <String Id="ProgressTextUnregisterMIMEInfoTemplate" Overridable="yes">Tip conţinut MIME: [1], Extensie: [2]</String>
+  <String Id="ProgressTextUnregisterProgIdInfo" Overridable="yes">Se anulează înregistrarea identificatorilor de program</String>
+  <String Id="ProgressTextUnregisterProgIdInfoTemplate" Overridable="yes">ID program: [1]</String>
+  <String Id="ProgressTextUnregisterTypeLibraries" Overridable="yes">Se anulează înregistrarea bibliotecilor de tipuri</String>
+  <String Id="ProgressTextUnregisterTypeLibrariesTemplate" Overridable="yes">ID bibliotecă: [1]</String>
+  <String Id="ProgressTextWriteEnvironmentStrings" Overridable="yes">Se actualizează şirurile de mediu</String>
+  <String Id="ProgressTextWriteEnvironmentStringsTemplate" Overridable="yes">Nume: [1], Valoare: [2], Acţiune [3]</String>
+  <String Id="ProgressTextWriteIniValues" Overridable="yes">Se scriu valorile fişierelor INI</String>
+  <String Id="ProgressTextWriteIniValuesTemplate" Overridable="yes">Fişier: [1], Secţiune: [2], Cheie: [3], Valoare: [4]</String>
+  <String Id="ProgressTextWriteRegistryValues" Overridable="yes">Se scriu valorile în registry de sistem</String>
+  <String Id="ProgressTextWriteRegistryValuesTemplate" Overridable="yes">Cheie: [1], Nume: [2], Valoare: [3]</String>
+  <String Id="ProgressTextAdvertise" Overridable="yes">Se anunţă aplicaţia</String>
+  <String Id="ProgressTextGenerateScript" Overridable="yes">Se generează operaţii de script pentru acţiune:</String>
+  <String Id="ProgressTextGenerateScriptTemplate" Overridable="yes">[1]</String>
+  <String Id="ProgressTextInstallSFPCatalogFile" Overridable="yes">Se instalează catalogul de sistem</String>
+  <String Id="ProgressTextInstallSFPCatalogFileTemplate" Overridable="yes">Fişier: [1], Dependenţe: [2]</String>
+  <String Id="ProgressTextMsiPublishAssemblies" Overridable="yes">Se publică informaţiile de asamblare</String>
+  <String Id="ProgressTextMsiPublishAssembliesTemplate" Overridable="yes">Context aplicaţie:[1], Nume asamblare:[2]</String>
+  <String Id="ProgressTextMsiUnpublishAssemblies" Overridable="yes">Se anulează publicarea informaţiilor de asamblare</String>
+  <String Id="ProgressTextMsiUnpublishAssembliesTemplate" Overridable="yes">Context aplicaţie:[1], Nume asamblare:[2]</String>
+  <String Id="ProgressTextRollback" Overridable="yes">Se anulează acţiunea:</String>
+  <String Id="ProgressTextRollbackTemplate" Overridable="yes">[1]</String>
+  <String Id="ProgressTextRollbackCleanup" Overridable="yes">Se elimină fişierele de rezervă</String>
+  <String Id="ProgressTextRollbackCleanupTemplate" Overridable="yes">Fişier: [1]</String>
+  <String Id="ProgressTextUnmoveFiles" Overridable="yes">Se elimină fişierele mutate</String>
+  <String Id="ProgressTextUnmoveFilesTemplate" Overridable="yes">Fişier: [1], Director: [9]</String>
+  <String Id="ProgressTextUnpublishProduct" Overridable="yes">Se anulează publicarea informaţiilor despre produs</String>
+
+  <String Id="Error0" Overridable="yes">{{Eroare fatală: }}</String>
+  <String Id="Error1" Overridable="yes">{{Eroare [1]. }}</String>
+  <String Id="Error2" Overridable="yes">Avertisment [1]. </String>
+  <String Id="Error4" Overridable="yes">Informaţii [1]. </String>
+  <String Id="Error5" Overridable="yes">Programul de instalare a întâlnit o eroare neaşteptată la instalarea acestui pachet. Acest lucru poate indica o problemă cu pachetul. Codul de eroare este [1]. {{Argumentele sunt: [2], [3], [4]}}</String>
+  <String Id="Error7" Overridable="yes">{{Disc plin: }}</String>
+  <String Id="Error8" Overridable="yes">Acţiune [Time]: [1]. [2]</String>
+  <String Id="Error9" Overridable="yes">[ProductName]</String>
+  <String Id="Error10" Overridable="yes">{[2]}{, [3]}{, [4]}</String>
+  <String Id="Error11" Overridable="yes">Tip mesaj: [1], Argument: [2]</String>
+  <String Id="Error12" Overridable="yes">=== Înregistrarea în jurnal a început: [Date] [Time] ===</String>
+  <String Id="Error13" Overridable="yes">=== Înregistrarea în jurnal s-a oprit: [Date] [Time] ===</String>
+  <String Id="Error14" Overridable="yes">Acţiune începută la [Time]: [1].</String>
+  <String Id="Error15" Overridable="yes">Acţiune terminată la [Time]: [1]. Valoare întoarsă [2].</String>
+  <String Id="Error16" Overridable="yes">Timp rămas: {[1] minute }{[2] secunde}</String>
+  <String Id="Error17" Overridable="yes">Memorie insuficientă. Închideţi celelalte aplicaţii înainte de a încerca din nou.</String>
+  <String Id="Error18" Overridable="yes">Programul de instalare nu mai răspunde.</String>
+  <String Id="Error19" Overridable="yes">Programul de instalare s-a oprit prematur.</String>
+  <String Id="Error20" Overridable="yes">Aşteptaţi, Windows configurează [ProductName]</String>
+  <String Id="Error21" Overridable="yes">Se colectează informaţiile necesare...</String>
+  <String Id="Error22" Overridable="yes">Se elimină versiunile anterioare ale acestei aplicaţii...</String>
+  <String Id="Error23" Overridable="yes">Se pregăteşte eliminarea versiunilor anterioare ale acestei aplicaţii...</String>
+  <String Id="Error32" Overridable="yes">Instalarea {[ProductName] } s-a finalizat cu succes.</String>
+  <String Id="Error33" Overridable="yes">Instalarea {[ProductName] } nu a reuşit.</String>
+  <String Id="Error1101" Overridable="yes">Eroare la citirea din fişierul: [2]. {{ Eroare de sistem [3].}} Verificaţi dacă fişierul există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1301" Overridable="yes">Imposibil de creat fişierul „[2]”. Există deja un director cu acest nume. Revocaţi instalarea şi încercaţi să instalaţi la o locaţie diferită.</String>
+  <String Id="Error1302" Overridable="yes">Introduceţi discul: [2]</String>
+  <String Id="Error1303" Overridable="yes">Programul de instalare nu are privilegii suficiente pentru accesarea acestui director: [2]. Instalarea nu poate continua. Faceţi log on ca administrator sau contactaţi administratorul de sistem.</String>
+  <String Id="Error1304" Overridable="yes">Eroare la scrierea în fişierul: [2]. Verificaţi dacă aveţi acces la acel director.</String>
+  <String Id="Error1305" Overridable="yes">Eroare la citirea din fişierul [2]. {{ Eroare de sistem [3].}} Verificaţi dacă fişierul există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1306" Overridable="yes">O altă aplicaţie are acces exclusiv la fişierul „[2]”. Închideţi toate celelalte aplicaţii, apoi faceţi clic pe Reîncercare.</String>
+  <String Id="Error1307" Overridable="yes">Nu există suficient spaţiu-disc pentru instalarea acestui fişier: [2]. Eliberaţi spaţiu-disc şi faceţi clic pe Reîncercare, sau faceţi clic pe Revocare pentru a ieşi.</String>
+  <String Id="Error1308" Overridable="yes">Imposibil de găsit fişierul sursă: [2]. Verificaţi dacă fişierul există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1309" Overridable="yes">Eroare la citirea din fişierul: [3]. {{ Eroare de sistem [2].}} Verificaţi dacă fişierul există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1310" Overridable="yes">Eroare la scrierea în fişierul: [3]. {{ Eroare de sistem [2].}} Verificaţi dacă aveţi acces la director.</String>
+  <String Id="Error1311" Overridable="yes">Imposibil de găsit fişierul sursă{{(cabinet)}}: [2]. Verificaţi dacă fişierul există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1312" Overridable="yes">Imposibil de creat directorul „[2]”. Există deja un fişier cu acest nume. Redenumiţi sau eliminaţi fişierul şi faceţi clic pe Reîncercare, sau faceţi clic pe Revocare pentru a ieşi.</String>
+  <String Id="Error1313" Overridable="yes">Volumul [2] nu este disponibil în acest moment. Selectaţi altul.</String>
+  <String Id="Error1314" Overridable="yes">Calea specificată „[2]” este indisponibilă.</String>
+  <String Id="Error1315" Overridable="yes">Imposibil de scris în folderul specificat: [2].</String>
+  <String Id="Error1316" Overridable="yes">Eroare de reţea la încercarea de citire din fişierul: [2]</String>
+  <String Id="Error1317" Overridable="yes">Eroare la încercarea de creare a directorului: [2]</String>
+  <String Id="Error1318" Overridable="yes">Eroare de reţea la încercarea de creare a directorului: [2]</String>
+  <String Id="Error1319" Overridable="yes">Eroare de reţea la încercarea de deschidere a fişierului cabinet sursă: [2]</String>
+  <String Id="Error1320" Overridable="yes">Calea specificată este prea lungă: [2]</String>
+  <String Id="Error1321" Overridable="yes">Programul de instalare nu are privilegii suficiente pentru a modifica fişierul: [2].</String>
+  <String Id="Error1322" Overridable="yes">O parte din calea folderului „[2]” este nevalidă. Fie este goală, fie depăşeşte lungimea permisă de sistem.</String>
+  <String Id="Error1323" Overridable="yes">Calea folderului „[2]” conţine cuvinte care nu sunt valide în căile de foldere.</String>
+  <String Id="Error1324" Overridable="yes">Calea folderului „[2]” conţine un caracter nevalid.</String>
+  <String Id="Error1325" Overridable="yes">„[2]” nu este un nume scurt valid de fişier.</String>
+  <String Id="Error1326" Overridable="yes">Eroare la preluarea datelor de securitate pentru fişier: [3] GetLastError: [2]</String>
+  <String Id="Error1327" Overridable="yes">Unitate nevalidă: [2]</String>
+  <String Id="Error1328" Overridable="yes">Eroare la aplicarea corecţiei pentru fişierul [2]. Probabil a fost actualizat prin alte mijloace şi nu mai poate fi modificat prin această corecţie. Pentru mai multe informaţii, contactaţi furnizorul corecţiei. {{Eroare de sistem: [3]}}</String>
+  <String Id="Error1329" Overridable="yes">Un fişier necesar nu poate fi instalat, deoarece fişierul cabinet [2] nu este semnat digital. Aceasta poate indica faptul că fişierul cabinet este deteriorat.</String>
+  <String Id="Error1330" Overridable="yes">Un fişier necesar nu poate fi instalat, deoarece fişierul cabinet [2] are o semnătură digitală nevalidă. Aceasta poate indica faptul că fişierul cabinet este deteriorat.{{Eroare [3] returnată de WinVerifyTrust.}}</String>
+  <String Id="Error1331" Overridable="yes">Fişierul [2] nu a fost copiat corect: eroare CRC.</String>
+  <String Id="Error1332" Overridable="yes">Fişierul [2] nu a fost mutat corect: eroare CRC.</String>
+  <String Id="Error1333" Overridable="yes">Corecţia la fişierul [2] nu s-a aplicat corect: eroare CRC.</String>
+  <String Id="Error1334" Overridable="yes">Fişierul „[2]” nu se poate instala, deoarece nu a fost găsit în fişierul cabinet „[3]”. Acest lucru poate indica o eroare de reţea, o eroare la citirea de pe CD-ROM sau o problemă cu acest pachet.</String>
+  <String Id="Error1335" Overridable="yes">Fişierul cabinet „[2]” necesar pentru această instalare este deteriorat şi nu poate fi utilizat. Acest lucru poate indica o eroare de reţea, o eroare la citirea de pe CD-ROM sau o problemă cu acest pachet.</String>
+  <String Id="Error1336" Overridable="yes">Eroare la crearea unui fişier temporar necesar pentru finalizarea instalării.{{ Folder: [3]. Cod eroare de sistem: [2]}}</String>
+  <String Id="Error1401" Overridable="yes">Imposibil de creat cheia: [2]. {{ Eroare de sistem [3].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă. </String>
+  <String Id="Error1402" Overridable="yes">Imposibil de deschis cheia: [2]. {{ Eroare de sistem [3].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă. </String>
+  <String Id="Error1403" Overridable="yes">Imposibil de şters valoarea [2] din cheia [3]. {{ Eroare de sistem [4].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă. </String>
+  <String Id="Error1404" Overridable="yes">Imposibil de şters cheia [2]. {{ Eroare de sistem [3].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă. </String>
+  <String Id="Error1405" Overridable="yes">Imposibil de citit valoarea [2] din cheia [3]. {{ Eroare de sistem [4].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă. </String>
+  <String Id="Error1406" Overridable="yes">Imposibil de scris valoarea [2] în cheia [3]. {{ Eroare de sistem [4].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă.</String>
+  <String Id="Error1407" Overridable="yes">Imposibil de preluat numele valorilor pentru cheia [2]. {{ Eroare de sistem [3].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă.</String>
+  <String Id="Error1408" Overridable="yes">Imposibil de preluat numele subcheilor pentru cheia [2]. {{ Eroare de sistem [3].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă.</String>
+  <String Id="Error1409" Overridable="yes">Imposibil de citit informaţiile de securitate pentru cheia [2]. {{ Eroare de sistem [3].}} Verificaţi dacă aveţi drepturi suficiente de acces la acea cheie sau contactaţi personalul de asistenţă.</String>
+  <String Id="Error1410" Overridable="yes">Imposibil de mărit spaţiul disponibil pentru registry. Este necesar un spaţiu liber de [2] KO în registry pentru instalarea acestei aplicaţii.</String>
+  <String Id="Error1500" Overridable="yes">O altă instalare este în curs. Trebuie să finalizaţi acea instalare înainte de a o continua pe aceasta.</String>
+  <String Id="Error1501" Overridable="yes">Eroare de accesare a datelor securizate. Asiguraţi-vă că Windows Installer este corect configurat şi încercaţi instalarea încă o dată.</String>
+  <String Id="Error1502" Overridable="yes">Utilizatorul „[2]” a iniţiat anterior o instalare a produsului „[3]”. Acel utilizator va trebui să execute din nou instalarea pentru a utiliza produsul. Instalarea dvs. curentă va continua.</String>
+  <String Id="Error1503" Overridable="yes">Utilizatorul „[2]” a iniţiat anterior o instalare a produsului „[3]”. Acel utilizator va trebui să execute din nou instalarea pentru a utiliza produsul.</String>
+  <String Id="Error1601" Overridable="yes">Spaţiu-disc insuficient - Volum: „[2]”; spaţiu necesar: [3] KO; spaţiu disponibil: [4] KO. Eliberaţi spaţiu-disc şi reîncercaţi.</String>
+  <String Id="Error1602" Overridable="yes">Sigur revocaţi?</String>
+  <String Id="Error1603" Overridable="yes">Fişierul [2][3] este reţinut în utilizare {de următorul proces: Nume: [4], ID: [5], Titlu fereastră: „[6]”}. Închideţi acea aplicaţie şi reîncercaţi.</String>
+  <String Id="Error1604" Overridable="yes">Produsul „[2]” este deja instalat, ceea ce împiedică instalarea acestui produs. Cele două produse sunt incompatibile.</String>
+  <String Id="Error1605" Overridable="yes">Spaţiu-disc insuficient pe volumul „[2]” pentru a continua instalarea cu opţiunea de recuperare activată. Este necesar un spaţiu de [3] KO, dar este disponibil doar un spaţiu de [4] KO. Faceţi clic pe Ignorare pentru a continua instalarea fără a salva informaţiile de recuperare, faceţi clic pe Reîncercare pentru a verifica din nou spaţiul disponibil sau faceţi clic pe Revocare pentru a părăsi instalarea.</String>
+  <String Id="Error1606" Overridable="yes">Imposibil de accesat locaţia din reţea [2].</String>
+  <String Id="Error1607" Overridable="yes">Următoarele aplicaţii trebuie închise înainte de a continua instalarea:</String>
+  <String Id="Error1608" Overridable="yes">Imposibil de găsit produse conforme instalate anterior pe computer pentru instalarea acestui produs.</String>
+  <String Id="Error1609" Overridable="yes">Eroare la aplicarea setărilor de securitate. [2] nu este un utilizator sau un grup valid. Aceasta poate indica o problemă cu pachetul sau o problemă de conectare la un controler de domeniu din reţea. Verificaţi conexiunea la reţea şi faceţi clic pe Reîncercare sau pe Revocare pentru a finaliza instalarea. {{Imposibil de localizat identificatorul SID al utilizatorului, eroare de sistem [3]}}</String>
+  <String Id="Error1701" Overridable="yes">Cheia [2] nu este validă. Verificaţi dacă aţi introdus cheia corectă.</String>
+  <String Id="Error1702" Overridable="yes">Programul de instalare trebuie să repornească sistemul înainte de a continua configurarea [2]. Faceţi clic pe Da pentru a reporni acum sau pe Nu dacă intenţionaţi să reporniţi manual mai târziu.</String>
+  <String Id="Error1703" Overridable="yes">Trebuie să reporniţi sistemul pentru ca modificările de configurare efectuate la [2] să fie aplicate. Faceţi clic pe Da pentru a reporni acum sau pe Nu dacă intenţionaţi să reporniţi manual mai târziu.</String>
+  <String Id="Error1704" Overridable="yes">O instalare pentru [2] este suspendată momentan. Pentru a continua, trebuie să anulaţi modificările făcute de acea instalare. Anulaţi aceste modificări?</String>
+  <String Id="Error1705" Overridable="yes">O instalare anterioară a acestui produs este în curs. Pentru a continua, trebuie să anulaţi modificările făcute de acea instalare. Anulaţi aceste modificări?</String>
+  <String Id="Error1706" Overridable="yes">Imposibil de găsit un pachet de instalare pentru produsul [2]. Încercaţi să instalaţi din nou utilizând o copie validă a pachetului de instalare „[3]”.</String>
+  <String Id="Error1707" Overridable="yes">Instalare finalizată cu succes.</String>
+  <String Id="Error1708" Overridable="yes">Instalarea nu a reuşit.</String>
+  <String Id="Error1709" Overridable="yes">Produs: [2] - [3]</String>
+  <String Id="Error1710" Overridable="yes">Aveţi posibilitatea să restauraţi starea anterioară a computerului sau să continuaţi instalarea mai târziu. Restauraţi starea anterioară?</String>
+  <String Id="Error1711" Overridable="yes">Eroare la scrierea informaţiilor de instalare pe disc. Asiguraţi-vă că este disponibil suficient spaţiu-disc, apoi faceţi clic pe Reîncercare, sau faceţi clic pe Revocare pentru a încheia instalarea.</String>
+  <String Id="Error1712" Overridable="yes">Unul sau mai multe fişiere necesare pentru a restaura starea iniţială a computerului nu au fost găsite. Restaurarea este imposibilă.</String>
+  <String Id="Error1713" Overridable="yes">[2] nu poate instala unul din produsele sale necesare. Contactaţi grupul de asistenţă tehnică. {{Eroare de sistem: [3].}}</String>
+  <String Id="Error1714" Overridable="yes">Versiunea anterioară de [2] nu poate fi eliminată. Contactaţi grupul de asistenţă tehnică. {{Eroare de sistem [3].}}</String>
+  <String Id="Error1715" Overridable="yes">S-a instalat [2]</String>
+  <String Id="Error1716" Overridable="yes">S-a configurat [2]</String>
+  <String Id="Error1717" Overridable="yes">S-a eliminat [2]</String>
+  <String Id="Error1718" Overridable="yes">Fişierul [2] a fost respins de politica de semnături digitale.</String>
+  <String Id="Error1719" Overridable="yes">Serviciul Windows Installer nu poate fi accesat. Aceasta situaţie poate să apară dacă Windows se execută în modul de siguranţă sau dacă Windows Installer nu este instalat corect. Luaţi legătura cu personalul de asistenţă pentru ajutor.</String>
+  <String Id="Error1720" Overridable="yes">Există o problemă cu acest pachet Windows Installer. Un script necesar pentru finalizarea acestei instalări nu poate fi executat. Contactaţi personalul de asistenţă sau furnizorul pachetului. {{Acţiune particularizată [2] - eroare script [3], [4]: [5] linie [6], coloană [7], [8] }}</String>
+  <String Id="Error1721" Overridable="yes">Există o problemă cu acest pachet Windows Installer. Un program necesar pentru finalizarea acestei instalări nu poate fi executat. Contactaţi personalul de asistenţă sau furnizorul pachetului. {{Acţiune: [2], locaţie: [3], comandă: [4] }}</String>
+  <String Id="Error1722" Overridable="yes">Există o problemă cu acest pachet Windows Installer. O executare de program ca parte a instalării nu s-a finalizat conform aşteptării. Contactaţi personalul de asistenţă sau furnizorul pachetului. {{Acţiune [2], locaţie: [3], comandă: [4] }}</String>
+  <String Id="Error1723" Overridable="yes">Există o problemă cu acest pachet Windows Installer. Un DLL necesar pentru finalizarea acestei instalări nu poate fi executat. Contactaţi personalul de asistenţă sau furnizorul pachetului. {{Acţiune [2], intrare: [3], bibliotecă: [4] }}</String>
+  <String Id="Error1724" Overridable="yes">Eliminarea s-a finalizat cu succes.</String>
+  <String Id="Error1725" Overridable="yes">Eliminarea nu a reuşit.</String>
+  <String Id="Error1726" Overridable="yes">Anunţul s-a finalizat cu succes.</String>
+  <String Id="Error1727" Overridable="yes">Anunţul nu a reuşit.</String>
+  <String Id="Error1728" Overridable="yes">Configurarea s-a finalizat cu succes.</String>
+  <String Id="Error1729" Overridable="yes">Configurarea nu a reuşit.</String>
+  <String Id="Error1730" Overridable="yes">Pentru a elimina această aplicaţie, trebuie să fiţi administrator. Pentru a elimina această aplicaţie, aveţi posibilitatea să faceţi log on ca administrator sau să luaţi legătura cu grupul de asistenţă tehnică pentru ajutor.</String>
+  <String Id="Error1731" Overridable="yes">Pachetul de instalare sursă pentru produsul [2] nu este sincronizat cu pachetul client. Încercaţi să instalaţi din nou utilizând o copie validă a pachetului de instalare „[3]”.</String>
+  <String Id="Error1732" Overridable="yes">Pentru a finaliza instalarea [2], trebuie să reporniţi computerul. Alţi utilizatori sunt conectaţi în prezent la computer, iar repornirea poate cauza pierderea muncii acestora. Reporniţi acum?</String>
+  <String Id="Error1801" Overridable="yes">Calea [2] nu este validă. Specificaţi o cale validă.</String>
+  <String Id="Error1802" Overridable="yes">Memorie insuficientă. Închideţi celelalte aplicaţii înainte de a încerca din nou.</String>
+  <String Id="Error1803" Overridable="yes">Niciun disc în unitatea [2]. Introduceţi un disc şi faceţi clic pe Reîncercare, sau faceţi clic pe Revocare pentru a reveni la volumul selectat anterior.</String>
+  <String Id="Error1804" Overridable="yes">Niciun disc în unitatea [2]. Introduceţi un disc şi faceţi clic pe Reîncercare, sau faceţi clic pe Revocare pentru a reveni la dialogul de răsfoire şi selectaţi un alt volum.</String>
+  <String Id="Error1805" Overridable="yes">Folderul [2] nu există. Introduceţi o cale către un folder existent.</String>
+  <String Id="Error1806" Overridable="yes">Nu aveţi privilegii suficiente pentru a citi acest folder.</String>
+  <String Id="Error1807" Overridable="yes">Imposibil de determinat un folder de destinaţie valid pentru instalare.</String>
+  <String Id="Error1901" Overridable="yes">Eroare la încercarea de citire din baza de date sursă de instalare: [2].</String>
+  <String Id="Error1902" Overridable="yes">Se programează operaţia de repornire a sistemului: se redenumeşte fişierul din [2] în [3]. Este necesară repornirea sistemului pentru a finaliza operaţia.</String>
+  <String Id="Error1903" Overridable="yes">Se programează operaţia de repornire a sistemului: se şterge fişierul [2]. Este necesară repornirea sistemului pentru a finaliza operaţia.</String>
+  <String Id="Error1904" Overridable="yes">Înregistrarea modulului [2] nu a reuşit. HRESULT [3]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1905" Overridable="yes">Anularea înregistrării modulului [2] nu a reuşit. HRESULT [3]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1906" Overridable="yes">Memorarea în cache a pachetului [2] nu a reuşit. Eroare: [3]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1907" Overridable="yes">Imposibil de înregistrat fontul [2]. Verificaţi dacă deţineţi suficiente permisiuni pentru a instala fonturi şi dacă sistemul acceptă acest font.</String>
+  <String Id="Error1908" Overridable="yes">Imposibil de anulat înregistrarea fontului [2]. Verificaţi dacă aveţi suficiente permisiuni pentru a elimina fonturi.</String>
+  <String Id="Error1909" Overridable="yes">Imposibil de creat comanda rapidă [2]. Verificaţi dacă folderul destinaţie există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1910" Overridable="yes">Imposibil de eliminat comanda rapidă [2]. Verificaţi dacă fişierul comenzii rapide există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1911" Overridable="yes">Imposibil de înregistrat biblioteca de tipuri pentru fişierul [2]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1912" Overridable="yes">Imposibil de anulat înregistrarea bibliotecii de tipuri pentru fişierul [2]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1913" Overridable="yes">Imposibil de actualizat fişierul ini [2][3]. Verificaţi dacă fişierul există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1914" Overridable="yes">Imposibil de programat fişierul [2] pentru înlocuirea fişierului [3] la repornire. Verificaţi dacă aveţi permisiuni de scriere pentru fişierul [3].</String>
+  <String Id="Error1915" Overridable="yes">Eroare la eliminarea managerului de drivere ODBC, eroare ODBC [2]: [3]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1916" Overridable="yes">Eroare la instalarea managerului de drivere ODBC, eroare ODBC [2]: [3]. Contactaţi personalul de asistenţă.</String>
+  <String Id="Error1917" Overridable="yes">Eroare la eliminarea driverului ODBC: [4], eroare ODBC [2]: [3]. Verificaţi dacă aveţi privilegii suficiente pentru a elimina drivere ODBC.</String>
+  <String Id="Error1918" Overridable="yes">Eroare la instalarea driverului ODBC: [4], eroare ODBC [2]: [3]. Verificaţi dacă fişierul [4] există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1919" Overridable="yes">Eroare la configurarea sursei de date ODBC: [4], eroare ODBC [2]: [3]. Verificaţi dacă fişierul [4] există şi dacă îl puteţi accesa.</String>
+  <String Id="Error1920" Overridable="yes">Pornirea serviciului „[2]” ([3]) nu a reuşit. Verificaţi dacă aveţi suficiente privilegii pentru a porni serviciile de sistem.</String>
+  <String Id="Error1921" Overridable="yes">Imposibil de oprit serviciul „[2]” ([3]). Verificaţi dacă aveţi suficiente privilegii pentru a opri serviciile de sistem.</String>
+  <String Id="Error1922" Overridable="yes">Imposibil de şters serviciul „[2]” ([3]). Verificaţi dacă aveţi suficiente privilegii pentru a elimina serviciile de sistem.</String>
+  <String Id="Error1923" Overridable="yes">Imposibil de instalat serviciul „[2]” ([3]). Verificaţi dacă aveţi suficiente privilegii pentru a instala serviciile de sistem.</String>
+  <String Id="Error1924" Overridable="yes">Imposibil de actualizat variabila de mediu „[2]”. Verificaţi dacă aveţi suficiente privilegii pentru a modifica variabilele de mediu.</String>
+  <String Id="Error1925" Overridable="yes">Nu aveţi suficiente privilegii pentru a finaliza această instalare pentru toţi utilizatorii computerului. Conectaţi-vă ca administrator şi reîncercaţi această instalare.</String>
+  <String Id="Error1926" Overridable="yes">Imposibil de setat securitatea fişierului pentru fişierul „[3]”. Eroare: [2]. Verificaţi dacă aveţi suficiente privilegii pentru a modifica permisiunile de securitate pentru acest fişier.</String>
+  <String Id="Error1927" Overridable="yes">Serviciile componente (COM+ 1.0) nu sunt instalate pe acest computer. Serviciile componente sunt necesare pentru ca această instalare să se finalizeze cu succes. Serviciile componente sunt disponibile în Windows 2000.</String>
+  <String Id="Error1928" Overridable="yes">Eroare la înregistrarea aplicaţiei COM+. Contactaţi personalul de asistenţă pentru informaţii suplimentare.</String>
+  <String Id="Error1929" Overridable="yes">Eroare la anularea înregistrării aplicaţiei COM+. Contactaţi personalul de asistenţă pentru informaţii suplimentare.</String>
+  <String Id="Error1930" Overridable="yes">Imposibil de modificat descrierea serviciului „[2]” ([3]).</String>
+  <String Id="Error1931" Overridable="yes">Serviciul Windows Installer nu poate actualiza fişierul de sistem [2], deoarece fişierul este protejat de Windows. Poate fi necesară actualizarea sistemului de operare pentru ca acest program să funcţioneze corect. {{Versiune pachet: [3], versiune protejată SO: [4]}}</String>
+  <String Id="Error1932" Overridable="yes">Serviciul Windows Installer nu poate actualiza fişierul Windows [2] protejat. {{Versiune pachet: [3], Versiune protejată SO: [4], Eroare SFP: [5]}}</String>
+  <String Id="Error1933" Overridable="yes">Serviciul Windows Installer nu poate actualiza unul sau mai multe fişiere Windows protejate. {{Eroare SFP: [2]. Lista fişierelor protejate:\r\n[3]}}</String>
+  <String Id="Error1934" Overridable="yes">Instalările efectuate de utilizatori sunt dezactivate prin politica de pe acest computer.</String>
+  <String Id="Error1935" Overridable="yes">Eroare la instalarea asamblării „[6]”. Pentru mai multe informaţii, consultaţi Ajutor şi asistenţă. HRESULT: [3]. {{interfaţă asamblare: [4], funcţie: [5], componentă: [2]}}</String>
+  <String Id="Error1936" Overridable="yes">Eroare la instalarea asamblării „[6]”. Asamblarea nu este denumită corespunzător sau nu este semnată cu lungimea de cheie minimă. HRESULT: [3]. {{interfaţă asamblare: [4], funcţie: [5], componentă: [2]}}</String>
+  <String Id="Error1937" Overridable="yes">Eroare la instalarea asamblării „[6]”. Semnătura sau catalogul sunt imposibil de verificat sau nu sunt valide. HRESULT: [3]. {{interfaţă asamblare: [4], funcţie: [5], componentă: [2]}}</String>
+  <String Id="Error1938" Overridable="yes">Eroare la instalarea asamblării „[6]”. Unul sau mai multe module ale asamblării nu au fost găsite. HRESULT: [3]. {{interfaţă asamblare: [4], funcţie: [5], componentă: [2]}}</String>
+
+  <String Id="UITextbytes" Overridable="yes">octeţi</String>
+  <String Id="UITextGB" Overridable="yes">GO</String>
+  <String Id="UITextKB" Overridable="yes">KO</String>
+  <String Id="UITextMB" Overridable="yes">MO</String>
+  <String Id="UITextMenuAbsent" Overridable="yes">Întreaga caracteristică va fi indisponibilă</String>
+  <String Id="UITextMenuAdvertise" Overridable="yes">Caracteristica se va instala când va fi necesar</String>
+  <String Id="UITextMenuAllCD" Overridable="yes">Întreaga caracteristică se va instala pentru executare de pe CD</String>
+  <String Id="UITextMenuAllLocal" Overridable="yes">Întreaga caracteristică se va instala pe unitatea de disc locală</String>
+  <String Id="UITextMenuAllNetwork" Overridable="yes">Întreaga caracteristică se va instala pentru executare din reţea</String>
+  <String Id="UITextMenuCD" Overridable="yes">Se va instala pentru executare de pe CD</String>
+  <String Id="UITextMenuLocal" Overridable="yes">Se va instala pe unitatea de disc locală</String>
+  <String Id="UITextMenuNetwork" Overridable="yes">Se va instala pentru executare din reţea</String>
+  <String Id="UITextNewFolder" Overridable="yes">Folder|Folder nou</String>
+  <String Id="UITextScriptInProgress" Overridable="yes">Se colectează informaţiile necesare...</String>
+  <String Id="UITextSelAbsentAbsent" Overridable="yes">Această caracteristică va rămâne neinstalată</String>
+  <String Id="UITextSelAbsentAdvertise" Overridable="yes">Această caracteristică se va seta pentru a fi instalată când va fi necesar</String>
+  <String Id="UITextSelAbsentCD" Overridable="yes">Această caracteristică se va instala pentru executare de pe CD</String>
+  <String Id="UITextSelAbsentLocal" Overridable="yes">Această caracteristică se va instala pe unitatea de disc locală</String>
+  <String Id="UITextSelAbsentNetwork" Overridable="yes">Această caracteristică se va instala pentru executare din reţea</String>
+  <String Id="UITextSelAdvertiseAbsent" Overridable="yes">Această caracteristică va deveni indisponibilă</String>
+  <String Id="UITextSelAdvertiseAdvertise" Overridable="yes">Se va instala când va fi necesar</String>
+  <String Id="UITextSelAdvertiseCD" Overridable="yes">Această caracteristică va fi disponibilă pentru executare de pe CD</String>
+  <String Id="UITextSelAdvertiseLocal" Overridable="yes">Această caracteristică se va instala pe unitatea de disc locală</String>
+  <String Id="UITextSelAdvertiseNetwork" Overridable="yes">Această caracteristică va fi disponibilă pentru executare din reţea</String>
+  <String Id="UITextSelCDAbsent" Overridable="yes">Această caracteristică se va dezinstala complet, va fi imposibil de executat de pe CD</String>
+  <String Id="UITextSelCDAdvertise" Overridable="yes">Această caracteristică se va modifica de la starea de executare de pe CD la instalare când va fi necesar</String>
+  <String Id="UITextSelCDCD" Overridable="yes">Această caracteristică va rămâne executabilă de pe CD</String>
+  <String Id="UITextSelCDLocal" Overridable="yes">Această caracteristică se va modifica de la starea de executare de pe CD la instalare pe unitatea de disc locală</String>
+  <String Id="UITextSelChildCostNeg" Overridable="yes">Această caracteristică eliberează [1] pe unitatea de disc.</String>
+  <String Id="UITextSelChildCostPos" Overridable="yes">Această caracteristică necesită [1] pe unitatea de disc.</String>
+  <String Id="UITextSelCostPending" Overridable="yes">Se calculează costul acestei caracteristici...</String>
+  <String Id="UITextSelLocalAbsent" Overridable="yes">Această caracteristică va fi eliminată complet</String>
+  <String Id="UITextSelLocalAdvertise" Overridable="yes">Această caracteristică va fi eliminată de pe unitatea de disc locală, dar va fi setată să se instaleze când este necesar</String>
+  <String Id="UITextSelLocalCD" Overridable="yes">Această caracteristică se va elimina de pe unitatea de disc locală, dar va fi disponibilă pentru executare de pe CD</String>
+  <String Id="UITextSelLocalLocal" Overridable="yes">Această caracteristică va rămâne pe unitatea de disc locală</String>
+  <String Id="UITextSelLocalNetwork" Overridable="yes">Această caracteristică se va elimina de pe unitatea de disc locală, dar va fi disponibilă pentru executare din reţea</String>
+  <String Id="UITextSelNetworkAbsent" Overridable="yes">Această caracteristică se va dezinstala complet, va fi imposibil de executat din reţea</String>
+  <String Id="UITextSelNetworkAdvertise" Overridable="yes">Această caracteristică se va modifica de la starea de executare din reţea la instalare când va fi necesar</String>
+  <String Id="UITextSelNetworkLocal" Overridable="yes">Această caracteristică se va modifica de la starea de executare din reţea la instalare pe unitatea de disc locală</String>
+  <String Id="UITextSelNetworkNetwork" Overridable="yes">Această caracteristică va rămâne executabilă din reţea</String>
+  <String Id="UITextSelParentCostNegNeg" Overridable="yes">Această caracteristică eliberează [1] pe unitatea de disc. [2] din [3] caracteristici secundare sunt selectate. Caracteristicile secundare eliberează [4] pe unitatea de disc.</String>
+  <String Id="UITextSelParentCostNegPos" Overridable="yes">Această caracteristică eliberează [1] pe unitatea de disc. [2] din [3] caracteristici secundare sunt selectate. Caracteristicile secundare necesită [4] pe unitatea de disc.</String>
+  <String Id="UITextSelParentCostPosNeg" Overridable="yes">Această caracteristică necesită [1] pe unitatea de disc. [2] din [3] caracteristici secundare sunt selectate. Caracteristicile secundare eliberează [4] pe unitatea de disc.</String>
+  <String Id="UITextSelParentCostPosPos" Overridable="yes">Această caracteristică necesită [1] pe unitatea de disc. [2] din [3] caracteristici secundare sunt selectate. Caracteristicile secundare necesită [4] pe unitatea de disc.</String>
+  <String Id="UITextTimeRemaining" Overridable="yes">Timp rămas: {[1] minute }{[2] secunde}</String>
+  <String Id="UITextVolumeCostAvailable" Overridable="yes">Disponibil</String>
+  <String Id="UITextVolumeCostDifference" Overridable="yes">Diferenţă</String>
+  <String Id="UITextVolumeCostRequired" Overridable="yes">Necesar</String>
+  <String Id="UITextVolumeCostSize" Overridable="yes">Dimensiune disc</String>
+  <String Id="UITextVolumeCostVolume" Overridable="yes">Volum</String>
+</WixLocalization>

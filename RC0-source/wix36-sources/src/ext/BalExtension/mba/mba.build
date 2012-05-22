@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="mba" default="mba.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    mba.build - Builds the managed bootstrapper application libraries.
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  <include buildfile="core\core.build" unless="${property::exists('mbacore.properties.defined')}" />
+  <include buildfile="host\host.build" unless="${property::exists('mbahost.properties.defined')}" />
+
+  <!-- Build -->
+  <target name="mba.build" description="Peforms a full rebuild (clean then build)" depends="mba.clean, mba.inc" />
+
+  <!-- Clean -->
+  <target name="mba.clean" description="Cleans the build" depends="mbacore.clean, mbahost.clean" />
+
+  <!-- Inc -->
+  <target name="mba.inc" description="Performs an incremental build" depends="mbacore.inc, mbahost.inc" />
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="mba.properties.defined" value="true" readonly="true" />
+
+</project>

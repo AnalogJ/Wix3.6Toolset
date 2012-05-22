@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="sfxca" default="sfxca.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    sfxca.build - Builds the Self-extracting custom actions dll (sfxca.dll).
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  <include buildfile="${dir.src.dutil}\dutil.build" unless="${property::exists('dutil.properties.defined')}" />
+
+    <!-- sfxca-specific properties -->
+  <property name="dir.src.dtf.sfxca" value="${dir.wixroot.src}\dtf\tools\sfxca" readonly="true" />
+  <property name="dir.build.dtf.sfxca.x86" value="${dir.build.wix.x86}\dtf\sfxca\x86" readonly="true" />
+  <property name="sfxca.file.target.x86" value="${dir.target.wix.x86}\sfxca.dll" dynamic="true" readonly="true" />
+  <property name="sfxca.file.targetpdb.x86" value="${dir.target.wix.x86}\sfxca.pdb" dynamic="true" readonly="true" />
+  <property name="dir.build.dtf.sfxca.x64" value="${dir.build.wix.x64}\dtf\sfxca\x64" readonly="true" />
+  <property name="sfxca.file.target.x64" value="${dir.target.wix.x64}\sfxca.dll" dynamic="true" readonly="true" />
+  <property name="sfxca.file.targetpdb.x64" value="${dir.target.wix.x64}\sfxca.pdb" dynamic="true" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="sfxca.build" description="Peforms a full rebuild (clean then build)" depends="sfxca.clean, sfxca.inc" />
+  
+  <!-- Clean -->
+  <target name="sfxca.clean" description="Cleans the build" depends="dutil.clean">
+    <delete dir="${dir.build.dtf.sfxca.x86}" failonerror="false" if="${directory::exists(dir.build.dtf.sfxca.x86)}" />
+    <delete file="${sfxca.file.target.x86}" failonerror="false" if="${file::exists(sfxca.file.target.x86)}" />
+    <delete file="${sfxca.file.targetpdb.x86}" failonerror="false" if="${file::exists(sfxca.file.targetpdb.x86)}" />
+    <delete dir="${dir.build.dtf.sfxca.x64}" failonerror="false" if="${directory::exists(dir.build.dtf.sfxca.x64)}" />
+    <delete file="${sfxca.file.target.x64}" failonerror="false" if="${file::exists(sfxca.file.target.x64)}" />
+    <delete file="${sfxca.file.targetpdb.x64}" failonerror="false" if="${file::exists(sfxca.file.targetpdb.x64)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="sfxca.inc" description="Performs an incremental build" depends="makeDirs, dutil.inc">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.dtf.sfxca}">
+      <include name="ClrHost.cpp" />
+      <include name="Extract.cpp" />
+      <include name="RemoteMsi.cpp" />
+      <include name="SfxCA.cpp" />
+      <include name="SfxUtil.cpp" />
+      <include name="EmbeddedUI.cpp" />
+    </fileset>
+
+    <!-- Build the x86 version of sfxca.dll -->
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dtf.sfxca}\precomp.h" />
+    <property name="makeNativeDll.file.def" value="${dir.src.dtf.sfxca}\EntryPoints.def" />
+    <property name="compileCpp.additionalOptions" value="/I &quot;${dir.wixroot.inc}&quot; /D_UNICODE /DUNICODE"/>
+    <property name="compileCpp.file.rc" value="${dir.src.dtf.sfxca}\sfxca.rc" />
+    <property name="compileCpp.dir.build" value="${dir.build.dtf.sfxca.x86}" dynamic="true" />
+    <property name="makeNativeDll.file.target" value="${sfxca.file.target.x86}" dynamic="true" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.dutil.x86}&quot; &quot;${dir.platformsdk.lib.x86}\msi.lib&quot; &quot;${dir.platformsdk.lib.x86}\fdi.lib&quot; &quot;${dir.platformsdk.lib.x86}\shlwapi.lib&quot;" dynamic="true" />
+    <property name="makeNativeDll.platform" value="x86" />
+    <call target="makeNativeDll" />
+
+    <!-- Build the x64 version of sfxca.dll -->
+    <property name="compileCpp.file.precomp.h" value="${dir.src.dtf.sfxca}\precomp.h" />
+    <property name="makeNativeDll.file.def" value="${dir.src.dtf.sfxca}\EntryPoints.def" />
+    <property name="compileCpp.additionalOptions" value="/I &quot;${dir.wixroot.inc}&quot; /D_UNICODE /DUNICODE"/>
+    <property name="compileCpp.file.rc" value="${dir.src.dtf.sfxca}\sfxca.rc" />
+    <property name="compileCpp.dir.build" value="${dir.build.dtf.sfxca.x64}" dynamic="true" />
+    <property name="makeNativeDll.file.target" value="${sfxca.file.target.x64}" dynamic="true" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.dutil.x64}&quot; &quot;${dir.platformsdk.lib.x64}\msi.lib&quot; &quot;${dir.platformsdk.lib.x64}\fdi.lib&quot; &quot;${dir.platformsdk.lib.x64}\shlwapi.lib&quot;" dynamic="true" />
+    <property name="makeNativeDll.platform" value="x64" />
+    <call target="makeNativeDll" />
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="sfxca.properties.defined" value="true" readonly="true" />
+
+</project>

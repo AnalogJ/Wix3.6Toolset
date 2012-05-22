@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="thmviewer" default="thmviewer.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    thmviewer.build - Builds the WiX Standard Bootstrapper Application DLL.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <property name="dir.src.thmviewer" value="${dir.src.toolsrc}\thmviewer" readonly="true" />
+  <property name="dir.build.thmviewer" value="${dir.build.wix}\toolsrc\thmviewer" readonly="true" />
+
+  <!-- thmviewer-specific properties -->
+  <property name="thmviewer.file.exe.target" value="${dir.target.wix}\thmviewer.exe" readonly="true" />
+  <property name="thmviewer.file.exe.targetpdb" value="${dir.target.wix}\thmviewer.pdb" readonly="true" />
+
+  <property name="thmviewer.additionalOptions" value="/I &quot;${dir.src.toolsrc}\inc&quot; /I &quot;${dir.src.toolsrc}\balutil\inc&quot;"/>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="thmviewer.build" description="Peforms a full rebuild (clean then build)" depends="thmviewer.clean, thmviewer.inc" />
+
+  <!-- Clean -->
+  <target name="thmviewer.clean" description="Cleans the build">
+    <delete dir="${dir.build.thmviewer}" failonerror="false" if="${directory::exists(dir.build.thmviewer)}" />
+    <delete file="${thmviewer.file.exe.target}" failonerror="false" if="${file::exists(thmviewer.file.exe.target)}" />
+    <delete file="${thmviewer.file.exe.targetpdb}" failonerror="false" if="${file::exists(thmviewer.file.exe.targetpdb)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="thmviewer.inc" description="Performs an incremental build" depends="makeDirs, thmviewer.inc.exe" />
+
+  <!-- thmviewer.inc.exe -->
+  <target name="thmviewer.inc.exe" description="Performs an incremental build of thmviewer.exe">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.thmviewer}">
+      <include name="thmviewer.cpp" />
+      <include name="display.cpp" />
+      <include name="load.cpp" />
+    </fileset>
+    <property name="compileCpp.dir.build" value="${dir.build.thmviewer}\exe" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.thmviewer}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.thmviewer}\thmviewer.rc" />
+    <property name="compileCpp.additionalOptions" value="-DUNICODE -D_UNICODE" />
+    <property name="makeNativeExe.file.target" value="${thmviewer.file.exe.target}" />
+    <property name="makeNativeExe.additionalLibs" value="/SWAPRUN:CD /SWAPRUN:NET -entry:wWinMainCRTStartup &quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\shlwapi.lib&quot; &quot;${dir.platformsdk.lib}\Comdlg32.lib&quot; &quot;${dir.platformsdk.lib}\comctl32.lib&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot; &quot;${dir.platformsdk.lib}\gdiplus.lib&quot; &quot;${dir.platformsdk.lib}\gdi32.lib&quot;" dynamic="true" />
+
+    <!-- Make SetupBuilder.exe -->
+    <call target="makeNativeExe" />
+  </target>
+
+</project>

@@ -1,0 +1,39 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{6F1482DF-1598-4D88-BDAA-B9D0E0242139}</ProjectGuid>
+    <AssemblyName>WixPSExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="PSCompiler.cs" />
+    <Compile Include="PSExtension.cs" />
+    <MsgGenSource Include="Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+    <EmbeddedFlattenedResource Include="Xsd\ps.xsd">
+      <LogicalName>$(RootNamespace).Xsd.ps.xsd</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\ps.xsd">
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.PS</Namespace>
+    </XsdGenSource>
+    <EmbeddedResource Include="$(OutputPath)\ps.wixlib">
+      <Link>Data\ps.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

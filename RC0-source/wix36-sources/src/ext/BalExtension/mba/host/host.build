@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="host" default="host.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    host.build - Builds the native CLR host for the managed UX, mbahost.dll.
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+  <include buildfile="..\core\core.build" unless="${property::exists('mbacore.properties.defined')}" />
+  <include buildfile="${dir.src.balutil}\balutil.build" unless="${property::exists('balutil.properties.defined')}" />
+
+    <!-- Properties -->
+  <property name="file.target.mbahost" value="${dir.target.wix}\mbahost.dll" readonly="true" />
+
+  <!-- Build -->
+  <target name="mbahost.build" description="Peforms a full rebuild (clean then build)" depends="mbahost.clean, mbahost.inc" />
+
+  <!-- Clean -->
+  <target name="mbahost.clean" description="Cleans the build">
+    <delete dir="${dir.build.burn.mba.host}" failonerror="false" if="${directory::exists(dir.build.burn.mba.host)}" />
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix}">
+        <include name="mbahost.dll" />
+        <include name="mbahost.pdb" />
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- Inc -->
+  <target name="mbahost.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile, balutil.inc, mbacore.inc">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.burn.mba.host}">
+      <include name="host.cpp" />
+    </fileset>
+    <property name="compileCpp.additionalIncludes" value="/I &quot;${dir.inc.burn}&quot; /I &quot;${dir.inc.balutil}&quot; /I &quot;${dir.build.burn.mba.core}&quot;" />
+    <property name="compileCpp.dir.build" value="${dir.build.burn.mba.host}" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.burn.mba.host}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.burn.mba.host}\host.rc" />
+    <property name="makeNativeDll.file.target" value="${file.target.mbahost}" />
+    <property name="makeNativeDll.file.def" value="${dir.src.burn.mba.host}\host.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${dir.platformsdk.lib}\mscoree.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot; &quot;${dir.platformsdk.lib}\shlwapi.lib&quot; &quot;${file.target.dutil}&quot; &quot;${file.target.balutil}&quot;" dynamic="true" />
+
+    <!-- Make mbahost.dll -->
+    <call target="makeNativeDll" />
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="mbahost.properties.defined" value="true" readonly="true" />
+
+</project>

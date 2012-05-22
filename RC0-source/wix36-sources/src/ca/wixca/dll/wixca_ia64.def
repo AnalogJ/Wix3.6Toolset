@@ -1,0 +1,10 @@
+; wixca_ia64.def : declares the module parameters for the wixca_ia64.dll
+
+LIBRARY      "wixca_ia64"
+
+EXPORTS
+; secureobjects.cpp
+    SchedSecureObjects
+    SchedSecureObjectsRollback
+    ExecSecureObjects
+    ExecSecureObjectsRollback

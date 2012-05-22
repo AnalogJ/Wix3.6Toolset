@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="NAnt directory and tools properties" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+
+    directories.include - Contains global directory properties for the NAnt builds.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Dependencies
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  In order to fully build WiX, you must have the following Frameworks and
+  SDKs installed:
+    * NAnt version 0.86 beta nightly (2008-02-10-0.86 or later)
+    * .NET Framework 2.0, 3.0, and 3.5
+    * Windows SDK for Windows Server 2008 and .NET Framework 3.5
+    * Visual C++ 2008 Express or any edition of Visual Studio 2008 with 
+        Visual C++ default libraries installed
+    * HTML Help SDK 1.4 or higher
+
+  To build and install Sconce and Votive, you must have Visual Studio 2008,
+  Standard edition or higher)
+  -->
+  
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Directories
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Properties that can be set on the command line -->
+  <if test="${property::exists('platform') and platform == 'x86'}">
+    <property name="x86" value="true" />
+    <property name="x64" value="false" />
+    <property name="ia64" value="false" />
+  </if>
+  <if test="${property::exists('platform') and platform == 'x64'}">
+    <property name="x86" value="true" />
+    <property name="x64" value="true" />
+    <property name="ia64" value="false" />
+  </if>
+  <if test="${property::exists('platform') and platform == 'ia64'}">
+    <property name="x86" value="true" />
+    <property name="x64" value="false" />
+    <property name="ia64" value="true" />
+  </if>
+
+  <property name="x86" value="true" overwrite="false" />
+  <property name="x64" value="true" overwrite="false" />
+  <property name="ia64" value="true" overwrite="false" />
+
+  <if test="${not property::exists('platform')}">
+    <property name="platform" value="x86"/>
+  </if>
+  <property name="setPlatformCalled" value="false"/>
+
+  <property name="flavor" value="debug" overwrite="false" />
+  <if test="${flavor != 'debug' and flavor != 'ship'}">
+    <fail message="Please specify either 'debug' or 'ship' for the flavor." />
+  </if>
+
+  <property name="language" value="lang-neutral" overwrite="false" />
+  <property name="msbuildverbosity" value="minimal" overwrite="false" />
+
+  <!-- Platform and flavor properties -->
+  <property name="debug" value="${flavor == 'debug'}" readonly="true" />
+  <property name="ship" value="${flavor == 'ship'}" readonly="true" />
+
+  <!-- Root directories -->
+  <fail message="Use make.bat found in the root of your WiX enlistment to build or set the WIX_ROOT environment variable to build via nant or MSBuild directly." unless="${environment::variable-exists('WIX_ROOT')}" />
+
+  <property name="dir.root" value="${environment::get-variable('WIX_ROOT')}" />
+  <property name="dir.root" value="${dir.root}\" unless="${string::ends-with(dir.root, '\')}" />
+  <property name="dir.externalroot" value="${dir.root}external" readonly="true" />
+  <property name="dir.objroot" value="${dir.root}build\obj" readonly="true" unless="${environment::variable-exists('WIX_OBJROOT')}"/>
+  <property name="dir.objroot" value="${environment::get-variable('WIX_OBJROOT')}" readonly="true" if="${environment::variable-exists('WIX_OBJROOT')}"/>
+  <property name="dir.targetroot" value="${dir.root}build" readonly="true" unless="${environment::variable-exists('WIX_BUILDROOT')}"/>
+  <property name="dir.targetroot" value="${environment::get-variable('WIX_BUILDROOT')}" readonly="true" if="${environment::variable-exists('WIX_BUILDROOT')}"/>
+
+  <!-- SDK directories -->
+
+  <!-- Library directories -->
+  <property name="dir.netfxsdk2.lib" value="${dir.netfxsdk2.lib.switch}" dynamic="true" readonly="true" />
+  <readregistry property="dir.netfx4" key="Software\Microsoft\NET Framework Setup\NDP\v4\Client\InstallPath" failonerror="false" />
+
+  <!-- Look for VSIP2010 until it is checked in -->
+  <readregistry property="dir.vsip2010" key="Software\Microsoft\VisualStudio\VSIP\10.0\InstallDir" failonerror="false" />
+
+  <!-- If the lookup failed, check again in the Wow6432Node -->
+  <if test="${not property::exists('dir.vsip2010') or dir.vsip2010 == '' or not directory::exists(dir.vsip2010)}">
+    <readregistry property="dir.vsip2010" key="Software\Microsoft\VisualStudio\VSIP\10.0\InstallDir" failonerror="false" />
+  </if>
+
+  <property name="dir.platformsdk.lib" value="${dir.platformsdk.lib.switch}" dynamic="true" readonly="true" />
+  <property name="dir.vc.lib" value="${dir.vc.lib.switch}" dynamic="true" readonly="true" />
+
+  <!-- Directories derived from the current platform and flavor -->
+  <property name="dir.build.project" value="${dir.objroot}\${flavor}\${platform}" dynamic="true" readonly="true" />
+  <property name="dir.target.project" value="${dir.targetroot}\${flavor}\${platform}" dynamic="true" readonly="true" />
+
+  <!-- Directories which specify a particular platform -->
+  <property name="dir.build.project.x86" value="${dir.objroot}\${flavor}\x86" readonly="true" />
+  <property name="dir.build.project.x64" value="${dir.objroot}\${flavor}\x64" readonly="true" />
+  <property name="dir.build.project.ia64" value="${dir.objroot}\${flavor}\ia64" readonly="true" />
+  <property name="dir.target.project.x86" value="${dir.targetroot}\${flavor}\x86" dynamic="true" readonly="true" />
+  <property name="dir.target.project.x64" value="${dir.targetroot}\${flavor}\x64" dynamic="true" readonly="true" />
+  <property name="dir.target.project.ia64" value="${dir.targetroot}\${flavor}\ia64" dynamic="true" readonly="true" />
+
+  <!-- The path to the Visual Studio interop assemblies -->
+  <property name="vsip.installed" value="true" dynamic="true" readonly="true" />
+  <property name="vsip2005.installed" value="true" dynamic="true" readonly="true" />
+  <property name="vsip2008.installed" value="true" dynamic="true" readonly="true" />
+  <property name="vsip2010.installed" value="${property::exists('dir.vsip2010') and directory::exists(dir.vsip2010)}" dynamic="true" readonly="true" />
+
+  <if test="${environment::variable-exists('OFFICIAL_WIX_BUILD') and (not vsip.installed or not vsip2005.installed or not vsip2008.installed or not vsip2010.installed or not property::exists('dir.netfx4'))}">
+    <fail message="All versions of VSIP and .NET 4 are required on an official build." />
+  </if>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="directories.properties.defined" value="true" readonly="true" />
+</project>

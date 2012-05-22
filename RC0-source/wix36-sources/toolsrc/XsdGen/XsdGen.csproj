@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{F60EA31D-BE1A-4CD2-828B-CC726982D041}</ProjectGuid>
+    <AssemblyName>XsdGen</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>XsdGen</RootNamespace>
+    <NoWarn>0618</NoWarn>
+    <FxCopEnabled>false</FxCopEnabled>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="StronglyTypedClasses.cs" />
+    <Compile Include="XsdGen.cs" />
+    <EmbeddedNativeResource Include="xsdgen.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+</Project>

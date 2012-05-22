@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="votive2005" default="votive2005.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    votive.build - Builds the votive project.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="votive2005.build" description="Peforms a full rebuild (clean then build)" if="${vsip2005.installed}">
+    <!-- sconce/votive -->
+    <exec program="msbuild.exe" basedir="${framework::get-framework-directory('net-2.0')}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:FxCopEnabled=false" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.votive}\votive\Votive2005.csproj" />
+    </exec>
+  </target>
+
+  <!-- Clean -->
+  <target name="votive2005.clean" description="Cleans the build" if="${vsip2005.installed}">
+    <!-- sconce/votive -->
+    <exec program="msbuild.exe" basedir="${framework::get-framework-directory('net-2.0')}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:FxCopEnabled=false" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.votive}\votive\Votive2005.csproj" />
+    </exec>
+  </target>
+
+  <!-- Inc -->
+  <target name="votive2005.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile" if="${vsip2005.installed}">
+    <!-- sconce/votive -->
+    <exec program="msbuild.exe" basedir="${framework::get-framework-directory('net-2.0')}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:FxCopEnabled=false" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.votive}\votive\Votive2005.csproj" />
+    </exec>
+
+    <copy todir="${dir.target.wix}">
+      <fileset basedir="${dir.src.votive}\SDK\Redist">
+        <include name="ProjectAggregator2.msi" />
+      </fileset>
+    </copy>
+    <copy todir="${dir.target.wix}">
+      <fileset basedir="${dir.src.votive}\Icons">
+        <include name="ProjectFile.ico" />
+        <include name="ProductFile.ico" />
+        <include name="IncludeFile.ico" />
+        <include name="LocalizationFile.ico" />
+        <include name="WixLibraryFile.ico" />
+      </fileset>
+    </copy>
+  </target>
+
+</project>

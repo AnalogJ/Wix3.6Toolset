@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="ExtensionComponents" Directory="BinFolder">
+            <ComponentGroupRef Id="ExtensionXsdComponents" />
+
+            <Component>
+                <File Source="WixBalExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixComPlusExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixDependencyExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixDifxAppExtension.dll" />
+                <File Source="difxapp_x86.wixlib" />
+                <File Source="difxapp_x64.wixlib" />
+                <?if $(var.BuildIA64)=true ?>
+                <File Source="difxapp_ia64.wixlib" />
+                <?endif ?>
+            </Component>
+
+            <Component>
+                <File Source="WixDirectXExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixFirewallExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixGamingExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixIIsExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixMsmqExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixNetFxExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixPSExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixSqlExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixUIExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixUtilExtension.dll" />
+            </Component>
+
+            <Component>
+                <File Source="WixVSExtension.dll" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="ExtensionXsdComponents" Directory="DocFolder">
+            <Component>
+                <File Source="ext\BalExtension\wixext\Xsd\bal.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\ComPlusExtension\wixext\xsd\complus.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\DifxAppExtension\wixext\Xsd\difxapp.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\FirewallExtension\wixext\Xsd\firewall.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\GamingExtension\wixext\Xsd\gaming.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\IIsExtension\wixext\xsd\iis.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\MsmqExtension\wixext\xsd\msmq.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\NetFxExtension\wixext\Xsd\netfx.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\PSExtension\wixext\xsd\ps.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\SqlExtension\wixext\Xsd\sql.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="ext\UtilExtension\wixext\Xsd\util.xsd"/>
+            </Component>
+
+            <Component>
+                <File Source="ext\VSExtension\wixext\xsd\vs.xsd" />
+            </Component>
+
+            <Component>
+                <File Source="dutil\Xsd\thmutil.xsd" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

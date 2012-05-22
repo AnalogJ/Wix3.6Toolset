@@ -1,0 +1,24 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+
+  <PropertyGroup>
+    <ProjectGuid>{94d84769-2139-4c9c-811d-9c27327c3bde}</ProjectGuid>
+    <OutputName>CommonLib</OutputName>
+    <OutputType>Library</OutputType>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <IncludeSearchPaths>$(ROOT)inc</IncludeSearchPaths>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Folders.wxs" />
+  </ItemGroup>
+
+  <Target Name="Rebuild">
+    <!-- Provide a default Rebuild target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Target Name="Clean">
+    <!-- Provide a default Clean target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
+</Project>

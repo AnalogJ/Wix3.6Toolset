@@ -1,0 +1,338 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+*************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+This code is licensed under the Visual Studio SDK license terms.
+THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+*************************************************************************
+-->
+
+  <UsingTask TaskName="FindVsSDKInstallation" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="CtoResourceMerger" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="MPLex" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="CreatePkgDef" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="CopyIfChanged" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="VSCTCompiler" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+
+  <PropertyGroup>
+    <GetVsixItemsToBundleDependsOn>$(GetVsixItemsToBundleDependsOn);Compile</GetVsixItemsToBundleDependsOn>
+    <DeployVsixExtensionFilesDependsOn>$(DeployVsixExtensionFilesDependsOn);Compile</DeployVsixExtensionFilesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="FindSDKInstallation"
+          Condition="'$(VsSDKInstall)'==''">
+    <FindVsSDKInstallation SDKVersion="$(VsSDKVersion)">
+      <Output TaskParameter="InstallationPath" PropertyName="VsSDKInstall" />
+      <Output TaskParameter="IncludesPath" PropertyName="VsSDKIncludes" />
+      <Output TaskParameter="ToolsPath" PropertyName="VsSDKToolsPath" />
+    </FindVsSDKInstallation>
+  </Target>
+
+  <PropertyGroup>
+    <TargetVSVersion Condition="'$(TargetVSVersion)' == ''">$(VSSDKTargetPlatformVersion)</TargetVSVersion>
+  </PropertyGroup>
+
+  <!--
+    =======================================================================================================
+                                                VSCT Compilation
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <VSCTCompileDependsOn>$(VSCTCompileDependsOn);FindSDKInstallation</VSCTCompileDependsOn>
+    <!--Make sure that the __CTC__ macro is defined. This macro is used in common headers
+        like vsshids.h, so we need it for every VSCT compilation.-->
+    <__internal_VSCTDefinitions>__CTC__;_CTC_GUIDS_;$(VSCTDefinitions)</__internal_VSCTDefinitions>
+
+
+  </PropertyGroup>
+
+  <Target Name="VSCTCompile"
+          DependsOnTargets="$(VSCTCompileDependsOn)"
+          Condition="'$(BuildingProject)' != 'false' And '@(VSCTCompile)' != ''">
+
+    <!--Create the list of include path to use for the VSCT compilation-->
+    <!--As first add the user provided folders-->
+    <CreateItem Include="@(VSCTIncludePath)" Condition="'@(VSCTIncludePath)' != ''">
+      <Output TaskParameter="Include" ItemName="_InternalVSCTIncludePath"/>
+    </CreateItem>
+    <!--Now add the internal folders-->
+    <CreateItem Include="$(VsSDKIncludes)" Condition="'$(VsSDKIncludes)' != ''">
+      <Output TaskParameter="Include" ItemName="_InternalVSCTIncludePath"/>
+    </CreateItem>
+    <CreateItem Include="$(VsSDKIncludes)\office10" Condition="'$(VsSDKIncludes)' != ''">
+      <Output TaskParameter="Include" ItemName="_InternalVSCTIncludePath"/>
+    </CreateItem>
+
+    <VSCTCompiler AdditionalIncludeDirectories="@(_InternalVSCTIncludePath)"
+                  IntermediateDirectory="$(IntermediateOutputPath)"
+                  Definitions="$(__internal_VSCTDefinitions)"
+                  NoLogo="true"
+                  OutputFile="@(VSCTCompile->'%(FileName).cto')"
+                  Source="@(VSCTCompile)"
+                  Verbose="true"
+                  SDKVersion="$(VsSDKVersion)" />
+
+    <!--Record the VSCT compile CTO outputs for the Clean task.-->
+    <CreateItem Include="@(VSCTCompile->'$(IntermediateOutputPath)%(FileName).cto')" Condition="Exists('@(VSCTCompile->'$(IntermediateOutputPath)%(FileName).cto')')">
+      <Output TaskParameter="Include" ItemName="FileWrites"/>
+    </CreateItem>
+  </Target>
+
+
+  <!--
+    =======================================================================================================
+    This target sets a property when the .cto file is newer than the previously built assembly.
+    =======================================================================================================
+  -->
+
+  <Target Name="CheckCTOFileHasChanged"
+          Inputs="@(VSCTCompile->'$(IntermediateOutputPath)%(FileName).cto')"
+          Outputs="$(TargetPath)"
+          DependsOnTargets="VSCTCompile">
+
+    <CreateProperty Value="true">
+      <Output PropertyName="CTOFileHasChanged"
+              TaskParameter="ValueSetByTask" />
+    </CreateProperty>
+  </Target>
+
+
+  <!--
+    =======================================================================================================
+                                              Merging CTO resource
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <!-- The result of the VSCT compilation will be used by the resource generator, so this task
+         must depend on the VSCT one -->
+    <PrepareResourcesDependsOn>$(PrepareResourcesDependsOn);MergeCtoResource</PrepareResourcesDependsOn>
+    <MergeCtoResourceDependsOn>$(MergeCtoResourceDependsOn);GenerateListOfCTO;VSCTCompile;CheckCTOFileHasChanged</MergeCtoResourceDependsOn>
+  </PropertyGroup>
+
+  <!--
+    There are two different ways to search for resources in the 2.0 version of MSBuild and newer versions.
+    Here we try to find the toolset version in use and add the right target to the dependencies according
+    with the version.
+  -->
+  <Choose>
+    <When Condition="'$(MSBuildToolsVersion)' == '2.0' OR '$(MSBuildToolsVersion)' == ''">
+      <PropertyGroup>
+        <MergeCtoResourceDependsOn>$(MergeCtoResourceDependsOn);GenerateResourceToMergeWithCTO_20</MergeCtoResourceDependsOn>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <MergeCtoResourceDependsOn>$(MergeCtoResourceDependsOn);GenerateResourceToMergeWithCTO</MergeCtoResourceDependsOn>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!--
+    Create the list of the .RESOURCES files to merge with the CTO data.
+  -->
+  <Target Name="GenerateResourceToMergeWithCTO_20"
+          DependsOnTargets="ResGen">
+    <!-- No need to remove ManifestResource items from this target as it is for 2.0 where that's OK -->
+    <CreateItem Include="@(ManifestResourceWithCulture);@(ManifestResourceWithNoCulture)" Condition="'%(ManifestResourceWithCulture.MergeWithCTO)'=='true' Or '%(ManifestResourceWithNoCulture.MergeWithCTO)'=='true'">
+      <Output TaskParameter="Include" ItemName="_ResourcesToMergeWithCTO" />
+    </CreateItem>
+  </Target>
+  <Target Name="GenerateResourceToMergeWithCTO"
+          DependsOnTargets="ResGen">
+    <CreateItem Include="%(EmbeddedResource.OutputResource)" Condition="'%(EmbeddedResource.MergeWithCTO)'=='true'">
+      <Output TaskParameter="Include" ItemName="_ResourcesToMergeWithCTO" />
+    </CreateItem>
+  </Target>
+
+  <!--
+  Create the list of the expected CTO files.
+  -->
+  <Target Name="GenerateListOfCTO">
+    <!--Add the CTO files from the list of VSCT files.-->
+    <CreateItem Include="@(VSCTCompile->'$(IntermediateOutputPath)%(FileName).cto')" Condition="'@(VSCTCompile)' != ''">
+      <Output TaskParameter="Include" ItemName="_GeneratedCTOFiles"/>
+    </CreateItem>
+  </Target>
+
+  <Target Name="MergeCtoResource"
+          Condition="'@(VSCTCompile)' != '' AND '$(BuildingProject)'!='false'"
+          DependsOnTargets="$(MergeCtoResourceDependsOn)">
+
+    <CtoResourceMerger DestinationResource="$(PackageResources)"
+                       CtoFile="@(_GeneratedCTOFiles)"
+                       ResourcesToMerge="@(_ResourcesToMergeWithCTO)" >
+      <Output TaskParameter="GeneratedResource" ItemName="MergedCtoResource" />
+    </CtoResourceMerger>
+
+  </Target>
+
+  <!-- 
+    Use ManifestResourceWithNoCulture when targetting 2.0 as that system doesn't support WithCulture on EmbeddedResource 
+    Use EmbeddedResource for > 2.0 as ManifestResourceWithNoCulture is deprecated in that environment
+    -->
+  <Choose>
+    <When Condition="'$(MSBuildToolsVersion)' == '2.0' OR '$(MSBuildToolsVersion)' == ''">
+      <ItemGroup>
+        <ManifestResourceWithNoCulture Include="$(MergedCtoResource)" >
+          <InProject>false</InProject>
+        </ManifestResourceWithNoCulture>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <EmbeddedResource Include="$(MergedCtoResource)" >
+          <Type>Non-Resx</Type>
+          <WithCulture>false</WithCulture>
+          <InProject>false</InProject>
+        </EmbeddedResource>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
+  <!--
+    =======================================================================================================
+                                       Generate code from LEX files
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <!--Make sure that the lexer runs before the C# compiler-->
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);GenerateCodeFromLex</CoreCompileDependsOn>
+  </PropertyGroup>
+  <!--
+    TODO: When MPLex.exe will allow us to specify the name / path of the output file we should change this
+    target to use custom output names and use @(MPLexCompile->'$(IntermediateOutputPath)%(FileName).cs')
+    as default.
+  -->
+  <Target Name="GenerateCodeFromLex"
+          Condition="'$(BuildingProject)'!='false'"
+          Inputs="@(MPLexCompile);$(LexFrameFile)"
+          Outputs="@(MPLexCompile->'$(IntermediateOutputPath)%(FileName).cs')"
+          DependsOnTargets="$(GenerateCodeFromLexDependsOn)">
+
+    <MPLex InputFile="@(MPLexCompile)"
+           OutputFile="@(MPLexCompile->'$(IntermediateOutputPath)%(FileName).cs')"
+           CompressTables="$(CompressTables)"
+           FrameFile="$(LexFrameFile)"
+           SDKVersion="$(VsSDKVersion)">
+      <Output TaskParameter="OutputFile" ItemName="Compile" />
+      <Output TaskParameter="OutputFile" ItemName="FileWrites"/>
+    </MPLex>
+
+  </Target>
+
+  <!--
+    =======================================================================================================
+                                      Generate parser code from Y files
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <GenerateParserCodeFromGrammarDependsOn>$(GenerateParserCodeFromGrammarDependsOn);FindSDKInstallation</GenerateParserCodeFromGrammarDependsOn>
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);GenerateParserCodeFromGrammar</CoreCompileDependsOn>
+  </PropertyGroup>
+  <Target Name="GenerateParserCodeFromGrammar"
+          Condition="'$(BuildingProject)'!='false'"
+          Inputs="@(MPPGCompile)"
+          Outputs="@(MPPGCompile->'$(IntermediateOutputPath)%(FileName).cs')"
+          DependsOnTargets="$(GenerateParserCodeFromGrammarDependsOn)">
+
+    <!--Check if there are .lex files in the project because in this case mppg should generate the base classes
+        used by the code generated by MPLex-->
+    <CreateProperty Value="-mplex" Condition="'@(MPLexCompile)' != ''">
+      <Output TaskParameter="ValueSetByTask" PropertyName="__GenerateForMPLex" />
+    </CreateProperty>
+
+    <!--Run the command line tool that generates the cs files.-->
+    <Exec Command="&quot;$(VsSDKToolsPath)\MPPG.exe&quot; $(__GenerateForMPLex) @(MPPGCompile->'&quot;%(Identity)&quot;') > @(MPPGCompile->'&quot;$(IntermediateOutputPath)%(FileName).cs&quot;')" />
+
+    <!--Add the generated files to the list of the files to compile.-->
+    <CreateItem Include="@(MPPGCompile->'$(IntermediateOutputPath)%(FileName).cs')">
+      <Output TaskParameter="Include" ItemName="Compile" />
+      <Output TaskParameter="Include" ItemName="FileWrites"/>
+    </CreateItem>
+  </Target>
+
+  <!--
+    =======================================================================================================
+                                         Generating PkgDef File
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <PrepareForRunDependsOn>
+      $(PrepareForRunDependsOn);
+      GeneratePkgDef;
+      CopyPkgDef;
+      CreateVsixBundle;
+      DeployVsixExtensionFiles;
+    </PrepareForRunDependsOn>
+    <GeneratePkgDefDependsOn>$(GeneratePkgDefDependsOn);Compile</GeneratePkgDefDependsOn>
+    <GeneratePkgDefFile Condition="'$(GeneratePkgDefFile)' == ''">true</GeneratePkgDefFile>
+  </PropertyGroup>
+
+  <Target Name="GeneratePkgDef"
+          Inputs="$(TargetPath)"
+          Outputs="$(IntermediateOutputPath)$(TargetName).pkgdef"
+          Condition="'$(GeneratePkgDefFile)'=='true'"
+          DependsOnTargets="$(GeneratePkgDefDependsOn)">
+
+    <Message Importance="High" Text="Creating intermediate PkgDef file." />
+
+    <CreatePkgDef AssemblyToProcess="$(TargetPath)"
+              ProductVersion="$(TargetVSVersion)"
+              SDKVersion="$(VsSDKVersion)"
+              OutputFile="$(IntermediateOutputPath)$(TargetName).pkgdef"
+              UseCodebase="$(RegisterWithCodebase)" />
+  </Target>
+
+  <!--
+    =======================================================================================================
+    This target contains 2 tasks to copy the .pkgdef file only when necessary. 
+    =======================================================================================================
+  -->
+
+  <PropertyGroup>
+    <CopyPkgDefDependsOn>$(CopyPkgDefDependsOn);GeneratePkgDef;CheckCTOFileHasChanged</CopyPkgDefDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CopyPkgDef"
+          Inputs="$(IntermediateOutputPath)$(TargetName).pkgdef"
+          Outputs="$(OutDir)$(TargetName).pkgdef"
+          Condition="'$(GeneratePkgDefFile)'=='true'"
+          DependsOnTargets="$(CopyPkgDefDependsOn)">
+
+    <!--
+      =======================================================================================================
+      This task copies the .pkgdef file to the target directory when the .cto file has changed. 
+      Even though the .pkgdef file contents might have not changed, the new timestamp on the .pkgdef file
+      will cause Visual Studio to re-merge menus on next launch.
+      =======================================================================================================
+    -->
+    <Copy Condition="'$(CTOFileHasChanged)'=='true'"
+          SourceFiles="$(IntermediateOutputPath)$(TargetName).pkgdef"
+          DestinationFiles="$(OutDir)$(TargetName).pkgdef"
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+    </Copy>
+
+    <!--
+      =======================================================================================================
+      This target copies the .pkgdef file to the target directory only if its contents have changed.
+      This is an optimization to avoid rebuilding the PkgDef cache if this .pkgdef has not really changed.
+      =======================================================================================================
+    -->
+    <CopyIfChanged Condition="'$(CTOFileHasChanged)'!='true'"
+                   SourceFile="$(IntermediateOutputPath)$(TargetName).pkgdef"
+                   DestinationFile="$(OutDir)$(TargetName).pkgdef" >
+      <Output TaskParameter="DestinationFile" ItemName="FileWrites"/>
+    </CopyIfChanged>
+
+  </Target>
+
+  <Import Project="Microsoft.VsSDK.Common.targets" />
+</Project>

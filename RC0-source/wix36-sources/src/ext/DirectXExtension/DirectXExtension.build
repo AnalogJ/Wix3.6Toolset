@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="directxextension" default="directxextension.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    directxextension.build - Builds the DirectXExtension project
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- extension directories -->
+  <property name="directxextension.ca.dir.src" value="${dir.src.ext}\DirectXExtension\ca" readonly="true" />
+
+  <!-- targets -->
+  <property name="file.target.directxcadll" value="${dir.target.wix}\directx.dll" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="directxextension.build" description="Peforms a full rebuild (clean then build)" depends="directxextension.clean, directxextension.inc" />
+
+  <!-- Clean -->
+  <target name="directxextension.clean" description="Cleans the build">
+    <delete dir="${dir.build.ext.directxextension}" failonerror="false" if="${directory::exists(dir.build.ext.directxextension)}" />
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix}">
+        <include name="directx.dll" />
+        <include name="directx.pdb" />
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="DirectXExtension.clean" description="Another clean call (different case)">
+    <call target="directxextension.clean"/>
+  </target>
+
+  <!-- Inc -->
+  <target name="directxextension.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile">
+    <fileset id="compileCpp.fileset.sources" basedir="${directxextension.ca.dir.src}">
+      <include name="directx.cpp" />
+      <include name="dllmain.cpp" />
+    </fileset>
+    <property name="compileCpp.dir.build" value="${dir.build.ext.directxextension}" />
+    <property name="compileCpp.file.precomp.h" value="${directxextension.ca.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${directxextension.ca.dir.src}\directx.rc" />
+    <property name="makeNativeDll.file.target" value="${file.target.directxcadll}" />
+    <property name="makeNativeDll.file.def" value="${directxextension.ca.dir.src}\directx.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil}&quot; &quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\d3d9.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" />
+
+    <!-- Make scaexec.dll -->
+    <call target="makeNativeDll" />
+  </target>
+
+</project>

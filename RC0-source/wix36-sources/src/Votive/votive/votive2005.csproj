@@ -1,0 +1,49 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{FE621961-B87D-4789-B84D-457F177845F8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>votive2005</AssemblyName>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <!-- Add new files to votive.common.targets and not here -->
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.VSHelp, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="VSLangProj80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedNativeResource Include="Votive2005.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\sconce\sconce2005.csproj">
+      <Project>{E155DD19-796B-44F0-9941-153C44C0BB06}</Project>
+      <Name>sconce</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="votive.common.targets" />
+  </ItemGroup>
+  <Import Project="votive.common.targets" />
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <Import Project="..\SDK_VS2008\Tools\Build\Microsoft.VsSDK.targets" />
+  <Target Name="AfterBuild" Inputs="@(IntermediateZipProject);@(IntermediateZipItem)" Outputs="@(IntermediateZipProject->'$(OutDir)%(Filename)%(Extension)');@(IntermediateZipItem->'$(OutDir)%(Filename)%(Extension)')" Condition=" '@(IntermediateZipProject)@(IntermediateZipItem)' != '' ">
+    <Copy SourceFiles="@(IntermediateZipProject);@(IntermediateZipItem)" DestinationFolder="$(OutDir)" />
+  </Target>
+</Project>

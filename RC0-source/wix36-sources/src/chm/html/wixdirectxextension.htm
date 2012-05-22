@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>WixDirectXExtension</title>
+</head>
+
+<body>
+  <h1>WixDirectXExtension</h1>
+
+  <p>The WixDirectXExtension includes a custom action named WixQueryDirectXCaps that sets properties you can use to check the DirectX capabilities of the installing user's video card.</p>
+
+  <table cellspacing="0" cellpadding="4" class="style1">
+    <tr>
+      <td valign="top">
+        <p><b>WixDirectXExtension properties</b></p>
+      </td>
+
+      <td></td>
+    </tr>
+
+    <tr>
+      <td valign="top">
+        <p>WIX_DIRECTX_PIXELSHADERVERSION</p>
+      </td>
+
+      <td>
+        <p>Pixel shader version capability, expressed as <i>major</i>*100 + <i>minor</i>. For example, a shader model 3.0-compliant system would have a WIX_DIRECTX_PIXELSHADERVERSION value of 300.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <td valign="top">
+        <p>WIX_DIRECTX_VERTEXSHADERVERSION</p>
+      </td>
+
+      <td>
+        <p>Vertex shader version capability, expressed as <i>major</i>*100 + <i>minor</i>. For example, a shader model 3.0-compliant system would have a WIX_DIRECTX_VERTEXSHADERVERSION value of 300.</p>
+      </td>
+    </tr>
+  </table>
+
+  <p>To use the WixDirectXExtension properties in an MSI, use the following steps:</p>
+
+  <ul>
+    <li>Add PropertyRef elements for items listed above that you want to use in your MSI.</li>
+
+    <li>Add the -ext &lt;path to WixDirectXExtension.dll&gt; command line parameter when calling light.exe to include the WixDirectXExtension in the MSI linking process.</li>
+
+    <li>Or, using an MSBuild-based .wixproj project, add &lt;path to WixDirectXExtension.dll&gt; to the WixExtension item group. When using Votive in Visual Studio, this can be done by right-clicking on the References node in a WiX project, choosing Add Reference... then browsing for WixDirectXExtension.dll and adding a reference.</li>
+  </ul>
+
+  <p>For example:</p>
+  <pre>
+&lt;PropertyRef Id="WIX_DIRECTX_PIXELSHADERVERSION" /&gt;
+
+&lt;CustomAction Id="CA_CheckPixelShaderVersion" Error="[ProductName] requires pixel shader version 3.0 or greater." /&gt;
+
+&lt;InstallExecuteSequence&gt;
+  &lt;Custom Action="CA_CheckPixelShaderVersion" After="WixQueryDirectXCaps"&gt;
+    &lt;![CDATA[WIX_DIRECTX_PIXELSHADERVERSION &lt; 300]]&gt;
+  &lt;/Custom&gt;
+&lt;/InstallExecuteSequence&gt;
+
+&lt;InstallUISequence&gt;
+  &lt;Custom Action="CA_CheckPixelShaderVersion" After="WixQueryDirectXCaps"&gt;
+    &lt;![CDATA[WIX_DIRECTX_PIXELSHADERVERSION &lt; 300]]&gt;
+  &lt;/Custom&gt;
+&lt;/InstallUISequence&gt;
+
+</pre>
+
+  <p>Note that the WixDirectXExtension properties are set to the value <b>NotSet</b> by default. The WixDirectXExtension custom action is configured to not fail if it encounters any errors when trying to determine DirectX capabilities. In this type of scenario, the properties will be set to their <b>NotSet</b> default values. In your setup authoring, you can compare the property values to the <b>NotSet</b> value or to a specific value to determine whether WixDirectXExtension was able to query DirectX capabilities and if so, what they are.</p>
+</body>
+</html>

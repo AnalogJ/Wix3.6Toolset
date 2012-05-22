@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Creating patches</title>
+</head>
+
+<body>
+  <h1>Creating patches</h1>
+
+  <p>Patches are updates to a product or products. WiX supports two different ways of creating them:</p>
+
+  <ul>
+    <li><a href="patch_building.htm">Using Patch Creation Properties</a> which requires that you have the Windows Installer 3.0 or newer SDK installed for full support of included examples.</li>
+
+    <li><a href="wix_patching.htm">Using Purely WiX</a> which uses functionality provided in WiX and does not require additional tools.</li>
+  </ul>
+
+  <p>There are also <a href="patch_restrictions.htm">restrictions</a> on how patches are built in order to avoid problems when installing them.</p>
+
+  <h2>How Patches Work</h2>
+
+  <p>Patches contain a collection of transforms - most often a pair of transforms for each target product. When a patch is applied, each installed target product is reinstalled individually with the corresponding patch transforms applied. These transforms contain the differences between that target product and the upgrade product that might contain new file versions and sizes, new registry keys, etc.</p>
+
+  <p>For more information about patching with Windows Installer, read <a href="http://msdn2.microsoft.com/en-us/library/aa370579.aspx" target="_blank">Patching and Upgrades</a>.</p>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Standard Custom Actions</title>
+</head>
+
+<body>
+  <h1>Standard Custom Actions</h1>
+
+  <p>The WiX toolset contains several custom actions to handle configuring resources such as Internet Information Services web sites and virtual directories, SQL Server databases and scripts, user accounts, file shares, and more. These custom actions are provided in WiX extensions.</p>
+
+  <p>To get started using standard custom actions, see the <a href='using_standard_customactions.htm'>Using Standard Custom Actions</a> topic.</p>
+
+  <p>For information about specific types of standard custom actions, see the following topics:</p>
+
+  <ul>
+    <li><a href='util_xsd_fileshare.htm'>FileShare custom action</a> (located in WixUtilExtension) - create and configure file shares.</li>
+
+    <li><a href='util_xsd_internetshortcut.htm'>Internet shortcut custom action</a> (located in WixUtilExtension) - create shortcuts that point to Web sites.</li>
+
+    <li><a href='osinfo.htm'>OSInfo custom actions</a> (located in WixUtilExtension) - set properties for OS information and standard directories that are not provided by default by Windows Installer.</li>
+
+    <li><a href='perfmon.htm'>Performance Counter custom action</a> (located in WixUtilExtension) - install and uninstall performance counters.</li>
+
+    <li><a href='qtexec.htm'>Quiet Execution custom action</a> (located in WixUtilExtension) - launch console executables without displaying a window.</li>
+
+    <li><a href='util_xsd_permissionex.htm'>Secure Objects custom action</a> (located in WixUtilExtension) - secure (using ACLs) objects that the <a href='http://msdn2.microsoft.com/library/aa369774.aspx' target="_blank">LockPermissions table</a> cannot.</li>
+
+    <li><a href='util_xsd_serviceconfig.htm'>Service Configuration custom action</a> (located in WixUtilExtension) - configure attributes of a Windows service that the <a href='http://msdn2.microsoft.com/library/aa371637.aspx' target="_blank">ServiceInstall table</a> cannot.</li>
+
+    <li><a href='shellexec.htm'>ShellExecute custom action</a> (located in WixUtilExtension) - launch document or URL targets via the Windows shell.</li>
+
+    <li><a href='util_xsd_user.htm'>User custom actions</a> (located in WixUtilExtension) - create and configure new users.</li>
+
+    <li><a href='wixdirectxextension.htm'>WixDirectXExtension</a> - custom action that can be used to check the DirectX capabilities of the video card on the system.</li>
+
+    <li><a href='wixexitearlywithsuccess.htm'>WixExitEarlyWithSuccess</a> (located in WixUtilExtension) - custom action that can be used to exit setup without installing the product. This can be useful in some major upgrade scenarios.</li>
+
+    <li><a href='wixfailwhendeferred.htm'>WixFailWhenDeferred</a> (located in WixUtilExtension) - custom action that can be used to simulate installation failures to test rollback scenarios.</li>
+
+    <li><a href='firewall_xsd_index.htm'>WixFirewallExtension</a> - Firewall custom action that can be used to add exceptions to the Windows Firewall.</li>
+
+    <li><a href='wixgamingextension.htm'>WixGamingExtension</a> - Gaming custom action that can be used to add icons and tasks to Windows Game Explorer.</li>
+
+    <li><a href='iis_xsd_index.htm'>WixIIsExtension</a> - Internet Information Services (IIS) custom actions that can be used to create and configure web sites, virtual directories, web applications, etc.</li>
+
+    <li><a href='wixnetfxextension.htm'>WixNetFxExtension </a> - custom action to generate native code for .NET assemblies; properties to detect .NET Framework install state and service pack levels.</li>
+
+    <li><a href='sql_xsd_index.htm'>WixSqlExtension</a> - SQL Server custom actions that can be used to create databases and execute SQL scripts and statements.</li>
+
+    <li><a href='wixvsextension.htm'>WixVSExtension</a> - custom action to register help collections and Visual Studio packages; properties to detect install state and service pack levels for various Visual Studio editions.</li>
+
+    <li><a href='util_xsd_xmlfile.htm'>XmlFile custom action</a> (located in WixUtilExtension) - configure and modify XML files as part of your installation package.</li>
+  </ul>
+</body>
+</html>

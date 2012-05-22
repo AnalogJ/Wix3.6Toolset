@@ -1,0 +1,2034 @@
+WixBuild: Version 3.6.0.0
+
+RobMen: WiX v3.6
+
+FGrohn: Updates to registration and payloads in Burn.
+
+RobMen: Add ability for bundle to disable rollback via Chain/@DisableRollback.
+
+MikeHo: Fix for building Burn stub with VS2010.
+
+EricStJ: IIS : Fix ERROR_INVALID_DATA when setting time properties to values 
+               greater than int.max
+         IIS : Fix ERROR_INSUFFICIENT_BUFFER when setting app name > 32 chars
+         WOW : Only attempt to disable FS redirection when running in WOW
+         Adding version logging to custom actions
+
+EricStJ: SFBUG:2990115 - Set RunAsSeparateProcess parameter for Heat tasks
+
+HeathS: Added support to set the app base for managed assemblies from
+        containers
+
+RobMen: Add support for ARP registration to bundle build.
+
+HeathS: Require a derived managed UX and general MUX clean up.
+
+ZhenyaS: Refactor MUX model into model and controller.  Create UI thread in MUX.
+
+ZhenyaS: Move WPF demo to test folder.  Add WPF bundle demo.
+
+FGrohn: Fixes for Burn unit tests.
+
+RobMen: SFBUG:2991602 - add ExePackage/@PerMachine and default to no.
+
+FGrohn: Completing Burn container rework.
+
+OngChees: Potential Burn crash.
+
+FGrohn: Parsing Burn manifest MsiProperty/@RollbackValue as optional.
+
+RobMen: SFBUG:1520745 - allow the SqlDatabase/@User to be a property.
+
+BobArnso: Remove x64 WiX .msi; for details, see
+          http://www.joyofsetup.com/2010/03/27/wix-msbuild-v2-0-and-x64-systems/.
+
+RobMen: SFBUG:2837367 - verify database names do not go over 128 characters.
+
+RobMen: SFBUG:2994398 - support spaces in build path.
+
+RobMen: SFBUG:2896938 - CustomAction/@Id is required, ensure it is.
+
+RobMen: SFBUG:2949663 - add resource dll for icons for advertised shortcuts.
+
+EricStJ: SFBUG:2979773,2966134,2889139 Can not call MsiFormatRecord from
+         deferred custom action.
+
+MiCarls: SFBug:2971082 - Fix bad formatting when printing Eula
+         SFBug:2932076 - Make util:User custom action more robust
+
+MiCarls: Burn should support directory copy when payload is extracted.
+
+FGrohn: Parsing ExePackage/@DetectCondition in Burn manifest. Updating
+        detection logic.
+
+RobMen: Move build to NAnt 0.9 Beta 1.
+
+BobArnso: Update Lux test generator to consider all source files that are 
+          fragments, not just those with unit tests. This allows you to isolate
+          your unit-test authoring in its own file and share other authoring
+          between unit-test projects and functional-test projects or other
+          "real" installers.
+
+RobMen: SFBUG:2996233 - do not fail if ExePackage/@DectectCondition is absent.
+        SFBUG:2996231 - fix per-machine MSIs install state.
+        Update test cases to new "Package Cache" location.
+
+VaraBall: Deleting dead code using IProvideDataToEngine and IUiMode.
+
+BMurri: Rename BasePaths to BindPaths, and add support for NamedBindPaths
+
+MHegazy: Added support for harvesting project outputs in PackageGroups.
+         Modified the Bundle Project template to reference the harvested 
+         PackageGroups from project references.
+         Added a new icon for Bundle projects.
+
+PMarcu: Initial plumbing for containers.
+
+FGrohn: Cleaning up dead Burn code.
+
+FGrohn: Early modifications for plan in Burn.
+
+RobMen: BUG:3001917 - fix MsiPackages that have external cabinets.
+
+HeathS: SFBUG:2991056 - Do not allow large code page values for summary info.
+
+EricStJ: SFBUG:2993823 - WriteIIS7ConfigChanges fails when virtual dir exists
+
+EricStJ: SFBUG:2997246 - Do not validate port when we might not be using it
+
+EricStJ: SFBUG:2990584 - Fix WebApplication under Website to correctly set
+                         App pool of the default application
+
+MikeHo: Add Disallow to MajorUpgrade to prevent upgrades
+
+BobArnso: Add and enable WixUICostingPopupOptOut WiX variable to turn off the
+          modal dialog shown when MSI hasn't yet completed costing. There is an
+          intermittent bug that prevents it from setting the CostingComplete 
+          property so the modal dialog is shown forever. This setting is 
+          enabled by default for now to verify the problem can be worked around 
+          by not checking for CostingComplete. If successful, it will become an
+          opt-in behavior. For now, to return to the previous behavior, add
+              <WixVariable Id="WixUICostingPopupOptOut" Value="0" />
+          to your authoring.
+
+BobArnso: Fix sfbug:2987553: Guid="" and Permanent="yes" doesn't make sense and
+          is illegal per ICE92.
+
+BobArnso: Fix sfbug:2990011 by adding specific error message when package being
+          validated requires a higher version of MSI than is present.
+
+RobMen: ServiceInstall/@Description should be modularized as a property.
+
+MHegazy: SFBUG:2987866 - Allow the same MsiProperty to be used by different
+         MSI packages.
+
+PMarcu: Adding SourcePath to BurnManifest for detached containers.
+
+RobMen: SFBUG:3005509 - initialize logging as early as possible.
+
+PMarcu: Initial Support for external payloads.
+
+MHegazy: SFBug:2981263 - Made sure files are not added to FileTransfere list
+                         only once
+         SFBug:2980768 - Added list of "seen" directories 
+         SFBug:2980757 - Create empty directories
+         SFBug:2980722 - Validate layoutDirectory @Name as a file path
+         SFBug:2980803 - Added validation on file sources before trying to copy
+                         them
+
+EricStJ: SFBUG:3002703 - Install fails when multiple defaultDocument Files or
+                         windowsAuthentication Providers are added.
+         IIS extension was failing to set integer attributes correctly.
+         IIS extension was failing when redifining a mimeMap for an extension
+         IIS extension compiler was not failing when specifying an error with
+         no file or URL
+
+HeathS: SFBUG:2996221 - Support incremental builds for Harvest tasks.
+
+EricStJ: SFBUG:3002633 - Uninstall always deletes the first element in a
+         collection.
+
+BobArnso: sfbug:2796124 - Update to the latest shipped darice.cub and 
+          mergemod.dll.
+
+PMarcu: Support Payloads overriding the bundle level compressed setting.
+
+PMarcu: Fixing support for relative paths for external payloads.
+
+RobMen: Allow BindFileManager to resolve DownloadUrls. Default implementation
+        uses String.Format().
+
+MHegazy: SFBUG:2980318 - Handle file not found or not accessible cases for
+                         packages
+
+MaHoover: Missing handling of BURN_VARIANT_TYPE_NONE in Burn.
+
+PMarcu: Refactoring the Binder to allow for simpler layout handling.
+
+FGrohn: Burn using new plan.
+
+FGrohn: Burn engine parsing changes for MSI upgrade/downgrade.
+
+JaredR: Added (deprecated) flag for per-source output specification in candle.
+        Added Compile item "CandleOutput" metadata detection and handling in
+        Candle task for MSBuild.
+
+PMarcu: SFBUG:3007586 Fixing debug assert for PayloadGroupRef under UX.
+
+RobMen: SFBUG:3011222 - add DisplayVersion for ARP.
+
+RobMen: SFBUG:3010749 - searches should be initialized during Detect.
+
+FGrohn: Burn engine changes for MSI upgrade/downgrade.
+
+FGrohn: Remove ATL dependency.
+
+FGrohn: Missing libs in Burn unit test project.
+
+AaronSte: SFBUG:2897016 - Remove VS 2008 SP level detection properties due
+          to unreliability of the registry values used for detection.
+
+BobArnso: Serialize validation to prevent ICE code from failing on multiproc/
+          multicore machines.
+
+APaloma: Fixed wix targets defining erroneous debug symbols for the
+         DebugSymbolsProjectOutputGroup target.
+
+BobArnso: sfbug:2971503 - Clarify that WixToolPath must end in a backslash.
+
+CAraman: Fix annotations.  Add localization annotations for WixUI_en-us.wxl.
+
+EricStJ: SFBUG:2993316 IIS7 CA does not associate ssl certificate with website
+         IIS Decompiler does not correctly handle Certificate table.
+
+EricStJ: SFBUG:3007484 WebAddress/@IP now supports Modularization
+
+JaredR: Fix string-concatenation bug in candle.exe.
+
+MiCarls: Initial implementation to allow dark.exe to support extracting bundles
+        (use "dark -x extractpath bundle.exe")
+
+HeathS: SFBUG:2990231 - Build ProjectReferences by default.
+
+BobArnso: Update DTF API help build to use latest Sandcastle (v2.4.10520 from 
+          http://sandcastle.codeplex.com/releases/view/13873) and Sandcastle 
+          Help File Builder (Sandcastle Help File Builder to v1.8.0.3 from 
+          http://shfb.codeplex.com/releases/view/29710).
+
+BobArnso: SFBug:3013077 - Update "Building WiX" topic for above Sandcastle
+          (and other) changes.
+
+EricStJ: SFBUG:2860926 - Support PFX with multiple Certs.
+
+HeathS: Added inspection framework to WiX.
+
+RobMen: SFBUG:3015014 - fix search attributes to not start at 0.
+        SFBUG:3014867 - ignore MSI callbacks with no message or record.
+        SFBUG:3013511 - Allow RegistrySearch/@Result="Value".
+        MUX is off by one on string capacities if initial buffer isn't big
+        enough.
+        Use InitiateShutdownEx() instead of ExitWindowsEx().
+
+MiCarls: SFBUG:3017303 - dark can extract payloads with directory path in name
+         SFBUG:3017301 - when extracting bundles, dark can overwrite previous
+                         output
+
+BobArnso: SFBug:3013255 - Update list of standard actions to MSI 5.0 level.
+
+MHegazy: Disabled reference harvesting by default in Votive 
+
+BobArnso: Add MajorUpgrade/@AllowSameVersionUpgrades attribute to allow 
+          version-inclusive major upgrades. (Also useful for product versions
+          that change only in the fourth field.)
+
+Yunher: Taking Wixcop out of toolsrc.sln and add it to tools.sln
+
+RobMen: Add Burn support for MSU packages.
+
+RobMen: SFBUG:3019971 - Burn support for non-Vital packages.
+
+RobMen: SFBUG:2994453 - repair ExePackages when @RepairCommand is present.
+        Support authoring the default log name and extension for the Bundle.
+
+MiCarls: Add BOOL support to EseUtil
+
+MiCarls: Move StrCurrentTime() and StrCurrentDateTime() to TimeUtil (and
+         corresponding function rename), and format DateTime()'s string to
+         RFC 3339
+
+HeathS: SFBUG:3013129 - Support PatchFiles action in AdminExecuteSequence table
+        Fixed delta patching supported
+
+AaronSte: SFBUG:2835501 - Clarify the documentation of WiX behavior regarding
+          automatic key path selection.
+
+BobArnso: Allow loc identifiers in Media/@Cabinet.
+
+EricStj: SFBUG:3012387 - IIS: Need to handle rewriting app ext handler
+
+RobMen: Pass original command-line back to Burn on restart.
+
+RobMen: Burn now controls package log files to match bundle log.
+        SFBUG:3013586 - provide package log paths in variables.
+
+BobArnso: Expose Dutil tracing to both ship and debug builds.
+
+RobMen: SFBUG:3021595 - detect cached packages.
+
+HeathS: Added support to NGEN with formatted columns for apps and dirs.
+
+RobMen: SFBUG:3021620 - calculate install size in UXManifest from File table.
+
+HeathS: Upgraded FxCop rules across the WiX enlistment.
+
+OCSLE: Added WXLs for 28+ languages
+
+MikeHo: Added support for patches in the WixUI library
+
+EricStJ: SFBUG:3011463 - Allow 32-bit handlers when installing AppPool from 
+         32-bit component
+
+APaloma: Fixed project harvesting failing if two project references to the same
+         project exist.
+
+PMarcu: SFBUG:3023336 Allow Assembly Versions to be updated in patches.
+
+MiCarls: Simplify EseUtil API's, and ensure we don't get "stuck" inside queries
+
+BobArnso: Add detection of running devenv.exe processes to WiX setup.
+
+CAraman: Add annotations for static code analysis. Ensure .WXLs are well-formed
+         XML, and all cultures are documented.
+
+HeathS: Fixed bad condition in WiX setup authoring.
+
+PMarcu: SFBUG:3023336 Allow Assembly Versions to be updated in patches.
+
+HeathS: Added mention of InspectorExtension to documntation.
+
+HeathS: Open a bundle with shared read access when unbinding.
+
+RobMen: Bundle upgrading bundles now supported in Burn.
+        SFBUG:2996829 - add detect for related bundles.
+        SFBUG:3026695,3027593,3027595 - fix Binder to correctly turn on
+            logging and create variables.
+        SFBUG:3029715 - clean up packages on uninstall/upgrade.
+
+EricStJ: IIS extension fails to handle app pools without components
+
+EricStJ: SFBUG:3024500 - VDirs are not installed under the proper applications
+
+EricStJ: SFBUG:3028842 - Units are wrong when setting appPool idleTimeout and
+         session timeout
+
+ZhenyaS: Fixed or suppressed in source current fxcop issues in mux.dll.  
+         Enabled future fxcop issues in mux.dll to trigger a build break.
+
+RobMen: SFBUG:3030192 - per-machine Bundle registration requires the plan to
+        be per-machine as well.
+
+RobMen: Fix handling of Bundle package's Id, Name and SourceFile to better
+        mimic the File element.
+
+BobArnso: Downgrade the BaseInputPaths deprecation warning to an informational 
+          message.
+
+MiCarls: SFBUG:3013386 - Make Burn support 64-bit registry searches
+
+RobMen: Burn logging improvements.
+
+PMarcu: SFBUG:3026506 Changing a components guid without in a patch breaks the
+        patch.
+
+AaronSte: Add breadcrumbs back to the main documentation page. Add the
+          property name to the MajorUpgrade documentation.
+
+RobMen: SFBUG:3031280 - fix references to custom actions in SetProperty.
+
+PMarcu: Updating error message for removing components in a patch to be
+        clearer.
+
+MiCarls: SFBUG:2898675 - Build Dutil/WcaUtil for VS2005, 2008, & 2010
+
+SBonev: SFBUG:2927773 Advertised Class with multiple ProgId elements fails
+        compile.
+
+EricStJ: SFBUG:3010044 - Cannot call UI thread from logging thread, porting fix
+
+FGrohn: Burn feature selection.
+
+RobMen: SFBUG:3027638 - allow shutdown to schedule reboot
+        SFBUG:3032348 - allow UX to set variables in OnComplete() messages.
+
+RobMen: Initial check-in for PreqUX to install NETFX for MUX when NETFX is not
+        installed.
+        Major clean-up of dead test code.
+
+EricStJ: SFBUG:3029559 - VCXProj project reference preprocessor variables
+         are not set when building from MSBUILD.
+
+HeathS: SFBUG:2990345 - Deprecated Product.Generated.wxs from project
+        templates.
+
+RobMen: Allow Burn Variables to be present in Fragments.
+
+BobArnso: Add condition-evaluation results logging to Burn
+
+SBonev: Fix a bug where patching a file with the same identifier but belonging 
+        to two (or more) different components in two (or more) different MSIs 
+        would corrupt transforms.
+
+PMarcu: SFBUG:3029621 Fix modularization of special properties.
+
+MiCarls: SFBUG:3038440 - Make Print EULA support really long EULAs.
+
+MiCarls: Fix WiX 3.5 setup to move to "3.x" directory, to reduce upgrade churn
+         in the future for users moving from 3.5 to some future 3.* version.
+
+MiCarls: SFBUG:3030385 - Fix crash in CAQuietExec when program being run
+         outputs percent characters
+
+HeathS: SFBUG:3038805 - Write PublicKeyToken as "null" instead of "neutral".
+
+RobMen: Allow Bundle/@Version to be specified like Module/@Version.
+
+MiCarls: SFBUG:3033195 - When burn starts up again after rebooting, continue
+         writing to the same log.
+
+RobMen: Implement BITS download engine.
+
+RobMen: Managed WixUX.
+
+BobArnso: Fix SFBUG:3034857 - GetCabList task in Link target fails when using 
+          BindFiles. XML outputs don't do layout, so skip GetCabList and 
+          GetLooseFileList tasks when linking XML outputs.
+
+MiCarls: SFBUG:3043073 - Fix DTF templates per latest 3.x and dutil changes,
+         and add version.lib to CPP templates as needed
+
+BobArnso: Fix DisplayVersion written to manifest for ARP display.
+
+BobArnso: Add ProductSearch element, using the detect-only Upgrade table 
+          attribute. This allows you to reference a product search using 
+          PropertyRef in the same Property pattern as AppSearch elements.
+
+RobMen: The great "Burn Concepts Rename". UX goes to Application.
+
+BobArnso: Fix SFBUG:3047665 - fix wix.ca.targets to point to 3.x
+
+PMarcu: SFBug:3027614 Adding more slots for SfxCA custom actions.
+        SFBug:2957993 Adding more to the error message for SFXCA to react to
+                      the new default activation policy in .NET 4.
+
+HeathS: SFBUG:3037918 - Fixed DLL resolution when building solutions in MSBuild.
+
+EricStJ: SFBUG:3034909 - Added support for AppPool managedPipelineMode and
+         managedRuntimeVersion.
+
+EricStJ: SFBUG:3026594 - MSBuild crashes when run as x64 and WixToolsPath is
+         overridden.
+
+RobMen: Add Burn support to use file signatures instead of hashes to verify
+        payloads.
+
+HeathS: Prevent restart manager from closing setup, and avoid loading mscoree.
+
+HeathS: Renamed MUX to MBA and rearranged project directories.
+        Renamed files for MBA:
+          Microsoft.Tools.WindowsInstallerXml.BootstrapperFoundation.dll ->
+            BootstrapperCore.dll
+          prequx.dll -> mbapreq.dll
+        Renamed the MBA .config file to match the output .dll name.
+
+HeathS: SFBUG:3049176 - Updated correct GUID for VWDExpress 2010 RTM.
+
+CAraman: Fix annotations.  Resolve PoliCheck issues.
+
+EricStJ: SFBUG: 3033224 - Build fails when building 2010 project with
+         MSBuild 3.5
+         SFBUG: 3040451,3011605 - VS prompts to save unchanged projects
+         SFBUG: 3050105 - Build errors do not appear in error window
+
+RobMen: SFBUG:3039203 - set both VC2008 and VC2010 vars since we use both.
+        Add support for Windows 7 and .NET Framework 4.0 SDK
+        Remove ATL/MFC requirement since Burn doesn't need it now.
+
+MiCarls: Add ListView & Tab control support to ThmUtil
+
+EricStJ: SFBUG: 3007090, 3017579 - Error messages when Test project
+         is in same sollution as Wix Project
+
+EricStJ: SFBUG: 3057922 - Applying custom Wix template containing binaries
+         corrupts the files.
+
+WixBuild: Version 3.6.0903.0
+
+RobMen: WiX v3.6 MSI now external and downloadable.
+        Update UX to support downloads and cancel correctly.
+
+WixBuild: Version 3.6.0905.0
+
+RobMen: SFBUG:2997972 - MSP packages now supported by Burn.
+        SFBUG:2997973 - MSP packages support MSI properties.
+
+MikeHo: Fix ScaVirtualDirsRead7 to prevent heap buffer overrun.
+
+EricStJ: SFBUG: 3062489 - Wix.targets doesn't work with MSBuild 2.0
+         SFBUG: 3062699 - Clean doesn't clean localized MSIs
+
+WixBuild: Version 3.6.0910.0
+
+BobArnso: Update registry path for wix36 branch
+
+BriaRo: Fixed file version parsing from string and date/time stamp for CAB'ing.
+        Fixed issue with FileVersionFromString not handling string versions
+        which were shorter than major.minor.build.revision.
+
+MiCarls: Make thmutil support comments / extra whitespace
+
+HeathS: Added Restart Manager support to WixUtilExtension.
+
+EricStJ: SFBUG: 3066897 - Cannot set iis:WebAppPool ManagedPipelineMode
+         & User attributes
+         SFBUG: 3068104 - Failure when installing site to default pool
+
+WixBuild: Version 3.6.0917.0
+
+RobMen: Split out pipe communication from elevation to be reusable for
+        embedded.
+
+HeathS: Validate only file key path changes when building a patch.
+
+MiCarls: SFBUG: 3066590 - add wcautil IA64 libs to wix zips
+
+EricStJ: SFBUG: 3073091 - Better error for iis:Website w/o @Directory
+
+WixBuild: Version 3.6.0924.0
+
+RobMen: Embedded Burn support.
+
+PMarcu: SFBUG:3066956 Handling conflicting Type51 actions for standard 
+        directories in melt.
+
+EricStJ: SFBUG: 3074682 VS Crashes when editing build events
+
+MiCarls: SFBUG: 2937235 util:User is now willing to proceed in cases it isn't
+         able to discover whether the user already exists or not.
+
+EricStJ: SFBUG: 3055413 Project properties don't match property page
+         configuration setting (match solution configuration).
+
+EricStJ: SFBUG: 3058358 Shared component w/ Certificate orphans 
+         private key files
+
+EricStJ: SFBUG: 3069107 Pyro flags reg-keypath components when they contain
+         changed files
+
+RobMen: SFBUG:3065075 - fix "FormattedSddl" to be "FormattedSDDLText" per
+        MSI SDK.
+
+WixBuild: Version 3.6.1001.0
+
+HSeiler: SFBUG:3041864 - Install fails when installing multiple websites
+
+MiCarls: SFBUG: 3053427 - update documentation to tell users to escape
+         backslashes in XMLConfig/XMLFile XPath attributes
+
+BobArnso: SFBUG:3048233 - Correct tab order on EULA pages
+
+EricStJ: SFBUG: 3080990 Wix references weren't using WixExtPath in vs2010
+
+RobMen: SFBUG:3083239 - add WixBalExtension.dll to zip.
+
+BobArnso: Add resource string support to ThmUtil.
+
+RobMen: SFBUG:3011150 - Burn now supports the "-layout" switch.
+
+WixBuild: Version 3.6.1008.0
+
+BobArnso: Add support to Melt for rewriting .wixpdb files based on exploded
+          content of .msi packages.
+
+BobArnso: Default WixUICostingPopupOptOut to 1, to avoid the CostingComplete 
+          MSI bug. Opt in to the costing dialog by setting 
+          WixUICostingPopupOptOut to 0.
+
+RobMen: SFBUG:3074436 - fix documentation where SystemFolder is better choice
+        than System64Folder.
+
+RobMen: SFBUG:2932337 - do not harvest .NET Component Categories.
+
+AaronSte: Fix inaccurate remark in the FileSearch documentation.
+
+CAraman: Update WixUI localization.
+
+RobMen: SFBUG:3019443 - set useLegacyV2RuntimeActivationPolicy="true" in
+        template to support NETFX4.0 correctly.
+
+WixBuild: Version 3.6.1015.0
+
+BobArnso: Fix sfbug:3088562 by pointing to right registry key.
+
+RobMen: SFBUG:3088298 - fix case of .cab files in MSI for download URLs.
+
+RobMen: SFBUG:3073007;3073030 - Burn now supports splash screen and custom
+                                icon.
+
+MiCarls: SFBUG:3086028 - Wix.xsd should allow preprocessor variables in DiskId
+         attribute
+
+RobMen: SFBUG:3087211 - fix payload verification to use the most local
+        certificate instead of the root certificate.
+
+CAraman: Update WixUI localization.
+
+RobMen: SFBUG:3090762 - allow UI/PropertyRef as per wix.xsd.
+
+EricStJ: SFBUG: 3085773 Use a product-unique backup file for IIS 7 CAs
+
+MiCarls: SFBUG:3087404 - Wixcop should allow preprocessor variables in ID
+         fields
+
+RobMen: BREAKING CHANGE - remove DTF dependencies on System.Data and
+                          System.Windows.Forms to solve NETFX 4.0 issues.
+
+EricStJ: BREAKING CHANGE - removing ConfigureIIS7 custom action.  IIS7 
+                           scheduling is now done by ConfigureIIS.  Do not 
+                           override the conditionon this CA.  If you wish 
+                           to use IIS6 metabase compatibility set the 
+                           UseIis6Compatibility property in your MSI
+         SFBUG: 3038987 IIS7 doesn't support SiteId or binding WebSite search.
+         SFBUG: 3085541 IIS WebFilter with WebSite attribute not uninstalled
+         SFBUG: 3086534 WriteIIS7ConfigChanges: Error 0x800700b7: Unable modify
+                        site
+         Fixing Global.include to enable wix builds with only VS 2010
+
+EricStJ: SFBUG: 3092442 - Password shown when configuring IIS
+
+EricStJ: ScaGetWebLog7 failing after recent refactoring
+
+WixBuild: Version 3.6.1022.0
+
+MiCarls: SFBUG: 3027622 - allow users to override the default InstallSize for
+         any chained package
+
+HeathS: Secured calls to LoadLibrary.
+
+MiCarls: SFBUG: 3094739 - Fix a DARK0001 error
+
+EricStJ: SFBUG: 3095961 IIS config fails when IIS feature does not exist and
+         all components are conditioned to not install.
+         Fix regression, Failure to install multiple app pools.
+
+HeathS: Added process support to the Restart Manager CA.
+        Allowed restart resources to be defined at the product scope.
+
+EricStJ: SFBUG: 3091362 WixLibraries are shown as file nodes in project
+
+WixBuild: Version 3.6.1029.0
+
+FGrohn: SFBUG:2995027 - ComPlusApplication doesn't work with ChangeAble="no"
+
+RobMen: Introducing WiX Standard Bootstrapper Application.
+        Enhance thmutil to add pages and handle name controls.
+
+MiCarls: SFBUG: 3101689 - Add Burn built-in variable "ServicePackLevel".
+
+RobMen: SFBUG:3101691;3101697;3101689 - document built-in bootstrapper
+        variables.
+
+MiCarls: SFBUG: 3073008 - Support bundle conditions in the engine using a
+         system error string
+
+CAraman: Update WixUI localization.
+
+RobMen: SFBUG:3101895 - ensure paths passed to heat from MSBuild are quoted
+        as necessary.
+
+EricStJ: SFBUG: 3101820 Crash when running 64-bit msbuild
+
+WixBuild: Version 3.6.1105.0
+
+BriaRo: Update SFBUG:3086028 - allow for custom preprocessors and more than one
+        preprocessor variable to be used.
+
+PMarcu: SFBUG:3082176 - Giving a better error message when an input file is 
+                        given with invalid extension for the number of inputs
+                        to torch but would be valid with a different set of
+                        inputs.
+
+FGrohn: SFBUG:3007072 - Updated variable value is not persistent
+
+HeathS: Ignore failures on RM calls like Windows Installer does.
+
+RobMen: SFBUG:3101303 - separate Burn verify calls for progress and retry.
+
+EricStJ: IIS: Install VDir to AppPool in seperate MSI transactions is broken
+
+CAraman: remove unused variables
+
+CAraman: include .PDBs for nit, lux and LuxTasks
+
+BobArnso: Fix sfbug:3075067 - Major Upgrade HowTo is outdated
+
+BobArnso: - Allow WixProj tests to just build, with no diff verification or 
+            expected errors.
+          - Validate WixUI localizations
+
+MiCarls: SFBUG: 3103180 - Make insignia.exe support "-nologo" switch.
+
+RobMen: SFBUG:3104047 - fix zh-TW UI localization by escaping [ and ]
+        as necessary.
+
+EricStJ: Clean up IIS ProgressText
+
+EricStJ: SFBUG: 3100784 SolutionDir doesn't work for Import statement
+         in wixproj
+
+EricStJ: SFBUG: 3091925 WriteIIS7ConfigChanges fails occasionally
+         with 0x80070020
+
+PMarcu: SFBUG:3105890 - Handling PID_LASTPRINTED in transforms.
+
+WixBuild: Version 3.6.1112.0
+
+RobMen: Rename Bundle/@UX element BootstrapperApplication
+        Create BootstrapperApplicationRef element.
+        Improve Binder error messages for of file resolution.
+
+RobMen: Begin wixstdba.wixlib and use new BootstrapperApplicationRef
+        element to simplify code.
+
+RobMen: ThmViewer provides data to better display richedit and progress bars.
+        thmutil now supports each control having its own image.
+
+RobMen: SFBUG:3101702 - add RebootPending built-in variable.
+
+RobMen: SFBUG:3109465 - include DTF.Resources.dll in the WiX folder since
+        Bundle bind depends on it now.
+
+RobMen: SFBUG:3106978 - do not copy over existing bundle.exe during layout.
+        SFBUG:3106429 - allow for "layout only" payloads.
+
+BobArnso: Add SystemLanguageID and UserLanguageID built-in Burn variables.
+
+JaredR: Prevent Packages and Containers from propagating ordering information
+        into their children.
+
+AaronSte: Adding a link to make WixUI topics accessible from the
+          web-based documentation set.
+
+EricStJ: SFBUG: 3109991, 3106809 Source file with identical name is not properly
+         linked
+         Fixing a double free in IIS7 custom action.
+
+EricStJ: SFBUG: 3105643 Cert uninstall fails with AV
+
+EricStJ: Adding logging to CoCreate in IIS7ConfigChanges
+
+RobMen: SFBUG:3112558 - remove WiX v3.6 elements from Util schema.
+
+RobMen: Add wixstdba to WixBalExtension for easier integration.
+        Allow wixstdba controls to have formatted text.
+        Fix some small bugs in balutil FormatString.
+
+RobMen: Add a billboard control to thmutil.
+
+EricStJ: SFBUG: 3112388 click in error panel does not go to error
+
+WixBuild: Version 3.6.1122.0
+
+RobMen: SFBUG:3116827 - update Bundle template to new syntax.
+        Add built-in options dialog.
+
+EricStJ: SFBUG: 3112521 Changed marker does not always disappear on project
+                        properties
+
+CAraman: Update WixUI localization.
+
+EricStJ: SFBUG: 3103178 Adding missing parameters to wix tasks & exposing in
+         targets
+
+EricStJ: SFBUG: 3110965 WriteIIS7ConfigChanges fails with
+         ERROR_SHARING_VIOLATION Allow user to retry.
+
+WixBuild: Version 3.6.1125.0
+
+MiCarls: SFBUG: 3103906 - Make burn support relative path logfiles
+
+MiCarls: SFBUG: 3105527 - Make burn log missing payload files
+
+RobMen: SFBUG:3123565 - update NAntTask to use correct registry key to find
+                        toolset.
+
+EricStJ: SFBUG:3123902 - Candle uses wrong object dir when item is in
+         intermed. dir.
+
+EricStJ: SFBUG:3123277 - (undo) SFBUG:3112521 to prevent crash.
+
+RobMen: SFBUG:3124544 - fix project harvesting.
+
+RobMen: SFBUG:3125429 - fix VS2008 build when no VS2005 x64 not present.
+
+WixBuild: Version 3.6.1203.0
+
+BobArnso: Add TerminalServer built-in Burn variable.
+
+RobMen: Fix WixStdBA to correctly show error page on failures and don't show
+        Cancel dialog as error.
+
+RobMen: Fix thmutil.cpp to correctly load themes stored as RCDATA.
+        Show the File Open dialog if a path isn't provided to ThmViewer.exe.
+        Add ThmViewer.exe to setup.
+
+RobMen: SFBUG:3132994,3132997,3133002 - fix localization errors.
+
+WixBuild: Version 3.6.1210.0
+
+RobMen: SFBUG:3135074 - fix some documentation links when pages moved.
+
+EricStJ: SFBUG: 3110965 WriteIIS7ConfigChanges fails with
+         ERROR_SHARING_VIOLATION when it is interrupted by another transaction.
+         Create a new AdminManager and restart from right after the last commit.
+
+EricStJ: WixUI Customize dialog for he-IL does not link.
+
+MiCarls: Fix a bad bug when 64-bit secureobjects custom actions roll back.
+
+MikeHo: Fix bug where clicking back on Ready to Install page doesn't go to the
+        proper page during patching
+
+RobMen: SFBUG:3076755 - preqba can now reload managed BA after installing NETFX.
+        Other small fixes to bootstrapper applications and their logging.
+
+WixBuild: Version 3.6.1217.0
+
+RobMen: SFBUG:3107297 - center splash screen the same way WPF does.
+        Update WiX v3.6 install, icon, ARP info, splash screen.
+
+BMurri: SFBUG:3024936 - Remove unneeded restrictions on XSLT security.
+
+RobMen: SFBUG:3139522 - add MakeSfxCA.exe.config to binaries.zip file.
+
+WixBuild: Version 3.6.1222.0
+
+RobMen: Remove unnecessary Action="createAndRemoveOnUninstall" so we do as we
+        tell others they should.
+
+RobMen: Hide Burn splash screen from task bar and Alt-Tab like most splash
+        screens do.
+
+RobMen: Fix potential hang in wixstdba due to SendMessage() on non-UI thread.
+        Return user exit error code when user cancels setup in wixstdba.
+        Support the -layout switch in wixstdba.
+
+RobMen: Bundle an MSI's external files.
+
+BobArnso: SFFeature:3130590 - Update DifxApp DLLs in DifxApp .wixlibs to 
+          version shipped in DDK 7600.16385.1.
+
+EricStJ: SFBUG:3147256 Votive 2005/2008 corrupts binary files in templates
+
+WixBuild: Version 3.6.1230.0
+
+RobMen: SFBUG:3107296 - allow BootstrapperCore.config to specify supported
+        framework versions (mainly to detect NETFX 3.0 and 3.5).
+        Clean up MBA code a bit.
+
+RobMen: Add Burn documentation on basics and wixstdba.
+
+WixBuild: Version 3.6.1307.0
+
+RobMen: Fix supportedFrameworks in Burn.
+
+WixBuild: Version 3.6.1308.0
+
+RobMen: Dark now will decompile BBControl table.
+
+RobMen: SFBUG:3013511 - allow RegistrySearch/@Result to specify "value".
+        Correctly camelCase attributes for WixUtilExtension search @Results.
+
+RobMen: SFBUG:2980315 - correctly detect version Variables.
+        SFBUG:2980325 - provide more documenation about default behavior of
+                        *Package/After attribute.
+        Fix documentation typo "HyperlinkLicnese".
+
+RobMen: SFBUG:3155725 - release Burn SDK files.
+
+RobMen: SFBUG:2993168 - support Windows installer logging policy in Burn.
+
+RobMen: SFBUG:3103337 - use full path for all file transfers.
+
+RobMen: SFBUG:3102971 - support preproc variables in Media/@Id.
+        SFBUG:3103010 - deprecate Package/@Platform in documentation.
+
+RobMen: SFBUG:3147758 - Remove ARP entry after cache failure during Apply.
+        SFBUG:3151890 - Burn no longer plans uncache of uncached package.
+        SFBUG:3030733 - fixed Burn planning of related bundle removal.
+
+RobMen: Remove the "Package Cache" directory when it is empty.
+        Add a bit of logging when packages are being removed from cache.
+
+WixBuild: Version 3.6.1314.0
+
+RobMen: Fix backwards compatibility break in BinderFileManager ResolvePath().
+
+RobMen: Ensure MBA & wixstdba files are always compressed in BA container.
+
+BobArnso: Add RemoveFolderEx custom action to WixUtilExtension: 
+          Recursively delete whole directory trees.
+
+RobMen: SFBUG:3157773 - re-include setupbld in WiX v3.5 MSI.
+        SFBUG:3156098 - fix bug in localization of zh-HK WixUI.
+
+WixBuild: Version 3.6.1321.0
+
+BobArnso: Burn: Plan superseded packages being uninstalled for removal.
+
+RobMen: SFBUG:3141429 - only set BurnLayoutDirectory if specified from
+        command-line. Otherwise BA can control it.
+
+HeathS: Support binder variable resolution for properties.
+
+EricStJ: SFBUG:3139749 clarify ConfigurationData docs
+         SFBUG:3141025 allow PerfCounterManifest without ResourceFileDirectory
+         SFBUG:3083252 update wix integration doc
+
+EricStJ: SFBUG:3148161 torch and light task don't pass all params correctly
+
+RobMen: SFBUG:3141379 - don't log errors when querying for non-existent Burn
+        variables.
+
+EricStJ: SFBUG:3147525 run IIS CAs when AppPool is the only table present
+
+EricStJ: SFBUG:3133804 SchedSecureObjects should not fail when table is absent
+
+CAraman: Fix heap corruption in ExecSecureObjectsRollback.
+
+RobMen: Send heartbeat for ExePackages and MsuPackages so they can be
+        "canceled".
+
+JasonGin: ZIP decompression now allows inconsistent slashes (\ /) in ZIP
+            central directory, as found in some XAP packages.
+          ZIP compression automatically uses ZIP64 format for >64K files.
+
+PMarcu: SFBUG:3155943 Unclear message when '-' prepended on the harvest type.
+
+EricStJ: SFBUG: 3165776 AddSslCertificate fails with WSANOTINITIALISED for 
+         binding that has IP
+
+RobMen: Fix wixstbda so that the progress bar moves.
+
+BobArnso: Expose DTF's Database.ExecutePropertyQuery method.
+
+RobMen: Support retrying package install in Burn.
+        Add balretry to convert common package errors to retry recommendations.
+
+BobArnso: Allow all bind-time variables in external cabinet names.
+
+BobArnso: Prevent rollback chain from being canceled by UX in both Burn engine
+          and CBalBaseBootstrapperApplication.
+
+BobArnso: SFBUG:3189224 - Fix filename case for hrefs (on Apache 
+          case-sensitive file system).
+
+VaraBall: Added support for Automatic media assignment based on MediaTemplate.
+
+BobArnso: Make Modify, Remove, Repair suppression attributes match across
+          binder and Burn engine.
+
+BobArnso: Expose RTF load to arbitrary rich-edit HWNDs 
+          (ThemeLoadRichEditFromResourceToHWnd)
+
+BobArnso: Fix SFBUG:3190965 -- Add a new error message for multiple possible 
+          attributes
+
+HeathS: Added extended flags for the dictionary utility.
+
+HeathS: Added function to split a string into an array.
+
+HeathS: Added binder property specializations for ProductVersion.
+        Allowed binder extensions to generate unique identifiers.
+
+WixBuild: Version 3.6.1502.0
+
+RobMen: Support MultiInstance Component in instance transforms.
+
+HeathS: Added package ref-counting to the core toolset.
+
+SimWu:  Support bindpath re-basing logic for patch by providing 
+        -bt/-bu argument in pyro.exe.
+
+HeathS: Fixed a bug in the dependent check for the wrong key name.
+        Add binder properties even when the ProductCode is auto-generated.
+
+NNewland: Add support for catalog signing of payloads in Burn.
+
+WixBuild: Version 3.6.1511.0
+
+MiCarls: Fix SFBUG:3155665 - Burn shouldn't error out when run from a unicode
+         path. Also make the log files UTF-8, again.
+
+RobMen: Fix incremental build in MSBuild.
+        Minimize messages printed during build by default.
+        Project harvesting now requires setting EnableProjectHarvesting=true.
+
+RobMen: SFBUG:3216782 - fix download when server doesn't send Content-Length
+        header on HTTP "HEAD" requests.
+
+RobMen: Set default auto-cab size to 200 MB.
+
+RobMen: Support passing command-line information to extensions in light.exe.
+
+WixBuild: Version 3.6.1518.0
+
+BobArnso: SFBUG:3214497 and SFBUG:3212982 - Fix bad XML characters in chm 
+          sources and more instances of bad mixed-case filenames. Switch web
+          site manual to use wix36 for the 3.x manual sources.
+
+RobMen: Implement incremental build for Bundles.
+
+RobMen: Hardlink from cabcache and default cabcache on when
+        ReuseCabinetCache=true.
+
+PMarcu: SFBUG:3141215 - Fixing broken link for extensions in the chm.
+
+RobMen: Add WixGenericMessageEventArgs so extensions can send arbitrary
+        messages without having to create a ResourceManager and localized
+        strings.
+
+RobMen: SFBUG:3220208 - use the word "setup" for "installation" for FileInUse
+        so the message makes more sense during uninstall.
+
+WixBuild: Version 3.6.1525.0
+
+HeathS: SFBUG:3257439 - Added WixDependencyExtension.dll to binaries.zip.
+
+PMarcu: SFBUG:3197719 - Adding exclusive feature file costing to 
+                        BootstrapperApplication xml.
+
+RobMen: Fix over rebuild in incremental build with cabcache and smartcabbing.
+
+RobMen: Allow MSBuild PdbOutputPath property to override ouput location for
+        .wixpdb files.
+
+WixBuild: Version 3.6.1601.0
+
+RobMen: Resolve files related to an MSI Package (like .cabs and loose files)
+        through the BinderFileManager instead of directly in the Binder.
+
+HeathS: Better error handling for dependency messages.
+
+WixBuild: Version 3.6.1608.0
+
+MikeHo: Remove erroneous check from CustomAction element, which prevents valid
+        combinations of custom action types & PatchUninstall values.
+
+HeathS: Refactored out the dependency library for use in Burn.
+
+MiCarls: Add first unit tests for dutil (DictUtil only, for now)
+
+WixBuild: Version 3.6.1615.0
+
+HeathS: Fixed documentation for named bind paths.
+
+A-BobArn: SFBUG:3280250, SFBUG:3285523, SFBUG:3285529, SFBUG:3257439
+          Bring binaries.zip and WiX36.msi back in line.
+
+RobMen: Support signing Bundle and Msm.
+        Fixed incremental build in complex dependency cases.
+            (e.g. Msi.wixproj -> Lib.wixproj -> Exe.csproj)
+        Add support to build only .wixlib project references.
+
+WixBuild: Version 3.6.1623.0
+
+MiCarls: SFBUG:3287800 - on uninstall, uninstall addons before everything else.
+         Continue uninstalling bundles to be upgraded, after everything else.
+
+A-BobArn: Make WixLocalization/@Culture optional (defaulting to neutral).
+
+MiCarls: SFBUG:3285054 - Fix WIX_SUITE_EMBEDDEDNT property
+
+RobMen: Support slipstream MSPs.
+
+RobMen: Add VsixPackage install support to WixVSExtension.
+
+WixBuild: Version 3.6.1629.0
+
+PMarcu: SFBUG:3205933 - Persist relative download urls in the burn manifest.
+        Fix Dark to not assume all payloads in a bundle are embedded.
+
+MiCarls: SFBUG:3287802 - allow related bundles (and your own bundle) to be
+         identified with Bundle/@Tag
+
+RobMen: SFBUG:3292845 - enable parallel cache via Bundle/Chain/ParallelCache
+        attribute.
+
+RobMen: SFBUG:3172051 - fix documentation to correctly reference install
+        location for WiX targets.
+
+RobMen: SFBUG:3283837 - fix Votive About Box and Bundle template to correct
+        version.
+        SFBUG:3116741 - remove dead sln file.
+
+HeathS: Added dependency/ref-counting support to Burn.
+
+WixBuild: Version 3.6.1706.0
+
+EricStJ: Adding support for netfx progress structure to communicate with .NET
+         framework setup.
+
+WixBuild: Version 3.6.1714.0
+
+PMarcu: SFBUG:2981229 Removing LayoutDirectory and LayoutFile.
+
+BMurri: Missing MSI 5.0 Support + DTF Bugs, including SFBUG:3072105
+
+HeathS: Remove all burn dependents when a bundle is uninstalled.
+        Remove orphaned registry keys from dependency graph for bundle.
+
+A-BobArn: SFBUG:3293975: store state when suspending
+
+BMurri: AdminExecuteSequence not processed correctly when building patches
+
+A-BobArn: Add WIX_COMPRESSION_LEVEL environment variable detection to override
+          authored or default compression level for cabinets.
+          WIX_COMPRESSION_LEVEL must be empty or one of the same values as 
+          Media/@CompressionLevel: none, mszip, low, medium, high
+
+EricStJ: SFBUG:3267882 Need to hide property for HideTarget CustomActions
+
+MiCarls: SFBUG:3292534 Don't fail if a payload we're copying to is read-only.
+
+EricStJ: SFBUG:3274080 Don't fail if CA dll is missing version
+
+EricStJ: SFBUG:3155753 Support LogVisits using dontLog dir prop.
+         SFBUG:3291011 Set cache mode when setting HttpExpires and 
+                       CacheControlMaxAge
+
+BMurri: Prevents some instances of reading/passing unneeded data
+        Fixes a race condition that causes successful CA calls to return
+        failure to MSI
+
+EricStJ: SFBUG:3109682 Don't log errors when doing a website search
+
+HeathS: Changed default bundle provider key generation to use bundle ID.
+
+RobMen: SFBUG:3303380 - create separate pipes for cache and apply threads to
+        prevent collisions in messages coming back at the same time.
+
+WixBuild: Version 3.6.1727.0
+
+CAraman: fix dutil annotations
+
+EricStJ: SFBUG:3135376 - failure to create websvcextension when exists with 
+         string-different but path-identical extension path.
+
+RobMen: Do not force all packages using the WixDependencyExtension to codepage
+        1252.
+
+WixBuild: Version 3.6.1803.0
+
+PMarcu: SFBUG:3307070 Generic fix to catch duplicate symbol issues early and
+                      cover all of them that we aren't special handling.
+
+BMurri: SFBUG: 3266592: Delta switch failure when an updated file is shared
+                        across cabinets.
+
+EricStJ: SFBUG: 3157348 Don't block uninstall if WebDir's web is missing.
+
+MiCarls: SFBUG:3103010 & SFBUG:3102971 - make wix schema tolerate preprocessor
+         variables being used in more places.
+
+PMarcu: SFBUG: 3309263: Fix to create fragments for each component.
+
+Jbae: Made ProjectDefineConstants properties static because they don't have to
+      be dynamic
+
+BMurri: SFBUG: 3175345: Stop dropping odd build output directories all over the
+                        build tree.
+        Also fixes doubling of BindPaths sent to light from msbuild.
+
+EricStJ: SFBUG: 3181941 Make ManagedPipelineMode and ManagedRuntimeVersion
+                        formatted
+
+HeathS: Change default provider key generation for consistent SxS experience.
+        SFBUG:3288070 - Fixed documentation for dependency extension.
+
+ZhenyaS: SFBUG:3163741 Allow bundle authors to customize prerequisites UX
+                       placeholders.
+         SFBUG 3308501 Don't show source resolution in silent mode, but try
+                       downloading netfx package instead
+         SFBUG 3184248 Allow netfx to be installed in non-install scenarios
+                       (e.g. layout, uninstall, repair, modify)
+         SFBUG 3158640 When not finding a registry value during a search,
+                       clear out a possibly stale variable. This allows us to
+                       correctly detect that netfx is absent in uninstall,
+                       repair, modify scenarios.
+
+JBae: Fixed bug for unused TargetPdbName property.
+
+WixBuild: Version 3.6.1811.0
+
+RobMen: SFBUG:3164596 - add pt-br loc for IIs and Util extensions.
+
+JBae: Added condition on target "Signing" for SuppressLayout because 
+      we don't want to sign if layout is suppressed.
+
+RobMen: SFBUG:3293788 - define a couple targets often required by project
+                        references from other projects (like .vcxproj).
+
+RobMen: SFBUG:3288797 - replace USERNAME with LogonUser because LogonUser is
+                        more correct.
+        SFBUG:3162829 - fix incorrectly formatted text in lv-LV and zh-HK .wxl
+                        files.
+        SFBUG:3163411 - delete hi-IN, kk-KZ, ro-RO wxl files that are really
+                        just English.
+
+RobMen: Introducing shine. Tool that generates graphs by reading source code.
+
+RobMen: SFBUG:3132163 - use the WiX update feed for news instead of my blog.
+
+WixBuild: Version 3.6.1817.0
+
+HeathS: Changed CRL checks to use cached CRL to support offline support.
+
+RobMen: SFBUG:3163411 - fix WixUI in hi-IN, kk-KZ, ro-RO.
+
+BMurri: Create parity in parsing attributes of EmbeddedUI and EmbeddedUIResource
+        elements.
+
+PMarcu: Second try at catching duplicate symbols early.
+
+EricStJ: Intermittent failure when a sharing violation occurs on last IIS commit
+
+EricStJ: SFBUG: 3310378 AccessViolation in MsiCloseHandle on finalizer thread.
+
+JieJi/RobMen - Support rollback boundaries correctly during uninstall.
+
+WixBuild: Version 3.6.1826.0
+
+RobMen: SFBUG:3303592 - do not crash in Burn if BITS is disabled.
+
+HeathS: Added a test custom action to wait for events.
+
+RFlaming: SFBug: 3297725 - Removing Burn Name attribute still adds an ARP.
+
+ZhenyaS: SFBUG:3304309 - Set WixBundleOriginalSource variable to help with
+                         source resolution when bundle is launched from the
+                         cache.
+
+RobMen: SFBUG:3166703 - dynamically load all MSI 3.0 functions so wiutil works
+                        against MSI 2.0.
+        SFBUG:3026086 - correctly register reboot pending state in Burn.
+        SFBUG:3309930;SFBUG:3341652 - reset ACLs and read-only attributes on
+                        files in working folder and in final cache locations
+        SFBUG:3314903 - clean up extra UX# in temp folder erroneously created by
+                        elevated Burn process.
+        SFBUG:3328616 - fix a few XML pointer leaks.
+
+PMarcu: Adding authoring support for Hidden and Persisted variables.
+
+HeathS: Created additional auto reset events for testing.
+
+WixBuild: Version 3.6.1901.0
+
+SimWu: SFBUG:3312373 - Cannot clear property value with SetProperty.
+
+FGrohn: SFBUG:3302804 - Burn: support secure Bundle Variables.
+
+RFlaming: SFBUG: 3300341 - Candle: support empty Bundle Variables.
+
+HeathS: SFBUG:3349032 - Allow user to attach a debugger to the process
+        a la Windows Installer
+
+RobMen: SFBUG:3312409 - correctly resume after prerequisites require a reboot.
+        SFBUG:3341140 - expand LaunchTarget variable in wixstdba.
+        SFBUG:3345197 - display appropriate error message when prerequisites
+                        fail to install.
+        Rename "well known" Burn variables to be "WixBundle..." instead of
+                        "Burn...".
+        Allow CustomTable element to provide data that is translated into the
+                        BootstrapperApplicationData.xml.
+        Merge mbapreq.dll functionality into wixstdba.dll to minimize redundant
+                        code.
+        Overhaul wixstdba.dll look and feel to be far more professional.
+        Fix small bugs in theme utility code, start support for accelerators.
+
+RobMen: SFBUG_3073006 - persist WixBundleName and allow it to be overwritten
+                        so the ARP entry can be localized at runtime by a BA.
+        Prevent bundle Variables beginning with "Wix" from being defined.
+
+WixBuild: Version 3.6.1908.0
+
+HeathS: Allow everyone to signal the test CA events.
+
+RobMen: SFBUG:3363492 - create directory for Burn log files.
+
+RFlaming: SFBug: 3304311 - dark.exe crashes while decompiling LockPermissions
+                           using standard WinNT.h mask in Permissions column.
+
+EricStJ: SFBUG: 3342730 Use case insensitive compare when doing IIS element
+                        searches.
+
+RobMen: Fix escaping of quotes when passing properties to MSI packages.
+
+WixBuild: Version 3.6.1915.0
+
+BobArnson: Fix SFBUG:3175287 by clarifying Component/@Win64 doc. Update 
+           MediaTemplate and CompressionLevel doc based on 
+           http://www.joyofsetup.com/2011/06/21/wix-and-cabinetry/.
+
+PMarcu: SFBUG: 3323884 - Enforcing entries in UpgradeVersion/@Maximum and
+                         Minimum are valid versions.
+
+EricStJ: SFBUG:3354254 - IIS6 CA fails when nothing to install & no IIS
+
+EricStJ: SFBUG:3369868 - Votive truncates project OutputName property at .
+
+EricStJ: SFBUG:3313606 - IIS7 Rollback broken with UseIis6Compatibility
+
+RobMen: Prefix BurnLayoutDirectory, BundleProviderKey and BundleTag with
+        "WixBundle" to be consistent with WixBundleName.
+        SFBUG:3373380 - fix typo in wixstdba_intro.htm documentation.
+
+RobMen: Only call ResolveUrl() for external payloads.
+
+RobMen: SFBUG:3356312 - allow WixStdba HyperlinkLicense to be empty.
+        Major clean up of WixStdba HyperlinkLicense BA UI.
+        Allow WixVariables to be empty.
+        Switch to .png files in WixStdba because they are smaller.
+        (refix) SFBUG:3308501 - Don't show source resolution in silent mode,
+                                but try downloading netfx package instead.
+
+RobMen: SFBUG:3156696 - Bundle/@DisableModify="button" creates an ARP 
+                        "Uninstall/Change" button.
+        SFBUG:3374115 - expand width of "Processing" label in wixstdba.
+
+RobMen: When Burn state file is missing log warning, do not fail.
+
+WixBuild: Version 3.6.1922.0
+
+RobMen: SFBUG:3158619 - escape command-line args passed to the BA to handle
+                        arguments with spaces in them such that
+                        ::CommandLineToArgv() will parse it correctly.
+
+RobMen: Massive refactoring to elevate/unelevate appropriately.
+        Support external programs "embedding" a Bundle.
+
+RobMen: Remove out of date stdux.dll
+
+WixBuild: Version 3.6.1929.0
+
+JaredR: Update UtilExtension's Binder to use a topological sort for ordering
+        WixSearch IDs.
+
+ZhenyaS: Do not pass PATCH property to MSIs during uninstall in Burn.
+
+JieJi - DirEnsureExistsEx() now handles "creating" the root of a folder.
+
+RobMen: Centralize variables that need to be kept in sync between Binder and
+        Burn.
+
+RobMen: Enable Burn to upgrade previous versions of Burn even when there is a
+        breaking change to the communication protocol.
+
+RobMen: SFBUG:3385078 - fix documentation link.
+
+WixBuild: Version 3.6.2005.0
+
+RobMen: SFBUG:3044016 - write Run key to the bundle's registry root instead
+                        of always going to HKCU.
+
+RobMen: Correctly set file version of bundle to the Bundle/@Version.
+
+RobMen: SFBUG:3309971 - internally retry Burn file copy and move operations to
+                        deal with overzealous anti-virus software.
+
+HeathS: Include version files when compiling temporary assemblies for WPF.
+
+RobMen: SFBUG:3386748 - fix wixstdba.dll to not double free m_sczLanguage.
+
+RobMen: Call MsiGetLastError() to get more details about unexpected MSI
+        failures.
+
+HeathS: Updated msi.chm for Windows Installer 5.0.
+
+WixBuild: Version 3.6.2012.0
+
+CAraman: Fix annotations.
+
+RobMen: SFBUG:3296438 - balretry can now retry cache errors.
+
+RobMen: SFBUG:3197004 - add MsiPackage/@EnableFeatureSelection so Burn knows
+                        when to use REINSTALL=ALL.
+        Rename MAINTENANCE to MODIFY and RECACHE to REPAIR which are more
+        correct names.
+
+FGrohn: SFBUG:3388644 - Partial feature selection doesn't work in some cases.
+
+HeathS: SFBUG:3323554 - Prevent shutdown even if initiated from AU.
+
+HeathS: Added documentation for BootstrapperCore to install.
+
+HeathS: Register the bundle as a dependent during repair actions.
+
+RobMen: SFBUG:3385097 - be a bit smarter about setting per-user MSI packages
+                        in Bundles and provide better error messages.
+
+MiCarls: SFBUG:2994274 - support "patch" type of related bundle.
+
+HeathS: Remove calls to disable the IME for message windows.
+
+MiCarls: SFBUG:3338956 - Burn related bundles now use the action passed in
+         to plan, rather than the action specified on the commandline
+
+WixBuild: Version 3.6.2019.0
+
+ScotK: A start on getting burn to compile for other architectures.
+
+PMarcu: SFBUG:3375939 Persisting tabs in custom table data and enforcing 
+                      Identifiers in Custom tables.
+
+PMarcu: SFBUG: 3383823 - removing quotes from around value in foreach in sample
+
+EricStJ: SFBUG:3394755 - Don't add extra netfx parameters
+         SFBUG:3394662 - When NetFx hits success blocker, Burn returns failure.
+
+ZhenyaS: SFBUG:3394197 - Transfer variables from user process to elevated
+                         process so that bundle name set by BA gets registered
+                         in ARP
+
+RobMen: Create runtime localization for WiX Standard Bootstrapper Application.
+        Support Bundle/Condition in WiX Standard Bootstrapper Application.
+        SFBUG:3396537 - allow preqba to be localized.
+
+RobMen: SFBUG:3328616 - fix leaked XML DOM nodes.
+
+JieJi: Fix the calculation of MSI execution percentage during rollback.
+
+WixBuild: Version 3.6.2026.0
+
+RobMen: SFBUG:3396574 - add MsiPackage/@ForcePerMachine to workaround poorly
+                        designed 3rd party packages.
+
+RobMen: SFBUG:3375622 - implement IBootstrapperApplicationEngine->Elevate().
+
+ZhenyaS: Refactor mba.wxs to allow for customization of prereq BA theme.
+
+WixBuild: Version 3.6.2102.0
+
+HeathS: SFBUG:3385047 - Support checking variable existence for MBAs.
+
+PMarcu: SFBUG: 3383823 - removing quotes from around value in foreach in sample
+
+PMarcu: SFBUG: 3393691 - Allowing patches to reference digital signatures.
+        SFBUG: 3400196 - Allowing extension attributes on Directory.
+        SFBUG: 3390807 - Better error when trying to generate a component guid
+                         and you have CompanionFile set.
+
+EricStJ: SFBUG:3401931 - crash when protocol=netfx and no repair command.
+
+MiCarls: SFBUG:3234079 - Make MSP's log in burn, just like MSI's already do.
+
+WixBuild: Version 3.6.2109.0
+
+RobMen: SFBUG:3379088 - don't relog variables passed to the elevated Burn
+                        process.
+
+RobMen: SFBUG:3197472 - cache only Burn engine, fix up signatures when using
+                        attached containers.
+
+PMarcu: SFBUG:3390034 - Adding error message for when module installer version
+                        is not valid.
+
+RobMen: SFBUG:3292846 - allow acquire to be retried if verify fails.
+        SFBUG:3293210 - allow BA to ignore cache failures for non-vital
+                        packages.
+
+SimWu: SFBUG:3323496 - Shared payloads downloaded more than once.
+
+HeathS: Added variable to determine if elevated burn has launched.
+
+WixBuild: Version 3.6.2116.0
+
+RobMen: SFBUG:3341700 - handle encrypted TEMP when caching in Burn.
+        SFBUG:3354642 - use unique folder in TEMP to avoid name collisions.
+
+RobMen: SFBUG:3409685 - fail to plan in Burn when a restart is required.
+
+RobMen: SFBUG:3366273 - provide progress in wixstdba using cache + execute
+                        detailed progress.
+        SFBUG:3408913 - probe for license file in wixstdba.
+
+RobMen: SFBUG:3366082 - allow MSI/MSP packages to show their internal UI.
+
+RobMen: Burn now works correctly when launched via psexec.exe.
+
+WixBuild: Version 3.6.2123.0
+
+CAraman: Use only interlocked accessors to avoid race conditions.
+
+RobMen: SFBUG:3411628 - by default treat detect-only related MSI packages as
+                        determing supersedence and don't modify superseded MSI
+                        packages.
+
+RobMen: SFBUG:3403392 - cache packages only when absolutely necessary.
+        SFBUG:3390725 - send MsiRecord data when possible from MSI messages.
+
+RobMen: SFBUG:3394749 - add supportedFramework/@runtimeVersion to ensure
+                        correct framework is loaded.
+
+RobMen: SFBUG:3390016 - fix bundle search documentation.
+        SFBUG:3413887 - fix .targets for VS2005 since conditions do not support
+                        short circuiting.
+        SFBUG:3118791 - add support for case-insensitive variable comparisons.
+        SFBUG:3393136 - add support for System64Folder in Burn.
+
+RobMen: SFBUG:3390305 - make long cabinet templates a warning like other
+                        cabinet messages.
+
+RobMen: SFBUG:3367340 - handle the Burn resume mode better to prevent getting
+                        into perpetually failed state.
+
+RobMen: WiX v3.6 single executable bundle and MSI no longer creates ARP entry.
+
+BobArnson: Fix SFBUG:3303277/3324464/3414454 by following project references 
+           when building a solution. MSBuild's behavior when building a 
+           solution changed in v4.0. For details, see 
+           http://connect.microsoft.com/VisualStudio/feedback/details/586875/msbuild-4-0-incorrectly-processes-project-dependencies-specified-in-solution-file.
+
+EricStJ: SFBUG:3299524 E_FAIL when opening a WIXPROJ with "show all files"
+         SFBUG:3405294 % is not encoded when setting property values.
+
+WixBuild: Version 3.6.2130.0
+
+RobMen: Fix Burn MSI messages not being sent via MBA due to exception thrown.
+
+RobMen: Retry setting ACLs in Burn since files may be in use.
+        Repair MSIs in Burn using InstallProduct instead of ConfigureProduct.
+
+WixBuild: Version 3.6.2201.0
+
+BriaRo: Adding PatchFamilyGroup and PatchFamilyGroupRef as two new WiX schema
+        elements.
+        
+BobArnson: SFBUG:3414460 - Update DocCompiler to read the authored HTML title.
+
+BobArnson: SFBUG:3303277 - Restore .vcxproj references by calling
+           GetNativeTargetPath.
+
+PMarcu: SFBUG:3374854 - Fixing docs to not say that you can use preprocessor
+                        variables that are not defined to check for their
+                        existance in an if statement.
+
+PMarcu: SFBUG:3392723 - Fixing crash when duplicate keys are added during
+                        ICE validation.
+
+BobArnson: SFBUG:3383304 - Add Directory and Source attributes to
+           ComponentGroup
+
+RobMen: SFBUG:3418715 - Provide override switch for test harnesses to disable
+                        unelevate behavior in Burn.
+
+WixBuild: Version 3.6.2207.0
+
+BobArnson: SFBUG:3393359 - de-dupe media and loose-file payloads with the same
+           name.
+
+BobArnson: SFBUG:3408233 - Use locale functions on Vista and later; fallback to
+           LCID.
+
+BobArnson: SFBUG:3130897 - ensure a "none" feature action state on execute is 
+           likewise "none" for rollback.
+
+BobArnson: Add PathCompress pathutil function to compress a file or directory.
+
+RobMen: SFBUG:3419045 - remove Sleep call now that message callbacks are working
+                        regularly.
+
+RobMen: Fix Insignia to not crash when inscribing a Media row with no cabinet.
+
+BobArnson: For * component GUIDs, support multiple files iff the keypath is a
+           versioned file and all the other files are not.
+
+BobArnson: Check output for duplicate GUIDs, replacing ICE08.
+
+JieJi: Fix mba.wxs to support RTF license in preqba.
+
+RobMen: SFBUG:3421308 - do not allow MSI packages to supersede themselves.
+
+RobMen: Move Burn resume key to RunOnce so per-machine bundles are automatically
+        elevated on restart.
+
+WixBuild: Version 3.6.2214.0
+
+HeathS: General code cleanup and bug fixes for the dependency feature.
+
+BobArnson: SFBUG:3361054 - Deprecate RegistryKey/@Action, replacing with 
+           @ForceCreateOnInstall and @ForceDeleteOnUninstall.
+
+MiCarls: SFBUG:3036347 - use an appropriate EstimatedSize in ARP.
+
+RobMen: Make cache failures on non-vital packages same as for vital packages.
+
+RobMen: SFBUG:3414392 - ensure Burn engine's suppress restart dialog is closed
+                        before attempting to schedule restart.
+
+RobMen: Burn engine will recommend best action.
+
+BobArnson: SFBUG:3425511 - Add support for RegistrySearch/@Root="HKU|HKCR".
+
+BobArnson: Fix doc bugs SFBUG:3425151 and SFBUG:3424772.
+
+PMarcu: SFBUG:3389181 pyro throws null exception when passing wixouts to torch.
+
+WixBuild: Version 3.6.2221.0
+
+BobArnson: SFBUG:3419080 and SFBUG:3309955 - For ProgramFiles[64]Folder and 
+           CommonFiles[64]Folder, use CSIDL to get paths; for the x86 stub, use
+           the registry to get the 64-bit paths.
+
+BobArnso: SFBUG:3427953 - Take a package's permanence into account when
+          determining default request state.
+
+PMarcu: SFBUG:3291297 preprocessor doesn't handle prefixes properly when 
+        resolving variables. Always hit default of $(var.
+
+RobMen: SFBUG:3420641 - correctly handle /layout when launched elevated.
+
+RobMen: SFBUG:3429406 - ensure signed bundles with attached containers stay
+                        signed during modify/uninstall.
+
+EricStJ: SFBUG:3428846 - set SaveOperatingEnvironment=false when harvesting
+                         projects inside msbuild
+
+RobMen: Related bundles should not assume Burn exe protocol is forward
+        compatible and move protocol compatibility to Beta.
+
+RobMen: SFBUG:3423401 - use DisableUninstall and DisableModify to hide bundles
+                        from ARP.
+        Deprecate Bundle/@DisableRepair since that only works for MSI files.
+
+RobMen: Burn now factors in the language for related packages.
+
+PMarcu: Add retries around database commit to handle msi locking issue.
+
+HeathS: Add dependency checks and registration in the Burn engine.
+        SFBUG:3386927 - Properly ref-count packages during upgrade.
+        SFBUG:3387046 - Properly ref-count packages during unintall.
+        SFBUG:3405221 - Properly ref-count packages during rollback.
+        
+BobArnson: When resuming after a reboot, via the RunOnce key, re-launch the 
+           bundle and exit so Windows will finish processing RunOnce and load 
+           the shell. The prior behavior locked the user on a shell-less black
+           desktop until the resumed chain was completed, which is a bit 
+           presumptious.
+
+HeathS: Support old WixDependencyProvider table schema in the binder.
+
+BriaRo: Refactor of Differ.cs in order to make large code blocks resuable.
+
+HeathS: SFBUG:3435047 - Do not register dependencies on failed packages.
+
+
+BobArnson: Preserve Field.PreviousData during transform diffing, so the 
+           original field value is available in the .wixpdb.
+
+HeathS: Register providers immediately after package execution.
+        SFBUG:3435047 - Do not fail the dependency check for non-vital packages.
+
+AaronSte: Add links to Burn documentation topics that are not currently 
+          reachable in the online docs.
+
+HeathS: Pass dependencies to ignore to packages and related bundles.
+
+RobMen: SFBUG:3432935 - prevent infinite loop when retrying or ignoring download
+                        of packages in Burn.
+
+HeathS: Always write bundle registration for detection but allow hiding it.
+
+HeathS: SFBUG:3380917 - Disable CRL checks prior to Vista for offline scenarios.
+
+PMarcu: Adding logging and waits in the retry logic around database commit.
+
+RobMen: SFBUG:3367340;3379176;3431430 - register only after a non-permanent
+                                        package is installed by Burn.
+        Pass layout directory via command to BootstrapperApplication.
+
+HeathS: Create dependency key when registering dependents.
+        Reset package state when resetting the plan.
+
+BobArnson: Add the Retina tool, to extract files embedded in a binary Wixlib
+           and rebuild the Wixlib with potentially updated files. This allows
+           you to Authenticode sign DLLs, for example.
+
+BobArnson: Reset Burn's command action when Plan is called.
+
+RobMen: Burn should not remove registration once installed until uninstall.
+
+RobMen: SFBUG:3426288 - Burn will now prompt for attached container source when
+                        necessary.
+        Burn fix security issue where cached content may not be verified.
+
+RobMen: Fallback to x86 Burn when building a Platform=x64 Bundle.
+
+BobArnson: Add support for keyboard navigation to ThmUtil
+
+BobArnson: SFBUG:3447325 - CEngineForApplication::FormatString returns 
+           E_MOREDATA in all cases where there isn't enough room.
+
+BobArnson: SFBUG:3431208 - Fix typo.
+           SFBUG:3429419 - Add Lux to the tools list.
+
+HeathS: Allow bundles to register in Installed Updates.
+
+HeathS: Register or unregister the bundle even when no packages are planned.
+
+RobMen: Differentiate minor upgrade from major upgrade in Burn to correctly
+        handle rollback.
+
+RobMen: SFBUG:3459780 - correctly plan rollback of acquired packages.
+
+RobMen: SFBUG:3405230 - store Burn logs in non-session specific TEMP folder
+                        so they don't get deleted on session logoff.
+
+PMarcu: Adding quiet and passive support to the WixUX.
+
+PMarcu: SFBUG 3458184: Can't use property expansion in Control->Publish.
+
+PMarcu: More logging for mysterious DatabaseCommit bug.
+
+PMarcu: SFBUG 3459661: Pyro shouldn't expect a WixFile table when there are 
+                       no files in the File table.
+
+RobMen: Add *Package and Payload/@SuppressSignatureVerification to force
+        Burn to always use hash verification of packages and/or payloads.
+
+EricStJ: SFBUG:3435020 IIS wasn't matching "All Unassigned" IP
+         SFBUG:3445454 Wix product version in VS updated to 3.6
+         SFBUG:3436464 IIS CAs fail when IIS is not installed
+         SFBUG:3432845 ServiceConfig/@ProgramCommandLine is not formatted
+         SFBUG:3431920 IIS7 CA Failure when installing an SSL cert
+                       no files in the File table.
+
+PMarcu: Major overhaul to the WiX installer UI.
+
+PMarcu: Making the eula an htm file and adding highlight on hover to the UI.
+
+PMarcu: Refactoring Progress and Cancel in WixUX as well as adding logging.
+
+PMarcu: Fixing PackagerId to PackageId.
+
+RobMen: burn /layout should go where the bundle is not current directory.
+
+RobMen: Fix Burn to correctly pass extended MSI message data to BA.
+
+RobMen: Prevent restarting all of caching when non-vital package fails to
+        acquire.
+
+PMarcu: Making WixUX handle sub package progress.
+
+PMarcu: Making WixUX handle cache progress.
+
+RobMen: Redesign WiX v3.6 install to take better advantage of Burn.
+
+PMarcu: Update Database commit retry logic.
+
+EricStJ: Support for .NET 4.5 & VS 11
+         Switching to extension install instead of devenv /setup.
+
+RFlaming: Add ExitCode child element of ExePackage element
+
+PMarcu: Finishing the rename of WixUx to WixBA.
+
+PMarcu: Handling cancel on elevate in WixBA
+
+HeathS: SFBUG:3476469 - Do an online certificate check before offline.
+
+WixBuild: Version 3.6.2520.0
+
+JieJi: Fix payload existence checking in bundle binding.
+
+RobMen: When Burn runs from package cache, do not copy engine to working folder
+        and do not try to cache engine over top itself.
+
+BobArnson: SFBUG:3479213 - Add DownloadUrl interpolation doc
+           SFBUG:3432837 - Remove obsolete doc
+
+HeathS: Skip bad configuration when enumerating products for patches in Burn.
+
+RobMen: SFBUG:3476841 - add missing CPL.txt
+        SFBUG:3476842 - add missing extensions.
+
+WixBuild: Version 3.6.2527.0
+
+HeathS: Fixed stack overflow issue in the managed bootstrapper application.
+
+RobMen: Use MSIFASTINSTALL for all MsiPackages in Burn to improve default
+        performance.
+
+WixBuild: Version 3.6.2603.0
+
+HeathS: SFBUG:3426489 - Write additional registration for update detection.
+
+EricStJ: SFBUG:3483397 - Fix wixtaskspath in wix.ca.targets
+         SFBUG:3481876 - Ensure we reference all necessary VS search props
+
+HeathS: SFBUG:3460518 - Explicitly register package sources when cached.
+
+HeathS: SFBUG:3469206 - Do not register dependencies on packages that are
+        already installed but not installing in the current bundle.
+
+HeathS: SFBUG:3439748 - Warn if dependency providers are in 64-bit components.
+
+WixBuild: Version 3.6.2610.0
+
+RobMen: Treat access denied error from elevation prompt as user cancel in Burn.
+
+RobMen: SFBUG:3433490;3197930;3203296 - fix Burn handling of patches.
+
+RobMen: SFBUG:3482871 - ensure MSP log filenames don't overwrite in Burn.
+
+RobMen: SFBUG:3482872 - add the target product code to Burn log when patching.
+
+RobMen: SFBUG:3463125;3474274 - disable Burn elevate code.
+
+RobMen: SFBUG:3485168 - send the BA target ProductCodes when patching via Burn.
+
+RobMen: Display error message when Burn provided invalid log path and disable
+        default logging on error.
+
+RobMen: Handle standard restart return codes by default for .EXEs in Burn.
+
+RobMen: SFBUG:3481704 - fix Burn cleanup to correctly remove obsoleted packages.
+
+RobMen: Only plan rollback actions if Burn plans an execute action.
+
+RobMen: SFBUG:3479775 - correctly uninstall superseded packages in Burn.
+        SFBUG:3458976 - send REINSTALL=ALL when feature selection is disabled
+                        in Burn.
+
+EricStJ: SFBUG:3484606 Add back native custom action projects.
+
+EricStJ: Clean up bundle project templates to use appropriate targets path.
+
+RobMen: SFBUG:3472564 - update insignia documentation.
+
+RobMen: SFBUG:3486506 - ensure Bundle log prefix is always a valid filename.
+
+HeathS: Added recently new variables to the documentation.
+
+HeathS: Support for sticky patch and addon bundles.
+        Support for patch and addon related bundles to target upgrade codes.
+
+RobMen: Display related bundles in plan in Burn log.
+
+WixBuild: Version 3.6.2617.0
+
+BobArnson: SFBUG:3447325 - clean up message if all conditions pass
+
+BobArnson: SFBUG:3419080 - use CSIDL_PROGRAM_FILES for 32-bit Program Files
+
+EricStJ: Fix typo in native custom action project template setup authoring.
+
+BobArnson: SFBUG:3431541 - handle Tab/Shift+Tab for rich-edit control
+
+BobArnson: - Add Hypertext control to ThmUtil (using Syslink commctrl)
+           - Add Hypertext/Richedit link handling to ThmUtil
+
+RobMen (jbtibor): SFBUG:3467540 - fix WixUI_ro-RO.wxl file.
+
+PMarcu: Adjusting retry message on failure of database commit.
+
+HeathS: Ignore the return code when registering MSI package source.
+
+RobMen: SFBUG:3431330;3458417 - wixstdba uninstall cancel now rollback.
+        SFBUG:3431449 - disable wixsdtba cancel button appropriately.
+        SFBUG:3476390 - fix wixstdba crash when cancelling.
+
+WixBuild: Version 3.6.2624.0
+
+RobMen: Prevent hang if Burn pipe communication fail during initialization.
+
+RobMen: Improve cancel handling in Burn during parallel cache and rollback.
+
+greggm: Add more support for Vista-and-later firewall rules: descriptions and
+        application+port/protocol rules.
+
+RobMen: SFBUG:3428949 - enable wixstdba to show hyperlinks in failure messages.
+        SFBUG:3431333 - enable wixstdba cancel confirmation to be localized.
+
+HeathS: Reduced number of strings compiled into the executable.
+
+HeathS: Added related bundle test for chained uninstall.
+
+RobMen: Burn will continue without logging when appending to ensure setup
+        always resumes after restart.
+
+BobArnson: Add <Control> to .wxl schema: Override size, location, and text of
+           MSI UI controls.
+
+RobMen: SFBUG:3428804 - show restart message in wixstdba appropriately.
+
+WixBuild: Version 3.6.2627.0
+
+BobArnson: SFBUG:3288872 - add Control loc overrides to fi-FI localization.
+
+BobArnson: SFBUG:3302804 - prevent hidden variables from showing up in log.
+
+RobMen: SFBUG:3459756 - pause autoupdates during execution in Burn.
+        Only allow one Burn to be executing at at time.
+
+RobMen: SFBUG:3488534 - launch maintenance mode when Bundle already installed.
+        Add WixBundleInstalled and WixBundleAction built-in variables.
+
+RobMen: Improve logging about cached packages in Burn.
+
+RobMen: Disable check to allow only one Burn to be executing at a time due to
+        embedded and related bundle handling.
+
+HeathS: Improved logging when source list registration failed.
+
+RobMen: Fix progress from embedded/related bundles in Burn.
+
+BobArnson: SFBUG:3439124 - Use Control localization in locutil to localize
+           ThmUtil controls.
+
+RobMen: Implement WixBundleLastUsedSource in Burn to better handle prompt for
+        source scenarios.
+
+RobMen: Fix Burn progress for repair/uninstall and layout.
+        Improve Burn acquisition logging a little more.
+
+BobArnson: Switch from Hyperlink to Hypertext controls in WixStdBA themes.
+           Localization string ids have changed.
+
+RobMen: SFBUG:3495355 - fix feature selection for superseded MSIs in Burn.
+
+HeathS: Changed default bundle provider key to UpgradeCode and Version.
+
+RobMen: SFBUG:3487838 - Fix per-user packages in Burn.
+
+RobMen: SFBUG:3196900 - Burn attempts rollback of MSI packages even if the
+                        cancel happened after MSI finalized installation.
+        Add execute state to log during Burn apply.
+
+BobArnson:  Fix SFBUG:3496347 - tell the rich-edit control how much text is 
+              coming.
+            Add WixStandardBootstrapperApplication and 
+              WixManagedBootstrapperApplicationHost to BalUtilExtension to 
+              simplify authoring of BA options (instead of undiscoverable 
+              WixVariables).
+            Add bal:WixStandardBootstrapperApplication/@SuppressOptionsUI to 
+              hide the Options button if a bundle installation directory 
+              shouldn't be supported.
+            Add bal:WixStandardBootstrapperApplication/@SuppressDowngradeFailure 
+              to let attempted downgrades happen. This is useful for 
+              redistributable bundles where a later version major-upgrades 
+              prior versions and where a product that ships with a prior 
+              version shouldn't cause an error when a later version of the 
+              redistributable is already present.
+            Support localized strings for license file and URL.
+
+RobMen: Default Burn packages and rollback boundaries to be vital.
+        Add MsiPackage/@Visible to control MSI visibility in ARP.
+
+BobArnson: Use ClearType when available for ThmUtil controls.
+
+WixBuild: Version 3.6.2705.0
+
+RobMen: SFBUG:3459758 - Burn support for system restore points.
+
+RobMen: SFBUG:3497028 - Burn parallel cache proceeds after each package.
+        Ignoring cache failure no longer tries to execute package later.
+
+HeathS: SFBUG:3460475 - Support reference counts for related bundles.
+
+BobArnson: SFBUG:3496929 - Look up controls as we can't rely on using 
+           GWLP_USERDATA for SysLink controls on Windows XP.
+
+BobArnson: SFBUG:3497031 - Dump Burn variables at the end of the chain log.
+
+RobMen: Error on pending reboots during apply instead of plan in Burn to be
+        consistent.
+
+RobMen: Add an error type to error messages sent from Burn.
+
+BobArnson: SFBUG:3497286 - Switch WixStdBA doc to use 
+           bal:WixStandardBootstrapperApplication.
+
+BobArnson: SFBUG:3497026 - Add util:ComponentSearchRef, 
+           util:DirectorySearchRef, util:FileSearchRef, util:ProductSearchRef,
+           and util:RegistrySearchRef to reference bundle search authoring.
+
+JieJi: SFBUG:3463228 Msi with slipstream patches -- PATCH property shouldn't be
+       on command line for repair and uninstall.
+
+BobArnson: SFBUG:3497024 - When an Upgrade row has an upgrade code different 
+           than a package's upgrade code, don't count it as a possible 
+           downgrade to that package.
+
+BobArnson: SFBUG:3445447 - Pick a better error message template.
+
+BobArnson: Change WixLoc.Control to WixLoc.UI to support localizing attributes
+           of dialogs in addition to individual controls.
+
+WixBuild: Version 3.6.2712.0
+
+BobArnson: Harvest patch metadata DisplayName for MspPackages.
+
+JieJi: Fixed SizeParamIndex for interop declaration.
+
+RobMen: Improve logging about restarts and re-allow elevated process to execute
+        the restart.
+
+RobMen: SFBUG:3505052 - correctly set MSP rollback logging variable.
+        Reset detect state when re-running detect.
+        Fix Burn crash while planning non-slipstream patches.
+
+WixBuild: Version 3.6.2719.0
+
+PMarcu: SFBUG:3477462 - Adding /layout support to WixBA.
+
+RobMen: SFBUG:3509882 - correctly interpret WUSA reboot return code.
+
+JieJi: Fix crash in slipstream install rollback, where the patch rollback
+       actions were not planned correctly. 
+
+
+HeathS: SFBUG:3438238 - Fix warning message to pass -p to torch.exe.
+
+HeathS: SFBUG:3509974 - Add Product properties to separate fragments.
+
+PMarcu: Fit and finish in WixBA - Slowing down gears and fixing update tile.
+
+WixBuild: Version 3.6.2726.0
+
+BobArnson: Don't log built-in variables unless they've been used. 
+           Add Windows version to Burn log.
+
+RobMen: Install Custom Action templates on VS 11.
+
+HeathS: Split dependency custom action to improve performance.
+
+BobArnson: Persist data about MSI packages in the bundle .wixpdb.
+
+RobMen: Simplistic telemetry for WiX toolset install.
+
+EricStJ: SFBUG:3498743 iis:WebAppPool MaxCpuUsage off by x10 
+         NetFx chainer errors were not reported correctly.  
+         Error message handler for wixstdba wasn't working
+         Added support for RemotePayloads.  Added NetFx packagegroups.
+         Devenv.exe /setup isn't needed for VS2010.
+
+HeathS: Added Win8 Express detection and fixed other VS11 detection.
+
+EricStJ: Put NetFx packages under redist folder in layout.
+         Fix NetFx package detection.
+
+WixBuild: Version 3.6.2802.0
+
+
+WixBuild: Version 3.6.2803.0
+

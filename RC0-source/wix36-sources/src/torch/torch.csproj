@@ -1,0 +1,45 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{7BC95599-2920-4824-B9F9-B21D8CFF061B}</ProjectGuid>
+    <AssemblyName>torch</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Tools</RootNamespace>
+    <PlatformTarget>x86</PlatformTarget>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="torch.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TorchStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TorchStrings.resx</DependentUpon>
+    </Compile>
+    <EmbeddedNativeResource Include="torch.rc" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TorchStrings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TorchStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

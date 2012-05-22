@@ -1,0 +1,18 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{b5461a62-7303-4741-a094-a793a235e38d}</ProjectGuid>
+    <OutputName>IsolatedApp</OutputName>
+    <OutputType>Library</OutputType>
+    <BindFiles>True</BindFiles>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <DefineConstants>
+      $(DefineConstants);
+      targetDirectory=$(OutputPath);
+    </DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="IsolatedApp.wxs" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+</Project>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="core" default="core.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    core.build - Builds the managed MBA core.
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- Properties -->
+  <property name="file.target.mba.core" value="${dir.target.wix}\BootstrapperCore.dll" readonly="true" />
+
+  <!-- Nant target hand off to MSBuild -->
+  <target name="mbacore" depends="mbacore.inc" />
+
+  <target name="mbacore.build" description="Rebuild MBA Core" depends="mbacore.clean, mbacore.inc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.burn.mba.core}\core.csproj" />
+    </exec>
+  </target>
+
+  <target name="mbacore.clean" description="Cleans the MBA Core build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.burn.mba.core}\core.csproj" />
+    </exec>
+  </target>
+
+  <target name="mbacore.inc" description="Incremental MBA Core build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.burn.mba.core}\core.csproj" />
+    </exec>
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="mbacore.properties.defined" value="true" readonly="true" />
+
+</project>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    The table definitions for the Windows Installer XML Toolset Driver Install Frameworks for Applications Extension.
+-->
+<tableDefinitions xmlns="http://schemas.microsoft.com/wix/2006/tables">
+    <tableDefinition name="MsiDriverPackages">
+        <columnDefinition name="Component" type="string" length="72" primaryKey="yes" modularize="column"
+                keyTable="Component" keyColumn="1" category="identifier" description="Name of the component that represents the driver package"/>
+        <columnDefinition name="Flags" type="number" length="4"
+                minValue="0" maxValue="31" description="Flags for installing and uninstalling driver packages"/>
+        <columnDefinition name="Sequence" type="number" length="4" nullable="yes"
+                minValue="0" description="Order in which the driver packages are processed"/>
+    </tableDefinition>
+</tableDefinitions>

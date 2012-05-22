@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'
+     xmlns:bal='http://schemas.microsoft.com/wix/BalExtension'
+     xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
+
+    <!--
+      Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    -->
+
+    <?include WixVer.wxi ?>
+
+    <Bundle Name='WiX Toolset v$(var.WixVersion)' Manufacturer='Microsoft Corporation'
+            Version='$(var.WixVersion)' UpgradeCode='65E893AD-EDD5-4E7D-80CA-F0F50F383532'
+            IconSourceFile='ProjectFile.ico' SplashScreenSourceFile='SplashScreen.bmp'
+            AboutUrl='http://wixtoolset.org' UpdateUrl='http://wixtoolset.org/releases/feed/v3.6'
+            Compressed='no'>
+
+        <BootstrapperApplicationRef Id='ManagedBootstrapperApplicationHost'>
+          <Payload Name='BootstrapperCore.config' SourceFile='WixBA.BootstrapperCore.config' />
+
+          <Payload SourceFile='WixBA.dll' />
+          <Payload SourceFile='License.htm' />
+          <Payload SourceFile='NetfxLicense.rtf' />
+        </BootstrapperApplicationRef>
+
+        <util:RegistrySearch Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0' Value='InstallDir' Variable='VS2005InstallFolder' />
+        <util:RegistrySearch Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\9.0' Value='InstallDir' Variable='VS2008InstallFolder' />
+        <util:RegistrySearch Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0' Value='InstallDir' Variable='VS2010InstallFolder' />
+        <util:RegistrySearch Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0' Value='InstallDir' Variable='VS11InstallFolder' />
+
+        <Chain>
+            <PackageGroupRef Id='Netfx4Full' />
+            <PackageGroupRef Id='ProjectAggregator' />
+
+            <!-- DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' -->
+            <MsiPackage Id='Wix' Vital='yes' Name='data\core.msi' SourceFile='x86\data\core.msi'
+                        DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' />
+
+            <MsiPackage Vital='yes' Name='data\msdk.msi' SourceFile='x86\data\msdk.msi'
+                        InstallCondition='VS2005InstallFolder OR VS2008InstallFolder OR VS2010InstallFolder OR VS11InstallFolder'
+                        DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' />
+
+            <PackageGroupRef Id='NativeSdkPackages' />
+
+            <!-- Votive needs to be last as it runs devenv /setup -->
+            <MsiPackage Vital='yes' Name='data\votive.msi' SourceFile='x86\data\votive.msi'
+                        InstallCondition='VS2005InstallFolder OR VS2008InstallFolder OR VS2010InstallFolder OR VS11InstallFolder'
+                        DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' />
+        </Chain>
+    </Bundle>
+
+    <Fragment>
+        <PackageGroup Id='NativeSdkPackages'>
+            <?if $(var.Build2005)=true?>
+            <MsiPackage Vital='yes' Name='data\nsdk2005.msi' SourceFile='x86\data\nsdk2005.msi'
+                        InstallCondition='VS2005InstallFolder'
+                        DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' />
+            <?endif?>
+
+            <?if $(var.Build2008)=true?>
+            <MsiPackage Vital='yes' Name='data\nsdk2008.msi' SourceFile='x86\data\nsdk2008.msi'
+                        InstallCondition='VS2008InstallFolder'
+                        DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' />
+            <?endif?>
+
+            <?if $(var.Build2010)=true?>
+            <MsiPackage Vital='yes' Name='data\nsdk2010.msi' SourceFile='x86\data\nsdk2010.msi'
+                        InstallCondition='VS2010InstallFolder'
+                        DownloadUrl='http://wixtoolset.org/releases/$(var.WixVersion)/{2}' />
+            <?endif?>
+        </PackageGroup>
+    </Fragment>
+</Wix>

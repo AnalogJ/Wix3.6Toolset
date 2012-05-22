@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Changing the WiX Standard Bootstrapper Application Branding</title>
+</head>
+
+<body>
+<h1>Changing the WiX Standard Bootstrapper Application Branding</h1>
+
+<p>The WiX Standard Bootstrapper Application displays a generic logo in the bottom left corner of the user interface. It is possible to change the image displayed using the WixStandardBootstrapperApplication element provided by WixBalExtension. The following example uses a &quot;customlogo.png&quot; file found in the &quot;path\to&quot; folder relative to the linker bind paths.</p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;
+         xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"&gt;
+      &lt;Bundle&gt;
+        &lt;BootstrapperApplicationRef Id=&quot;WixStandardBootstrapperApplication.RtfLicense&quot;&gt;
+          &lt;bal:WixStandardBootstrapperApplication
+            LicenseFile="path\to\license.rtf"
+            <strong class="highlight">LogoFile="path\to\customlogo.png"</strong>
+            /&gt;
+        &lt;/BootstrapperApplicationRef&gt;
+
+        &lt;Chain&gt;
+          ...
+        &lt;/Chain&gt;
+      &lt;/Bundle&gt;
+    &lt;/Wix&gt;</pre>
+</body>
+</html>

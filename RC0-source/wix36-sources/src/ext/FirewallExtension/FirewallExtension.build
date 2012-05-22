@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="firewallextension" default="firewallextension.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    firewallextension.build - Builds the FirewallExtension project
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- extension directories -->
+  <property name="firewallextension.ca.dir.src" value="${dir.src.ext}\FirewallExtension\ca" readonly="true" />
+
+  <!-- targets -->
+  <property name="file.target.firewallcadll" value="${dir.target.wix}\firewall.dll" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="firewallextension.build" description="Peforms a full rebuild (clean then build)" depends="firewallextension.clean, firewallextension.inc" />
+
+  <!-- Clean -->
+  <target name="firewallextension.clean" description="Cleans the build">
+    <delete dir="${dir.build.ext.firewallextension}" failonerror="false" if="${directory::exists(dir.build.ext.firewallextension)}" />
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix}">
+        <include name="firewall.dll" />
+        <include name="firewall.pdb" />
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="firewallExtension.clean" description="Another clean call">
+    <call target="firewallextension.clean"/>
+  </target>
+
+  <!-- Inc -->
+  <target name="firewallextension.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile">
+    <fileset id="compileCpp.fileset.sources" basedir="${firewallextension.ca.dir.src}">
+      <include name="firewall.cpp" />
+      <include name="dllmain.cpp" />
+    </fileset>
+    <property name="compileCpp.dir.build" value="${dir.build.ext.firewallextension}" />
+    <property name="compileCpp.file.precomp.h" value="${firewallextension.ca.dir.src}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.file.rc" value="${firewallextension.ca.dir.src}\firewall.rc" />
+    <property name="makeNativeDll.file.target" value="${file.target.firewallcadll}" />
+    <property name="makeNativeDll.file.def" value="${firewallextension.ca.dir.src}\firewall.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil}&quot; &quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\RpcRT4.Lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" />
+
+    <!-- Make scaexec.dll -->
+    <call target="makeNativeDll" />
+  </target>
+
+</project>

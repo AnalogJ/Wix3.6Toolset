@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VSIP10Dir>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\VSIP\10.0@InstallDir)\VisualStudioIntegration\Common\Assemblies</VSIP10Dir>
+    <VS10IDEDir>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\10.0@InstallDir)</VS10IDEDir>
+    <FXCOPDIR>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\10.0\Setup\EDev@FxCopDir)</FXCOPDIR>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{24A98296-9D58-42C1-95C0-CC36736409E2}</ProjectGuid>
+    <AssemblyName>votive2010</AssemblyName>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <OutputPath>bin\Debug\</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <!-- Add new files to votive.common.targets and not here -->
+  <ItemGroup>
+    <Reference Include="EnvDTE">
+      <HintPath>$(VS10IDEDir)\PublicAssemblies\EnvDTE.dll</HintPath>
+    </Reference>
+    <Reference Include="EnvDTE80">
+      <HintPath>$(VS10IDEDir)\PublicAssemblies\EnvDTE80.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Engine, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Build, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommonIDE">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.CommonIDE.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.10.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.Immutable.10.0</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Internal.VisualStudio.Shell.Interop.9.0">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Designer.Interfaces">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Designer.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Design">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.Shell.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.ProjectAggregator">
+      <HintPath>$(VSIP10Dir)\Microsoft.VisualStudio.ProjectAggregator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WizardFramework">
+      <HintPath>$(VS10IDEDir)\Microsoft.WizardFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.WizardFrameworkVS">
+      <HintPath>$(VS10IDEDir)\Microsoft.WizardFrameworkVS.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.VSHelp">
+      <HintPath>$(VS10IDEDir)\Microsoft.VisualStudio.VSHelp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="VslangProj80" />
+    <Reference Include="VslangProj">
+      <HintPath>VSLangProj100.dll</HintPath>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Wix">
+      <HintPath>..\..\..\build\debug\x86\wix.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedNativeResource Include="Votive2010.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\votive2010\extension.vsixmanifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\votive2010\votive2010.pkgdef">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\sconce\sconce2010.csproj">
+      <Project>{8214FF8E-ACCB-4F5B-B7CB-FAAD7CAC3900}</Project>
+      <Name>sconce</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <Import Project="votive2010.common.targets" />
+  <Import Project="..\..\..\wixbuild.common.targets" />
+</Project>

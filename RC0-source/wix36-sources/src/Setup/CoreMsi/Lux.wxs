@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+-->
+
+<?include WixVer.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="LuxComponents" Directory="BinFolder">
+            <Component>
+                <File Source="lux.exe" />
+                <File Source="lux.exe.config" />
+            </Component>
+
+            <Component>
+              <File Source="LuxTasks.dll" />
+            </Component>
+
+            <Component>
+                <File Source="nit.exe" />
+                <File Source="nit.exe.config" />
+            </Component>
+
+            <Component>
+                <File Source="WixLuxExtension.dll" />
+            </Component>
+
+            <ComponentRef Id="lux.xsd" />
+            <ComponentGroupRef Id="LuxMsbuildComponents" />
+        </ComponentGroup>
+
+        <Component Directory="DocFolder">
+            <File Source="lux\wixext\Xsd\lux.xsd" />
+        </Component>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="LuxMsbuildComponents"  Directory="MSBuildMSWix3xFolder">
+            <Component>
+                <File Source="lux.targets" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

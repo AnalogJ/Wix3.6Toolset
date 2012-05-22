@@ -1,0 +1,61 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{CC3521F5-D0A8-4CBA-99E2-092FCD04125D}</ProjectGuid>
+    <AssemblyName>WixIIsExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IIsCompiler.cs" />
+    <Compile Include="IIsDecompiler.cs" />
+    <Compile Include="IIsExtension.cs" />
+    <Compile Include="IIsFinalizeHarvesterMutator.cs" />
+    <Compile Include="IIsHarvesterMutator.cs" />
+    <Compile Include="IIsWebSiteHarvester.cs" />
+    <Compile Include="IIsHeatExtension.cs" />
+    <MsgGenSource Include="Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+    <EmbeddedFlattenedResource Include="Data\tables.xml">
+      <LogicalName>$(RootNamespace).Data.tables.xml</LogicalName>
+    </EmbeddedFlattenedResource>
+    <EmbeddedFlattenedResource Include="Xsd\iis.xsd">
+      <LogicalName>$(RootNamespace).Xsd.iis.xsd</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\iis.xsd">
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.IIs</Namespace>
+    </XsdGenSource>
+    <EmbeddedResource Include="$(OutputPath)\iis.wixlib">
+      <Link>Data\iis.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\heat\heat.csproj">
+      <Project>{97B3B5DF-70D2-4658-9259-1DB34976F89F}</Project>
+      <Name>heat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\WixTasks\WixTasks.csproj">
+      <Project>{21E8F2D3-EF19-49C8-88CA-A22C5B91DFDC}</Project>
+      <Name>WixTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UtilExtension\wixext\WixUtilExtension.csproj">
+      <Project>{3E74F4F0-7DC9-4837-9443-D5BE061C892C}</Project>
+      <Name>WixUtilExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

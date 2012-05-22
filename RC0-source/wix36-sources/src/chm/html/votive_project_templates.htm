@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link href="style.css" type="text/css" rel="stylesheet" />
+
+  <title>Project Templates</title>
+</head>
+
+<body>
+  <h1>Project Templates</h1>
+
+  <p>The WiX Visual Studio package provides the following Visual Studio project templates:</p>
+
+  <ul>
+      <li><strong>WiX Project </strong>- used to create a new Windows Installer package (.msi) file. Each new WiX project includes a .wxs file that consists of a &lt;Product&gt; element that contains a skeleton with the WiX authoring required to create a fully functional Windows Installer package. The &lt;Product&gt; element includes &lt;Package&gt;, &lt;Media&gt;, &lt;Directory&gt;, &lt;Component&gt; and &lt;Feature&gt; elements.</li>
+      <li><strong>WiX Library Project</strong> - used to create a new WiX library (.wixlib) file. A .wixlib file is a library of setup functionality that can be easily shared across different WiX-based packages by including it when linking the setup package. Each new WiX library project includes a .wxs file that consists of an empty &lt;Fragment&gt; element that can be populated with WiX authoring that can be shared by multiple packages.</li>
+      <li><strong>WiX Merge Module Project</strong> - used to create a new Windows Installer merge module (.msm) file. A merge module contains a set of Windows Installer resources that can be shared by multiple Windows Installer installation packages by merging the contents of the module into the .msi package. Each new WiX merge module project includes a .wxs file that consists of a &lt;Module&gt; element that contains a skeleton with the WiX authoring required to create a fully functional merge module. The &lt;Module&gt; element includes &lt;Package&gt;, &lt;Directory&gt; and &lt;Component&gt; elements.</li>
+  </ul>
+
+  <p>To create a new project:</p>
+
+  <ol>
+    <li>Click on File | New | Project&nbsp; on the Visual Studio menu.</li>
+
+    <li>Navigate to the Windows Installer XML node.</li>
+
+    <li>Select the project template and press OK.</li>
+  </ol>
+</body>
+</html>

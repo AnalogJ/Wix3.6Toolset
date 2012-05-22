@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>WixExitEarlyWithSuccess Custom Action</title>
+</head>
+
+<body>
+  <h1>WixExitEarlyWithSuccess Custom Action</h1>
+
+  <p>The WixExitEarlyWithSuccess custom action is an immediate custom action that does nothing except return the value <a href="http://msdn.microsoft.com/library/aa368072.aspx" target="_blank">ERROR_NO_MORE_ITEMS</a>. This return value causes Windows Installer to skip all remaining actions in the .msi and return a process exit code that indicates a successful installation.</p>
+
+  <p>This custom action is useful in cases where you want setup to exit without actually installing anything, but want it to return success to the calling process. A common scenario where this type of behavior is useful is in an out-of-order installation scenario for an .msi that implements <a href="http://msdn.microsoft.com/library/aa369786.aspx" target="_blank">major upgrades</a>. When a user has version 2 of an .msi installed and then attempts to install version 1, this custom action can be used in conjunction with the <a href="http://msdn.microsoft.com/library/aa372379.aspx" target="_blank">Upgrade table</a> to detect that version 2 is already installed to cause setup to exit without installing anything and return success. If any applications redistribute version 1 of the .msi, their installation processes will continue to work even if the user has version 2 of the .msi installed on their system.</p>
+
+  <p>There are 3 steps you need to take to use the WixExitEarlyWithSuccess custom action in your MSI:</p>
+
+  <h2>Step 1: Add the WiX utilities extensions library to your project</h2>
+
+  <p>The WiX support for WixExitEarlyWithSuccess is included in a WiX extension library that must be added to your project prior to use. If you are using WiX on the command line you need to add the following to your light command line:</p>
+  <pre>
+light.exe myproject.wixobj -ext <span>WixUtilExtension</span>
+</pre>
+
+  <p>If you are using Votive you can add the extension using the Add Reference dialog:</p>
+
+  <ol>
+    <li>Open your Votive project in Visual Studio</li>
+
+    <li>Right click on your project in Solution Explorer and select Add Reference...</li>
+
+    <li>Select the <strong>WixUtilExtension.dll</strong> assembly from the list and click Add</li>
+
+    <li>Close the Add Reference dialog</li>
+  </ol>
+
+  <h2>Step 2: Add a reference to the WixExitEarlyWithSuccess custom action</h2>
+
+  <p>To add a reference to the WixExitEarlyWithSuccess custom action, include the following in your WiX setup authoring:</p>
+  <pre>
+&lt;CustomActionRef Id="WixExitEarlyWithSuccess" /&gt;
+</pre>
+
+  <p>This will cause WiX to add the WixExitEarlyWithSuccess custom action to your MSI, schedule it immediately after the <a href="http://msdn.microsoft.com/library/aa368600.aspx" target="_blank">FindRelatedProducts</a> action and condition it to only run if the property named NEWERVERSIONDETECTED is set.</p>
+
+  <h2>Step 3: Add logic to define the NEWERVERSIONDETECTED property at the appropriate times</h2>
+
+  <p>In order to cause the WixExitEarlyWithSuccess to run at the desired times, you must add logic to your installer to create the NEWERVERSIONDETECTED property. To implement the major upgrade example described above, you can add an Upgrade element like the following:</p>
+
+<pre>
+&lt;Upgrade Id="!(loc.Property_UpgradeCode)"&gt;
+  &lt;UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" /&gt;
+&lt;/Upgrade&gt;
+</pre>
+
+</body>
+</html>

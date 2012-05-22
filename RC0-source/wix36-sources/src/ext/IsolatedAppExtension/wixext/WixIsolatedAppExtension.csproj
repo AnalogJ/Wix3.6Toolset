@@ -1,0 +1,64 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{3A9347D0-ACA1-457D-BAAE-AF8AA149E46B}</ProjectGuid>
+    <AssemblyName>WixIsolatedAppExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions.IsolatedApp</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IsolatedAppClickThroughConsole.cs" />
+    <Compile Include="IsolatedAppClickThroughUI.cs" />
+    <Compile Include="IsolatedAppFabricator.cs" />
+    <Compile Include="IsolatedMsiBuilder.cs" />
+    <MsgGenSource Include="Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+    <EmbeddedFlattenedResource Include="Xsd\IsolatedApp.xsd">
+      <LogicalName>$(RootNamespace).Xsd.isolatedapp.xsd</LogicalName>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\IsolatedApp.xsd">
+      <SubType>Designer</SubType>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.IsolatedApp</Namespace>
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+    </XsdGenSource>
+    <EmbeddedResource Include="$(OutputPath)\IsolatedApp.wixlib">
+      <Link>Data\IsolatedApp.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\heat\heat.csproj">
+      <Project>{97B3B5DF-70D2-4658-9259-1DB34976F89F}</Project>
+      <Name>heat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\WixTasks\WixTasks.csproj">
+      <Project>{21E8F2D3-EF19-49C8-88CA-A22C5B91DFDC}</Project>
+      <Name>WixTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UtilExtension\wixext\WixUtilExtension.csproj">
+      <Project>{3E74F4F0-7DC9-4837-9443-D5BE061C892C}</Project>
+      <Name>WixUtilExtension</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\wui\Wui.csproj">
+      <Project>{43175B3B-5440-4556-8BAD-2C322153D96F}</Project>
+      <Name>Wui</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

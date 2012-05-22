@@ -1,0 +1,91 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocCompiler", "DocCompiler\DocCompiler.csproj", "{232C8D2F-F845-452F-A8B8-017E28A35377}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsgGen", "MsgGen\MsgGen.csproj", "{F717806C-10CD-4459-A7A2-4D6473683DDA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResIdGen", "ResIdGen\ResIdGen.csproj", "{17C8452A-0815-40DE-86B2-8004EADFF5BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotivePP", "VotivePP\VotivePP.csproj", "{7B9119A3-AE78-4D8B-81EC-F3C7D1E81109}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XsdGen", "XsdGen\XsdGen.csproj", "{F60EA31D-BE1A-4CD2-828B-CC726982D041}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateWixInclude", "GenerateWixInclude\GenerateWixInclude.csproj", "{5D28C7C3-811F-4F36-85F5-4DF9DD80ACF7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XsdStitch", "XsdStitch\XsdStitch.csproj", "{1B70F0D0-25F2-4F7E-8B2C-452F862C4C5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlattenXml", "FlattenXml\FlattenXml.csproj", "{C67B9174-31EC-480D-9EE8-29ECAFD3A36B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7} = {EB323B05-8822-4645-A0E6-ACF401ED92F7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WixBuild", "WixBuild\WixBuild.csproj", "{EB323B05-8822-4645-A0E6-ACF401ED92F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{232C8D2F-F845-452F-A8B8-017E28A35377}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{232C8D2F-F845-452F-A8B8-017E28A35377}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{232C8D2F-F845-452F-A8B8-017E28A35377}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{232C8D2F-F845-452F-A8B8-017E28A35377}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F717806C-10CD-4459-A7A2-4D6473683DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F717806C-10CD-4459-A7A2-4D6473683DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F717806C-10CD-4459-A7A2-4D6473683DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F717806C-10CD-4459-A7A2-4D6473683DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C8452A-0815-40DE-86B2-8004EADFF5BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C8452A-0815-40DE-86B2-8004EADFF5BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C8452A-0815-40DE-86B2-8004EADFF5BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C8452A-0815-40DE-86B2-8004EADFF5BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9119A3-AE78-4D8B-81EC-F3C7D1E81109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9119A3-AE78-4D8B-81EC-F3C7D1E81109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9119A3-AE78-4D8B-81EC-F3C7D1E81109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9119A3-AE78-4D8B-81EC-F3C7D1E81109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F60EA31D-BE1A-4CD2-828B-CC726982D041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F60EA31D-BE1A-4CD2-828B-CC726982D041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F60EA31D-BE1A-4CD2-828B-CC726982D041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F60EA31D-BE1A-4CD2-828B-CC726982D041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D28C7C3-811F-4F36-85F5-4DF9DD80ACF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D28C7C3-811F-4F36-85F5-4DF9DD80ACF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D28C7C3-811F-4F36-85F5-4DF9DD80ACF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D28C7C3-811F-4F36-85F5-4DF9DD80ACF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B70F0D0-25F2-4F7E-8B2C-452F862C4C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B70F0D0-25F2-4F7E-8B2C-452F862C4C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B70F0D0-25F2-4F7E-8B2C-452F862C4C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B70F0D0-25F2-4F7E-8B2C-452F862C4C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C67B9174-31EC-480D-9EE8-29ECAFD3A36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C67B9174-31EC-480D-9EE8-29ECAFD3A36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C67B9174-31EC-480D-9EE8-29ECAFD3A36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C67B9174-31EC-480D-9EE8-29ECAFD3A36B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB323B05-8822-4645-A0E6-ACF401ED92F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,45 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{97B3B5DF-70D2-4658-9259-1DB34976F89F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Tools</RootNamespace>
+    <AssemblyName>heat</AssemblyName>
+    <PlatformTarget>x86</PlatformTarget>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="heat.cs" />
+    <Compile Include="HeatStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HeatStrings.resx</DependentUpon>
+    </Compile>
+    <EmbeddedNativeResource Include="heat.rc" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HeatStrings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HeatStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

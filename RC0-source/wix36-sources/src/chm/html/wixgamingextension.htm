@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>WixGamingExtension</title>
+</head>
+
+<body>
+  <h1>WixGamingExtension</h1>
+
+  <p>The <a href='gaming_xsd_index.htm'>WixGamingExtension</a> lets you register your application as a game in Windows Vista and later, in three main categories:</p>
+
+  <ul>
+    <li>Game Explorer integration with game definition file</li>
+
+    <li>Game Explorer tasks</li>
+
+    <li>Rich saved-game preview</li>
+  </ul>
+
+  <h2>Game Explorer integration</h2>
+
+  <p>For an overview of Game Explorer, see <a href="http://msdn2.microsoft.com/library/bb173446.aspx" target="_blank">Getting Started With Game Explorer</a>. Game Explorer relies on an embedded file (game definition file or GDF) to control the data displayed about the game. For details about GDFs, see <a href="http://msdn2.microsoft.com/library/bb173445.aspx" target="_blank">The Game-Definition-File (GDF) Schema</a> and <a href="http://msdn2.microsoft.com/library/bb173443.aspx" target="_blank">GDF Delivery and Localization</a>. Using WixGamingExtension, you register a game with Game Explorer using the Game element as a child of your game executable's File element:</p>
+  <pre>
+&lt;File Id="MyGameExeFile" Name="passenger_simulator.exe" KeyPath="yes"&gt;
+    &lt;gaming:Game Id="985D5FD3-FC40-4CE9-9EE5-F2AAAB959230"&gt;
+    ...
+&lt;/File&gt;
+</pre>
+
+  <p>The Game/@Id attribute is used as the InstanceID attribute discussed <a href="http://msdn2.microsoft.com/library/bb173446.aspx#Step_4_Call_IGameExplorer_AddGame" target="_blank">here</a>, rather than generating new GUIDs at install time, which would require persisting the generated GUID and loading it for uninstall and maintenance mode.</p>
+
+  <p class="signature">Implementation note: Using the Game element adds a row to a custom table in your .msi package and schedules the Gaming custom action; at install time, that custom action adds/updates/removes the game in Game Explorer and for operating system upgrades. (See <a href="http://msdn2.microsoft.com/library/bb173449.aspx" target="_blank">Supporting an Upgrade from Windows XP to Windows Vista</a> for details.)</p>
+
+  <h2>Game Explorer tasks</h2>
+
+  <p>In Game Explorer, a game's context menu includes custom <em>tasks</em>:</p>
+
+  <ul>
+    <li><em>Play tasks</em> start the game with optional arguments.</li>
+
+    <li><em>Support tasks</em> start the user's default browser to go to a specific URL.</li>
+  </ul>
+
+  <p>For details, see <a href="http://msdn2.microsoft.com/library/bb173450.aspx" target="_blank">Game Explorer Tasks</a>. In WixGameExtension, PlayTask and SupportTask are child elements of the Game element:</p>
+  <pre>
+&lt;File Id="MyGameExeFile" Name="passenger_simulator.exe" KeyPath="yes"&gt;
+    &lt;gaming:Game Id="985D5FD3-FC40-4CE9-9EE5-F2AAAB959230"&gt;
+        &lt;gaming:PlayTask Name="Play" Arguments="-go" /&gt;
+        &lt;gaming:SupportTask Name="Help!" Address="http://example.com" /&gt;
+        ...
+    ...
+&lt;/File&gt;
+</pre>
+
+  <p>For details, see the <a href="gaming_xsd_index.htm">Gaming schema documentation</a>.</p>
+
+  <p class="signature">Implementation note: Game Explorer tasks are shortcuts, so the Gaming compiler extension translates the PlayTask into rows in <a href="wix_xsd_shortcut.htm">Shortcuts</a> and SupportTask into WixUtilExtension <a href="util_xsd_internetshortcut.htm">InternetShortcuts</a>. It also creates directories to hold the shortcuts and custom actions to set the directories.</p>
+
+  <h2>Rich saved-game preview</h2>
+
+  <p>Windows Vista includes a shell handler that lets games expose metadata in their saved-game files. For details, see <a href="http://msdn2.microsoft.com/library/bb173448.aspx" target="_blank">Rich Saved Games</a>. If your game supports rich saved games, you can register it for the rich saved-game preview using the WixGamingExtension IsRichSavedGame attribute on the <a href="wix_xsd_extension.htm">Extension element</a>:</p>
+  <pre>
+&lt;ProgId Id="MyGameProgId"&gt;
+    &lt;Extension Id="MyGameSave" gaming:IsRichSavedGame="yes" /&gt;
+&lt;/ProgId&gt;
+</pre>
+
+  <p class="signature">Implementation note: The Gaming compiler extension translates the IsRichSavedGame attribute to rows in the MSI <a href="http://msdn2.microsoft.com/library/aa371168.aspx" target="_blank">Registry</a> table.</p>
+</body>
+</html>

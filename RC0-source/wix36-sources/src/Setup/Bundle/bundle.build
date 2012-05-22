@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="bundle" default="bundle.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    bundle.build - Builds the Bundle for WiX toolset.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- wixba-specific properties -->
+  <property name="dir.src.setup.bundle" value="${dir.wixroot.src}\setup\Bundle" readonly="true" />
+
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="bundle.build" depends="global.initTools" description="Performs a full rebuild (clean then build)">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x86" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/property:Build2005=${BuildVC8}" />
+      <arg value="/property:Build2008=${BuildVC9}" />
+      <arg value="/property:Build2010=${BuildVC10}" />
+      <arg value="/property:BuildVotive2010=true" if="${vsip2010.installed}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.setup.bundle}\Bundle.wixproj" />
+    </exec>
+  </target>
+
+  <!-- Clean -->
+  <target name="bundle.clean" depends="global.initTools" description="Cleans the build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x86" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/property:Build2005=${BuildVC8}" />
+      <arg value="/property:Build2008=${BuildVC9}" />
+      <arg value="/property:Build2010=${BuildVC10}" />
+      <arg value="/property:BuildVotive2010=true" if="${vsip2010.installed}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.setup.bundle}\Bundle.wixproj" />
+    </exec>
+  </target>
+
+  <!-- Inc -->
+  <target name="bundle.inc" depends="createKeyFile" description="Performs an incremental build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x86" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/property:Build2005=${BuildVC8}" />
+      <arg value="/property:Build2008=${BuildVC9}" />
+      <arg value="/property:Build2010=${BuildVC10}" />
+      <arg value="/property:BuildVotive2010=true" if="${vsip2010.installed}" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.setup.bundle}\Bundle.wixproj" />
+    </exec>
+  </target>
+
+</project>

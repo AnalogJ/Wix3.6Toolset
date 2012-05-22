@@ -1,0 +1,37 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{2256EFD7-E678-4485-818D-986D590068BE}</ProjectGuid>
+    <AssemblyName>WixDifxAppExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DifxAppCompiler.cs" />
+    <Compile Include="DifxAppDecompiler.cs" />
+    <Compile Include="DifxAppExtension.cs" />
+    <EmbeddedFlattenedResource Include="Data\tables.xml">
+      <LogicalName>$(RootNamespace).Data.tables.xml</LogicalName>
+    </EmbeddedFlattenedResource>
+    <EmbeddedFlattenedResource Include="Xsd\difxapp.xsd">
+      <LogicalName>$(RootNamespace).Xsd.difxapp.xsd</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\difxapp.xsd">
+      <SubType>Designer</SubType>
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.DifxApp</Namespace>
+    </XsdGenSource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

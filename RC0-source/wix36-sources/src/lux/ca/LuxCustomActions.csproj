@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E4E8ABBE-1FA6-44F5-BA99-B840C6779A04}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <AssemblyName>LuxCustomActions</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <WixCATargetsPath Condition=" '$(WixCATargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.CA.targets</WixCATargetsPath>
+    <ProductVersion>9.0.30729</ProductVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DTF\Libraries\WindowsInstaller\WindowsInstaller.csproj">
+      <Project>{24121677-0ED0-41B5-833F-1B9A18E87BF4}</Project>
+      <Name>WindowsInstaller</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomAction.cs" />
+    <Content Include="CustomAction.config" />
+    <Compile Include="..\shared\Constants.cs">
+      <Link>Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\shared\operatortypes.cs">
+      <Link>operatortypes.cs</Link>
+    </Compile>
+    <Compile Include="LuxUnitTestFactory.cs" />
+    <Compile Include="LuxLogger.cs" />
+    <Compile Include="LuxUnitTest.cs" />
+  </ItemGroup>
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <Import Project="$(WixCATargetsPath)" />
+</Project>

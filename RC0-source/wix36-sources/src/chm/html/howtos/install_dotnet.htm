@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>How To: Install the .NET Framework Using a Bootstrapper</title>
+</head>
+<body>
+<h1>How To: Install the .NET Framework Using a Bootstrapper</h1>
+<p>Applications written using the .NET Framework often need to install the framework as part of their installation process. Due to dependencies in the .NET Framework installer there is no way to include the framework directly within your package (as you can with the <a href="install_vcredist.htm">Visual C++</a> and <a href="install_directx9.htm">DirectX</a> runtimes). Instead you have to rely on a bootstrapper: a wrapper application that first installs the .NET Framework and then runs your application's installer.</p>
+<p>WiX does not currently provide a bootstrapper, however you can use the one provided by the ClickOnce deployment features in Visual Studio. This document walks through how to modify a WiX project to generate a ClickOnce bootstrapper for .NET Framework 3.5. Similar steps can be used to generate a bootstrapper for other technologies, such as SQL Server Compact Edition and Visual Studio Tools For Office.</p>
+<h2>Step 1: Open your .wixproj file for editing</h2>
+<p>To edit your .wixproj file for editing in Visual Studio:</p>
+<ol>
+<li>Open the project in Visual Studio</li>
+<li>In <strong>Solution Explorer</strong> right click on your project file and select <strong>Unload Project</strong></li>
+<li>In <strong>Solution Explorer</strong> right click on your project file and select <strong>Edit &lt;projectname&gt;</strong></li>
+</ol>
+<h2>Step 2: Add items for prerequisites</h2>
+<p>Anywhere in your project file, inside the &lt;Project&gt; element, add the following:</p>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">ItemGroup</font><font size="2" color="#0000FF">&gt;
+    &lt;</font><font size="2" color="#A31515">BootstrapperFile</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Include</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">Microsoft.Net.Framework.3.5</font><font size="2">"</font><font size="2" color="#0000FF">&gt;
+        &lt;</font><font size="2" color="#A31515">ProductName</font><font size="2" color="#0000FF">&gt;</font><font size="2">.NET Framework 3.5</font><font size="2" color="#0000FF">&lt;/</font><font size="2" color="#A31515">ProductName</font><font size="2" color="#0000FF">&gt;
+    &lt;/</font><font size="2" color="#A31515">BootstrapperFile</font><font size="2" color="#0000FF">&gt;
+    &lt;</font><font size="2" color="#A31515">BootstrapperFile</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Include</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">Microsoft.Windows.Installer.3.1</font><font size="2">"</font><font size="2" color="#0000FF">&gt;
+        &lt;</font><font size="2" color="#A31515">ProductName</font><font size="2" color="#0000FF">&gt;</font><font size="2">Windows Installer 3.1</font><font size="2" color="#0000FF">&lt;/</font><font size="2" color="#A31515">ProductName</font><font size="2" color="#0000FF">&gt;
+    &lt;/</font><font size="2" color="#A31515">BootstrapperFile</font><font size="2" color="#0000FF">&gt;
+&lt;/</font><font size="2" color="#A31515">ItemGroup</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p>These items will be used in step 3 to tell the bootstrap creation task the list of packages to include. In this case the packages are .NET Framework 3.5 and Windows Installer 3.1 (which is a required component for .NET Framework installation).</p>
+<h2>Step 3: Add the bootstrap generation task</h2>
+<p>In your project file uncomment the <font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">Target</font><font size="2" color="#FF0000">Name</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">AfterBuild</font><font size="2">"</font><font size="2" color="#0000FF">&gt;&lt;/</font><font size="2" color="#A31515">Target</font><font size="2" color="#0000FF">&gt;</font> element at the end of the file and replace it with the following:</p>
+<pre>
+<font size="2" color="#0000FF"><font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">Target</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Name</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">AfterBuild</font><font size="2">"</font><font size="2" color="#0000FF">&gt;
+    </font>&lt;</font><font size="2" color="#A31515">GenerateBootstrapper</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">ApplicationFile</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">$(TargetFileName)</font><font size="2">"</font><font size="2" color="#0000FF"> 
+                          </font><font size="2" color="#FF0000">ApplicationName</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">My Application Name</font><font size="2">"</font><font size="2" color="#FF0000"></font><font size="2">
+                          </font><font size="2" color="#FF0000">BootstrapperItems</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">@(BootstrapperFile)</font><font size="2">"
+                          </font><font size="2" color="#FF0000">ComponentsLocation</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">Relative</font><font size="2">"
+                          </font><font size="2" color="#FF0000">CopyComponents</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">True</font><font size="2">"
+                          </font><font size="2" color="#FF0000">OutputPath</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">$(OutputPath)</font><font size="2">"
+                          </font><font size="2" color="#FF0000">Path</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">C:\Program Files\Microsoft SDKs\Windows\v6.0A\Bootstrapper\</font><font size="2">"</font><font size="2" color="#0000FF">/&gt;
+&lt;/</font><font size="2" color="#A31515">Target</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p>This will instruct MSBuild to generate the bootstrapper after the build of your installer is complete. The ApplicationFile attribute will resolve to the location of your application's installer after the build is complete. The ApplicationName attribute is the application name displayed to the user while the bootstrapper is running. The BootstrapperItems attribute provides the list of pre-requisites to include (from Step 2). The ComponentsLocation attribute is set to Relative to indicate the pre-requisites will be installed from the same location as your application's installer. The CopyComponents attribute is set to true to copy the pre-requisite files into the output directory. The OutputPath attribute resolves to the output location of your installer on disk.</p>
+<p>The Path attribute indicates the location on your machine of the pre-requisite packages. The location shown above is appropriate for machines with Visual Studio 2008 installed to the default location. For machines with Visual Studio 2005 the default location is <strong>C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\BootStrapper\Packages</strong>.</p>
+<h2>Step 4: Build the project</h2>
+<p>Do the following to re-open the project for building:</p>
+<ol>
+<li>Save the changes</li>
+<li>In <strong>Solution Explorer</strong> right click on your project file and select <strong>Reload Project</strong></li>
+<li>In the resulting confirmation dialog select <strong>Yes</strong></li>
+</ol>
+<p>Then build your project. After your installer is built the bootstrapper will build and be placed in the output directory.</p>
+<h2>Installing Other Packages</h2>
+<p>Other packages can be installed using the same mechanism described above. The only additional steps are to modify the list of bootstrapper files in Step 2. The easiest way to obtain the necessary entries is to use the <a target="_blank" href="http://code.msdn.microsoft.com/bmg/">Bootstrapper Manifest Generator</a> tool to create a new MSBuild file with the required packages selected. Then save the generated file, open it in a text editor, and copy out the appropriate entries. The Bootstrap Manifest Generator tool can also be used to create your own custom packages that are then installed via the ClickOnce bootstrapper.</p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+; wixdepca.def : declares the module parameters for the wixdepca.dll
+
+LIBRARY      "wixdepca"
+
+EXPORTS
+	WixDependencyRequire
+	WixDependencyCheck

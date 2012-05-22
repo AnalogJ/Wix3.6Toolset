@@ -1,0 +1,51 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1A9940A7-3E29-4428-B753-C4CC66058F1A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Deployment.WindowsInstaller</RootNamespace>
+    <AssemblyName>Microsoft.Deployment.WindowsInstaller.Package</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.WindowsInstaller.Package.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.WindowsInstaller.Package.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="InstallPackage.cs" />
+    <Compile Include="InstallPath.cs" />
+    <Compile Include="PatchPackage.cs" />
+    <Compile Include="TransformInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Compression.Cab\Compression.Cab.csproj">
+      <Project>{15895FD1-DD68-407B-8717-08F6DD14F02C}</Project>
+      <Name>Compression.Cab</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Compression\Compression.csproj">
+      <Project>{2D62850C-9F81-4BE9-BDF3-9379389C8F7B}</Project>
+      <Name>Compression</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsInstaller\WindowsInstaller.csproj">
+      <Project>{24121677-0ED0-41B5-833F-1B9A18E87BF4}</Project>
+      <Name>WindowsInstaller</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+</Project>

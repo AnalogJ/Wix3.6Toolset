@@ -1,0 +1,51 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>3.6</ProductVersion>
+    <ProjectGuid>{fc691478-732d-4c2d-a19b-272898e83ee9}</ProjectGuid>
+    <OutputPath>$(OutputPath)data\</OutputPath>
+    <OutputName>core</OutputName>
+    <OutputType>Package</OutputType>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>en-us</Cultures>
+    <DefineConstants>$(DefineConstants);BuildIA64=$(BuildIA64);</DefineConstants>
+    <IncludeSearchPaths>$(ROOT)inc</IncludeSearchPaths>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="ClickThrough.wxs" />
+    <Compile Include="CoreMsi.wxs" />
+    <Compile Include="Doc.wxs" />
+    <Compile Include="Extensions.wxs" />
+    <Compile Include="Lux.wxs" />
+    <Compile Include="MSBuild.wxs" />
+    <Compile Include="Nant.wxs" />
+    <Compile Include="SetupExe.wxs" />
+    <Compile Include="Toolset.wxs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BindInputPaths Include="$(OutputPath_x86)" />
+    <BindInputPaths Include="$(OutputPath_x64)" />
+    <BindInputPaths Include="$(OutputPath_ia64)" />
+    <BindInputPaths Include="$(MSBuildProjectDirectory)" />
+    <BindInputPaths Include="$(WIX_ROOT)src" />
+    <BindInputPaths Include="$(WIX_ROOT)bin" />
+    <BindInputPaths Include="$(BindInputPaths)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLib\CommonLib.wixproj" />
+  </ItemGroup>
+
+  <Target Name="Rebuild">
+    <!-- Provide a default Rebuild target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Target Name="Clean">
+    <!-- Provide a default Clean target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
+</Project>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>How To: Build a Localized Version of Your Installer</title>
+</head>
+<body>
+<h1>How To: Build a Localized Version of Your Installer</h1>
+<p>Once you have described all the strings in your installer using language files, as described in <a href="make_installer_localizable.htm">How To: Make your installer localizable</a>, you can then build versions of your installer for each supported language. This how to explains building the localized installers both from the command line and using Visual Studio.</p>
+<h2>Option 1: Building localized installers from the command line</h2>
+<p>The first step in building a localized installer is to compile your WiX sources using candle.exe:</p>
+<pre>
+candle.exe myinstaller.wxs -out myinstaller.wixobj
+</pre>
+<p>After the intermediate output file is generated you can then use light.exe to generate multiple localized MSIs:</p>
+<pre>
+light.exe myinstaller.wixobj -cultures:en-us -loc en-us.wxl -out myinstaller-en-us.msi
+light.exe myinstaller.wixobj -cultures:fr-fr -loc fr-fr.wxl -out myinstaller-fr-fr.msi
+</pre>
+<p>The -loc flag is used to specify the language file to use. It is important to include the -cultures flag on the command line to ensure the correct localized strings are included for extensions such as <a href="WixUI_dialog_library.htm">WiXUIExtension</a>.</p>
+<h2>Option 2: Building localized installers using Visual Studio</h2>
+<p>Visual Studio will automatically build localized versions of your installer. If your WiX project includes multiple .wxl files, one localized installer will be built for each culture, unless <strong>Cultures to build</strong> is specified.</p>
+<p>For more information, see <a href="specifying_cultures_to_build.htm">Specifying cultures to build</a></p>
+</body>
+</html>

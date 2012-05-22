@@ -1,0 +1,1 @@
+@%1 %2 & if not errorlevel 1 exit /b 1

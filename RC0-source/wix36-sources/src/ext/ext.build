@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="ext" default="ext.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    ext.build - Builds the extensions.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Includes
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <include buildfile="balextension\balextension.build" unless="${property::exists('balextension.properties.defined')}" />
+  <include buildfile="complusextension\complusextension.build" />
+  <include buildfile="dependencyextension\dependencyextension.build" />
+  <include buildfile="directxextension\directxextension.build" />
+  <include buildfile="firewallextension\firewallextension.build" />
+  <include buildfile="gamingextension\gamingextension.build" />
+  <include buildfile="msmqextension\msmqextension.build" />
+  <include buildfile="netfxextension\netfxextension.build" />
+  <include buildfile="officeextension\officeextension.build" />
+  <include buildfile="uiextension\uiextension.build" />
+
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="ext.build" description="Peforms a full rebuild (clean then build)" depends="ext.clean, ext.inc" />
+  
+  <!-- Clean -->
+  <target name="ext.clean" description="Cleans the build"
+          depends="balextension.clean,
+                   dependencyextension.clean,
+                   directxextension.clean,
+                   firewallextension.clean,
+                   gamingextension.clean,
+                   netfxextension.clean,
+                   complusextension.clean,
+                   msmqextension.clean,
+                   uiextension.clean">
+    <delete dir="${dir.build.ext}" failonerror="false" if="${directory::exists(dir.build.ext)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="ext.inc" description="Performs an incremental build"
+          depends="balextension.inc,
+                   dependencyextension.inc,
+                   directxextension.inc,
+                   firewallextension.inc,
+                   gamingextension.inc,
+                   netfxextension.inc,
+                   complusextension.inc,
+                   msmqextension.inc,
+                   uiextension.inc" />
+</project>

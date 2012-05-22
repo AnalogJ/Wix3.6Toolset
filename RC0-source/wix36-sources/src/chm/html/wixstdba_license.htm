@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Specifying the WiX Standard Bootstrapper Application License</title>
+</head>
+
+<body>
+<h1>Specifying the WiX Standard Bootstrapper Application License</h1>
+
+<p>The WiX Standard Bootstrapper Application supports displaying a license in RTF format and/or linking to a license file either locally or on the web. Binder variables are used to override the default values. There are different binder variables depending which variation of the WiX Standard Bootstrapper Application is used.</p>
+
+<p>When using the standard bootstrapper application that displays the RTF license, it is highly recommended that the license is overridden because the default uses &quot;Lorem ipsum&quot; placeholder text. The following example uses a license.rtf file found in the &quot;path\to&quot; folder relative to the linker bind paths.</p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;&gt;
+      &lt;Bundle&gt;
+        &lt;BootstrapperApplicationRef Id=&quot;WixStandardBootstrapperApplication.RtfLicense&quot;&gt;
+          &lt;bal:WixStandardBootstrapperApplication
+            <strong class="highlight">LicenseFile="path\to\license.rtf"</strong>
+            LogoFile="path\to\customlogo.png"
+            /&gt;
+        &lt;/BootstrapperApplicationRef&gt;
+
+        &lt;Chain&gt;
+          ...
+        &lt;/Chain&gt;
+      &lt;/Bundle&gt;
+    &lt;/Wix&gt;</pre>
+
+<p>When using the bootstrapper application that displays the license as a hyperlink, the path or URL to the license is optional. If it is not provided the link and accept license checkbox is not displayed, providing an &quot;unlicensed&quot; installation experience. The following example links to a license page on the internet.</p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;&gt;
+      &lt;Bundle&gt;
+        &lt;BootstrapperApplicationRef Id=&quot;WixStandardBootstrapperApplication.HyperlinkLicense&quot;&gt;
+          &lt;bal:WixStandardBootstrapperApplication
+            <strong class="highlight">LicenseUrl="http://example.com/license.html"</strong>
+            LogoFile="path\to\customlogo.png"
+            /&gt;
+        &lt;/BootstrapperApplicationRef&gt;
+
+        &lt;Chain&gt;
+          ...
+        &lt;/Chain&gt;
+      &lt;/Bundle&gt;
+    &lt;/Wix&gt;</pre>
+</body>
+</html>

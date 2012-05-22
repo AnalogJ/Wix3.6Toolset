@@ -1,0 +1,34 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{6279CA71-A711-4CDE-AB39-0B0F92837F2F}</ProjectGuid>
+    <AssemblyName>Microsoft.Tools.WindowsInstallerXml.NAntTasks</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.NAntTasks</RootNamespace>
+    <SignAssembly>false</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CandleTask.cs" />
+    <Compile Include="LightTask.cs" />
+    <Compile Include="LitTask.cs" />
+    <Compile Include="PyroTask.cs" />
+    <Compile Include="TorchTask.cs" />
+    <Compile Include="Transform.cs" />
+    <Compile Include="SingleOutputWixTask.cs" />
+    <Compile Include="Strings.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="WixTask.cs" />
+    <EmbeddedResource Include="Strings.resx" />
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="NAnt.Core">
+      <Name>NAnt.Core</Name>
+      <HintPath>$(NantPath)\NAnt.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

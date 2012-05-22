@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="LibComponents">
+            <ComponentGroupRef Id="LibX86Components" />
+            <ComponentGroupRef Id="LibX64Components" />
+
+            <?if "$(var.BuildIA64)"="true" ?>
+            <ComponentGroupRef Id="LibIA64Components" />
+            <?endif?>
+        </ComponentGroup>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="LibX86Components" Directory="SdkX86LibFolder">
+            <Component>
+                <File Name="dutil.lib" Source="dutil_$(var.VisualStudioTargetVersion).lib"/>
+            </Component>
+            <Component>
+                <File Name="wcautil.lib" Source="wcautil_$(var.VisualStudioTargetVersion).lib"/>
+            </Component>
+
+            <Component>
+                <File Name="balutil.lib" Source="balutil_$(var.VisualStudioTargetVersion).lib"/>
+            </Component>
+            <Component>
+                <File Name="deputil.lib" Source="deputil_$(var.VisualStudioTargetVersion).lib"/>
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="LibX64Components" Directory="SdkX64LibFolder">
+            <Component>
+                <File Id="dutil_x64.lib" Name="dutil.lib" Source="dutil_$(var.VisualStudioTargetVersion)_x64.lib"/>
+            </Component>
+            <Component>
+                <File Id="wcautil_x64.lib" Name="wcautil.lib" Source="wcautil_$(var.VisualStudioTargetVersion)_x64.lib"/>
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="LibIA64Components" Directory="SdkIA64LibFolder">
+            <Component>
+                <File Id="dutil_ia64.lib" Name="dutil.lib" Source="dutil_$(var.VisualStudioTargetVersion)_ia64.lib"/>
+            </Component>
+            <Component>
+                <File Id="wcautil_ia64.lib" Name="wcautil.lib" Source="wcautil_$(var.VisualStudioTargetVersion)_ia64.lib"/>
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

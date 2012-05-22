@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+-->
+
+<?include WixVer.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="WiX Toolset v$(var.WixVersion) Votive Package" Language="1033" Manufacturer="Microsoft Corporation" Version="$(var.WixVersion)" UpgradeCode="B6D64CBC-7075-4A94-AD48-DB084C0E70B1">
+        <Package Compressed="yes" InstallerVersion="200" SummaryCodepage="1252" InstallScope="perMachine" />
+
+        <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed." />
+
+        <Media Id="1" Cabinet="votive.cab" CompressionLevel="high" />
+
+        <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+
+        <Feature Id="VotiveFeature" Title="Votive 200x" Level="1">            
+            <Feature Id="Intellisense2005" Title="IntelliSense 2005" Description="Schea files for IntelliSense in the Visual Studio 2005 editor" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS2005DEVENV OR VS2005_ROOT_FOLDER OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive2005SchemaComponents" />
+            </Feature>
+
+            <Feature Id="Votive2005" Title="Project Templates 2005" Description="Votive Package for Visual Studio 2005" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">( VS2005DEVENV AND VS2005PROJECTAGGREGATOR2 ) OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive2005Components" />
+                <ComponentGroupRef Id="FileAssociationComponents" />
+            </Feature>
+
+            <Feature Id="Intellisense2008" Title="IntelliSense 2008" Description="Schema files for IntelliSense in the Visual Studio 2008 editor" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS90DEVENV OR VS90_ROOT_FOLDER OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive2008SchemaComponents" />
+            </Feature>
+
+            <Feature Id="Votive2008" Title="Project Templates 2008" Description="Votive Package for Visual Studio 2008" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS90DEVENV OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive2008Components" />
+                <ComponentGroupRef Id="FileAssociationComponents" />
+            </Feature>
+
+            <?if $(var.BuildVotive2010)=true ?>
+            <Feature Id="Intellisense2010" Title="IntelliSense 2010" Description="Schema files for IntelliSense in the Visual Studio 2010 editor" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS2010DEVENV OR VS2010_ROOT_FOLDER OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive2010SchemaComponents" />
+            </Feature>
+
+            <Feature Id="Votive2010" Title="Project Templates 2010" Description="Votive Package for Visual Studio 2010" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS2010DEVENV OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive2010Components" />
+                <ComponentGroupRef Id="FileAssociationComponents" />
+            </Feature>
+
+            <Feature Id="Intellisense11" Title="IntelliSense 11" Description="Schema files for IntelliSense in the Visual Studio 11 editor" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS11DEVENV OR VS11_ROOT_FOLDER OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive11SchemaComponents" />
+            </Feature>
+
+            <Feature Id="Votive11" Title="Project Templates 11" Description="Votive Package for Visual Studio 11" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+                <Condition Level="1">VS11DEVENV OR REMOVE</Condition>
+                <ComponentGroupRef Id="Votive11Components" />
+                <ComponentGroupRef Id="FileAssociationComponents" />
+            </Feature>
+            <?endif?>
+        </Feature>
+    </Product>
+
+    <Fragment>
+        <Property Id="LATEST_DEVENV_EXE" Secure="yes" />
+        <Property Id="LATEST_DEVENV_EXE_COMMAND" Secure="yes" />
+
+        <PropertyRef Id="VS2005DEVENV" />
+        <PropertyRef Id="VS90DEVENV" />
+        <PropertyRef Id="VS2010DEVENV" />
+        <PropertyRef Id="VS11DEVENV" />
+
+        <CustomAction Id="CA_SetLatestDevenv_2005" Property="LATEST_DEVENV_EXE" Value="[VS2005DEVENV]"/>
+        <CustomAction Id="CA_SetLatestDevenv_2008" Property="LATEST_DEVENV_EXE" Value="[VS90DEVENV]"/>
+        <CustomAction Id="CA_SetLatestDevenv_2010" Property="LATEST_DEVENV_EXE" Value="[VS2010DEVENV]"/>
+        <CustomAction Id="CA_SetLatestDevenv_11" Property="LATEST_DEVENV_EXE" Value="[VS11DEVENV]" />
+
+        <CustomAction Id="CA_SetLatestDevenvCommand_2005" Property="LATEST_DEVENV_EXE_COMMAND" Value="&amp;Open in Visual Studio 2005"/>
+        <CustomAction Id="CA_SetLatestDevenvCommand_2008" Property="LATEST_DEVENV_EXE_COMMAND" Value="&amp;Open in Visual Studio 2008"/>
+        <CustomAction Id="CA_SetLatestDevenvCommand_2010" Property="LATEST_DEVENV_EXE_COMMAND" Value="&amp;Open in Visual Studio 2010"/>
+        <CustomAction Id="CA_SetLatestDevenvCommand_11" Property="LATEST_DEVENV_EXE_COMMAND" Value="&amp;Open in Visual Studio 11"/>
+
+        <!-- Install Sequences -->
+        <InstallExecuteSequence>
+            <Custom Action="CA_SetLatestDevenv_2005" After="CostFinalize"><![CDATA[VS2005DEVENV AND NOT VS90DEVENV AND NOT VS2010DEVENV AND NOT VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenv_2008" After="CostFinalize"><![CDATA[VS90DEVENV AND NOT VS2010DEVENV AND NOT VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenv_2010" After="CostFinalize"><![CDATA[VS2010DEVENV AND NOT VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenv_11" After="CostFinalize"><![CDATA[VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenvCommand_2005" After="CostFinalize"><![CDATA[VS2005DEVENV AND NOT VS90DEVENV AND NOT VS2010DEVENV AND NOT VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenvCommand_2008" After="CostFinalize"><![CDATA[VS90DEVENV AND NOT VS2010DEVENV AND NOT VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenvCommand_2010" After="CostFinalize"><![CDATA[VS2010DEVENV AND NOT VS11DEVENV]]></Custom>
+            <Custom Action="CA_SetLatestDevenvCommand_11" After="CostFinalize"><![CDATA[VS11DEVENV]]></Custom>
+        </InstallExecuteSequence>
+    </Fragment>
+</Wix>

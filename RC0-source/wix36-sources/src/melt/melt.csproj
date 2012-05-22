@@ -1,0 +1,54 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{B92D961C-F7D5-49D3-BFC0-70A3133930A4}</ProjectGuid>
+    <AssemblyName>melt</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Tools</RootNamespace>
+    <PlatformTarget>x86</PlatformTarget>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="melt.cs" />
+    <Compile Include="MeltStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MeltStrings.resx</DependentUpon>
+    </Compile>
+    <EmbeddedNativeResource Include="melt.rc" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MeltStrings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MeltStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wix\Wix.csproj">
+      <Name>Wix</Name>
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\DTF\Libraries\WindowsInstaller\WindowsInstaller.csproj">
+      <Project>{24121677-0ED0-41B5-833F-1B9A18E87BF4}</Project>
+      <Name>WindowsInstaller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DTF\Libraries\WindowsInstaller.Package\WindowsInstaller.Package.csproj">
+      <Project>{1A9940A7-3E29-4428-B753-C4CC66058F1A}</Project>
+      <Name>WindowsInstaller</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

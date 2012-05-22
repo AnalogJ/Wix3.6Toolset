@@ -1,0 +1,22 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{9590C9DD-52B5-4463-87ED-67D399A1F104}</ProjectGuid>
+    <OutputName>LuxLib</OutputName>
+    <OutputType>Library</OutputType>
+    <BindFiles>True</BindFiles>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>en-us</Cultures>
+    <IncludeSearchPaths>$(ROOT)inc</IncludeSearchPaths>
+    <DefineConstants>
+      $(DefineConstants);
+      luxcaDll=$(OutputPath)LuxCustomActions.CA.dll;
+    </DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="LuxLib.wxs" />
+    <EmbeddedResource Include="en-us.wxl" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+</Project>

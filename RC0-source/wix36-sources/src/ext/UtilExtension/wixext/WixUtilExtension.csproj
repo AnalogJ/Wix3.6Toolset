@@ -1,0 +1,74 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{3E74F4F0-7DC9-4837-9443-D5BE061C892C}</ProjectGuid>
+    <AssemblyName>WixUtilExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <NoWarn>618</NoWarn>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyHarvester.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="FeedBuilder.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="PerformanceCategoryHarvester.cs" />
+    <Compile Include="RegFileHarvester.cs" />
+    <Compile Include="SetupExeBuilder.cs" />
+    <Compile Include="TypeLibraryHarvester.cs" />
+    <Compile Include="UtilBinder.cs" />
+    <Compile Include="UtilCompiler.cs" />
+    <Compile Include="UtilDecompiler.cs" />
+    <Compile Include="UtilExtension.cs" />
+    <Compile Include="UtilFinalizeHarvesterMutator.cs" />
+    <Compile Include="UtilHeatExtension.cs" />
+    <Compile Include="DllHarvester.cs" />
+    <Compile Include="FileHarvester.cs" />
+    <Compile Include="DirectoryHarvester.cs" />
+    <Compile Include="UtilHarvesterMutator.cs" />
+    <Compile Include="RegistryHarvester.cs" />
+    <Compile Include="UtilMutator.cs" />
+    <Compile Include="UtilTransformMutator.cs" />
+    <EmbeddedFlattenedResource Include="Data\tables.xml">
+      <LogicalName>$(RootNamespace).Data.tables.xml</LogicalName>
+    </EmbeddedFlattenedResource>
+    <MsgGenSource Include="Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+    <EmbeddedFlattenedResource Include="Xsd\util.xsd">
+      <LogicalName>$(RootNamespace).Xsd.util.xsd</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\util.xsd">
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.Util</Namespace>
+    </XsdGenSource>
+    <EmbeddedResource Include="$(OutputPath)\util.wixlib">
+      <Link>Data\util.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\heat\heat.csproj">
+      <Project>{97B3B5DF-70D2-4658-9259-1DB34976F89F}</Project>
+      <Name>heat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\WixTasks\WixTasks.csproj">
+      <Project>{21E8F2D3-EF19-49C8-88CA-A22C5B91DFDC}</Project>
+      <Name>WixTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

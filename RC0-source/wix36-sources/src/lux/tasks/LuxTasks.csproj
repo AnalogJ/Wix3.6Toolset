@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{43BD7580-2DAC-4C80-AA9A-C10603917572}</ProjectGuid>
+    <AssemblyName>LuxTasks</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Lux</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <UseDocumentationFile>true</UseDocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="GenerateTestConsumer.cs" />
+    <Compile Include="..\lux\Generator.cs">
+      <Link>Generator.cs</Link>
+    </Compile>
+    <Compile Include="Nit.cs" />
+    <MsgGenSource Include="..\lux\Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lux.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\wixext\WixLuxExtension.csproj">
+      <Project>{4E633314-DF9D-4828-BCB4-D959EBBBF114}</Project>
+      <Name>WixLuxExtension</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WixTasks\WixTasks.csproj">
+      <Project>{21E8F2D3-EF19-49C8-88CA-A22C5B91DFDC}</Project>
+      <Name>WixTasks</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Include this before the CopyTargetsFiles target -->
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetPath);$(OutDir)lux.targets" DestinationFolder="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <CreateItem Include="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\$(TargetFileName);$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\lux.targets">
+      <Output TaskParameter="Include" ItemName="FileWrites" />
+    </CreateItem>
+  </Target>
+</Project>

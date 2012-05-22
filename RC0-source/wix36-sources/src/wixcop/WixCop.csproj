@@ -1,0 +1,47 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{93982760-E620-499A-9525-5763E813CB49}</ProjectGuid>
+    <AssemblyName>WixCop</AssemblyName>
+    <RootNamespace>Microsoft.Tools.WindowsInstaller.Tools</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <PlatformTarget>x86</PlatformTarget>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\wconsole\CommandLineResponseFile.cs">
+      <Link>CommandLineResponseFile.cs</Link>
+    </Compile>
+    <Compile Include="Inspector.cs" />
+    <Compile Include="LineInfoAttribute.cs" />
+    <Compile Include="LineInfoCData.cs" />
+    <Compile Include="LineInfoComment.cs" />
+    <Compile Include="LineInfoDeclaration.cs" />
+    <Compile Include="LineInfoDocument.cs" />
+    <Compile Include="LineInfoDocumentType.cs" />
+    <Compile Include="LineInfoElement.cs" />
+    <Compile Include="LineInfoEntityReference.cs" />
+    <Compile Include="LineInfoProcessingInstruction.cs" />
+    <Compile Include="LineInfoSignificantWhitespace.cs" />
+    <Compile Include="LineInfoText.cs" />
+    <Compile Include="LineInfoWhitespace.cs" />
+    <Compile Include="WixCop.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedNativeResource Include="wixcop.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+</Project>

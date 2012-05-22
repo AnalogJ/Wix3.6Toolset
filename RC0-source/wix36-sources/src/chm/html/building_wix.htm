@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Building WiX</title>
+</head>
+
+<body>
+  <h1>Building WiX</h1>
+
+  <p>Simply run "make.bat" from the dev\wix directory. You can also run "nant," which drives the overall build process. This will build debug bits into the "target" directory by default. To build release bits, run "make ship" or "nant -D:flavor=ship". You can disable building IA64-specific parts of the custom action library by running "nant -D:ia64=false".</p>
+
+  <p>In order to fully build WiX, you must have the following Frameworks and SDKs installed:</p>
+
+  <ul>
+    <li><a href="http://nant.sourceforge.net/" target="_blank">NAnt</a> (0.90 or later)</li>
+
+    <li>The following components from the <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=E6E1C3DF-A74F-4207-8586-711EBE331CDC" target="_blank">Windows SDK for Windows Server 2008 and .NET Framework 3.5</a>, Visual Studio 2008, Microsoft Windows 7 SDK, and/or Visual Studio 2010:</li>
+
+    <li style="list-style: none; display: inline">
+      <ul>
+        <li>x86 and x64 compilers, headers and libraries</li>
+
+        <li>IA64 headers and libraries are optional, but they are necessary for IA64 custom action support</li>
+
+        <li>If you want to be able to build optimized IA64 binaries, you'll need both the Windows SDK for Windows Server 2008 and .NET Framework 3.5 SDK <b>AND</b> Visual Studio 2008 installed; or the Microsoft Windows 7 SDK <b>AND</b> Visual Studio 2010.</li>
+
+        <li><a href="http://msdn2.microsoft.com/library/ms670169.aspx" target="_blank">HTML Help SDK 1.4</a> or higher [installed to Program Files or Program Files (x86)]</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p>To build Sconce and Votive, you must have the following SDKs installed:</p>
+
+  <ul>
+    <li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=51A5C65B-C020-4E08-8AC0-3EB9C06996F4" target="_blank">Visual Studio 2005 SDK Version 4.0</a></li>
+
+    <li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=30402623-93ca-479a-867c-04dc45164f5b" target="_blank">Visual Studio 2008 SDK</a></li>
+  </ul>
+
+  <p>More information about the Visual Studio SDK can be found at the <a href="http://msdn2.microsoft.com/vstudio/aa700819.aspx" target="_blank">Visual Studio Extensibility Center</a>.</p>
+
+  <p>To install Votive on Visual Studio 2005, 2008, or 2010, you must have the Standard Edition or higher.</p>
+
+  <p>To successfully build WiX with only the Microsoft Windows 7 SDK and/or Visual Studio 2010, use NAnt 0.91 Alpha 1 or later, or modify your NAnt.exe.config file to support the .NET Framework 4.0. See <a href="nant_configuration.htm#net-4.0">NAnt Configuration for an example</a>.</p>
+
+  <p>To build DTF help files, you need the following tools:</p>
+
+  <ul>
+    <li><a href="http://sandcastle.codeplex.com/releases/view/13873">Sandcastle May 2008 Release</a></li>
+
+    <li><a href="http://shfb.codeplex.com/releases/view/29710">Sandcastle Help File Builder 1.8.0.3</a></li>
+  </ul>
+
+  <p>The DTF help build process looks for these tools in an "external" directory parallel to the WiX "src" directory:</p>
+
+  <ul>
+    <li>Sandcastle: external\Sandcastle</li>
+
+    <li>Sandcastle Help File Builder: external\SandcastleBuilder</li>
+  </ul>
+</body>
+</html>

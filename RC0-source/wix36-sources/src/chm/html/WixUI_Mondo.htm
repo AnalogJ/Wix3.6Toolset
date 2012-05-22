@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>WixUI_Mondo Dialog Set</title>
+</head>
+
+<body>
+  <h1>WixUI_Mondo Dialog Set</h1>
+
+  <p>WixUI_Mondo includes a set dialogs that allow granular installation customization options. WixUI_Mondo is appropriate when some product features are not installed by default and there is a meaningful difference between typical and complete installs.</p>
+
+  <p><i>Note</i>: WixUI_Mondo uses <a href="http://msdn.microsoft.com/library/aa371688.aspx" target="_blank">SetInstallLevel</a> control events to set the install level when the user chooses Typical or Complete. For Typical, the install level is set to 3; for Complete, 1000. For details about feature levels and install levels, see <a href="http://msdn.microsoft.com/library/aa369536.aspx" target="_blank">INSTALLLEVEL Property</a>.</p>
+
+  <p>This dialog set is defined in the file <b>WixUI_Mondo.wxs</b> in the WixUIExtension in the WiX source code.</p>
+
+  <h2>WixUI_Mondo Dialogs</h2>
+  
+  <p>WixUI_Mondo includes the following dialogs:</p>
+
+  <ul>
+    <li>BrowseDlg</li>
+    <li>CustomizeDlg</li>
+    <li>DiskCostDlg</li>
+    <li>LicenseAgreementDlg</li>
+    <li>SetupTypeDlg</li>
+    <li>WelcomeDlg</li>
+  </ul>
+
+  <p>In addition, WixUI_Mondo includes the following common dialogs that appear in all WixUI dialog sets:</p>
+
+  <ul>
+    <li>CancelDlg</li>
+    <li>ErrorDlg</li>
+    <li>ExitDlg</li>
+    <li>FatalError</li>
+    <li>FilesInUse</li>
+    <li>MaintenanceTypeDlg</li>
+    <li>MaintenanceWelcomeDlg</li>
+    <li>MsiRMFilesInUse</li>
+    <li>OutOfDiskDlg</li>
+    <li>OutOfRbDiskDlg</li>
+    <li>PrepareDlg</li>
+    <li>ProgressDlg</li>
+    <li>ResumeDlg</li>
+    <li>UserExit</li>
+    <li>VerifyReadyDlg</li>
+    <li>WaitForCostingDlg</li>
+  </ul>
+
+  <p>See <a href="WixUI_dialogs.htm">the WixUI dialog reference</a> for detailed descriptions of each of the above dialogs.</p>
+
+</body>
+</html>

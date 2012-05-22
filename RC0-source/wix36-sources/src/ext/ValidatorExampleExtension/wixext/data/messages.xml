@@ -1,0 +1,35 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!--
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    The messages for the Windows Installer XML Toolset Validation Sample Extension.
+-->
+<Messages Namespace="Microsoft.Tools.WindowsInstallerXml.Extensions" Resources="Data.Messages" xmlns="http://schemas.microsoft.com/genmsgs/2004/07/messages">
+    <Class Name="ValidationErrors" ContainerName="ValidationErrorEventArgs" BaseContainerName="WixErrorEventArgs">
+        <Message Id="ExampleError" Number="6501" SourceLineNumbers="no">
+            <Instance>
+                Example validation error.
+            </Instance>
+        </Message>
+    </Class>
+    <Class Name="ValidationWarnings" ContainerName="ValidationWarningEventArgs" BaseContainerName="WixWarningEventArgs">
+        <Message Id="ExampleWarning" Number="6599">
+            <Instance>
+                Example validation warning.
+            </Instance>
+        </Message>
+        <Message Id="AnotherExampleWarning" Number="6598">
+            <Instance>
+                Another example validation warning.
+            </Instance>
+        </Message>
+    </Class>
+</Messages>

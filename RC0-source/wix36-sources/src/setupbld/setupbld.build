@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="setupbld" default="setupbld.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    setupbld.build - Builds the ClickThrough setup builder DLL and executable (SetupBuilder.dll and setupbld.exe).
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <property name="dir.src.setupbld" value="${dir.wixroot.src}\setupbld" readonly="true" />
+  <property name="dir.build.setupbld" value="${dir.build.ct}\setup" readonly="true" />
+
+  <!-- setupbld-specific properties -->
+  <property name="setupbld.file.dll.target" value="${dir.target.wix}\SetupBuilder.dll" readonly="true" />
+  <property name="setupbld.file.dll.targetpdb" value="${dir.target.wix}\SetupBuilder.pdb" readonly="true" />
+
+  <property name="setupbld.file.exe.target" value="${dir.target.wix}\setupbld.exe" readonly="true" />
+  <property name="setupbld.file.exe.targetpdb" value="${dir.target.wix}\setupbld.pdb" readonly="true" />
+
+  <property name="setupbld.additionalOptions" value="/I &quot;${dir.src.setupbld}\inc&quot; /I &quot;${dir.src.setupexe.inc}&quot;"/>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="setupbld.build" description="Peforms a full rebuild (clean then build)" depends="setupbld.clean, setupbld.inc" />
+  
+  <!-- Clean -->
+  <target name="setupbld.clean" description="Cleans the build">
+    <delete dir="${dir.build.setupbld}" failonerror="false" if="${directory::exists(dir.build.setupbld)}" />
+    <delete file="${setupbld.file.dll.target}" failonerror="false" if="${file::exists(setupbld.file.dll.target)}" />
+    <delete file="${setupbld.file.dll.targetpdb}" failonerror="false" if="${file::exists(setupbld.file.dll.targetpdb)}" />
+    <delete file="${setupbld.file.exe.target}" failonerror="false" if="${file::exists(setupbld.file.exe.target)}" />
+    <delete file="${setupbld.file.exe.targetpdb}" failonerror="false" if="${file::exists(setupbld.file.exe.targetpdb)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="setupbld.inc" description="Performs an incremental build" depends="makeDirs, setupbld.inc.dll, setupbld.inc.exe" />
+
+  <!-- setupbld.inc.dll -->
+  <target name="setupbld.inc.dll" description="Performs an incremental build of SetupBuilder.dll">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.setupbld}\dll">
+      <include name="SetupBuilder.cpp" />
+    </fileset>
+    <property name="compileCpp.dir.build" value="${dir.build.setupbld}\dll" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.setupbld}\dll\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="${setupbld.additionalOptions}"/>
+    <property name="compileCpp.file.rc" value="${dir.src.setupbld}\dll\SetupBuilder.rc" />
+    <property name="makeNativeDll.file.target" value="${setupbld.file.dll.target}" />
+    <property name="makeNativeDll.file.def" value="${dir.src.setupbld}\dll\SetupBuilder.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" />
+
+    <!-- Make SetupBuilder.dll -->
+    <call target="makeNativeDll" />
+  </target>
+
+  <!-- setupbld.inc.exe -->
+  <target name="setupbld.inc.exe" description="Performs an incremental build of setupbld.exe" depends="setupbld.inc.dll">
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.setupbld}\exe">
+      <include name="setupbld.cpp" />
+    </fileset>
+    <property name="compileCpp.dir.build" value="${dir.build.setupbld}\exe" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.setupbld}\exe\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.setupbld}\exe\setupbld.rc" />
+    <property name="compileCpp.additionalOptions" value="${setupbld.additionalOptions}"/>
+    <property name="makeNativeExe.file.target" value="${setupbld.file.exe.target}" />
+    <property name="makeNativeExe.additionalLibs" value="/subsystem:console &quot;${path::change-extension(setupbld.file.dll.target, '.lib')}&quot; &quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" />
+
+    <!-- Make setupbld.exe -->
+    <call target="makeNativeExe" />
+  </target>
+
+</project>

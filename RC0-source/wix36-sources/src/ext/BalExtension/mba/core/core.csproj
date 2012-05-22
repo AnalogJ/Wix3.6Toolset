@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <ProjectGuid>{015AA197-3CEC-4B06-B635-953B1A9619CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Bootstrapper</RootNamespace>
+    <AssemblyName>BootstrapperCore</AssemblyName>
+    <DocumentationFile>BootstrapperCore.xml</DocumentationFile>
+    <NoWarn>0693;1591</NoWarn>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>CODE_ANALYSIS;TRACE</DefineConstants>
+    <FxCopEnabled>true</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BootstrapperApplication.cs" />
+    <Compile Include="BootstrapperApplicationAttribute.cs" />
+    <Compile Include="BootstrapperApplicationFactory.cs" />
+    <Compile Include="BootstrapperSectionGroup.cs" />
+    <Compile Include="SupportedFrameworkElementCollection.cs" />
+    <Compile Include="SupportedFrameworkElement.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="EventArgs.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HostSection.cs" />
+    <Compile Include="IBootstrapperApplication.cs" />
+    <Compile Include="IBootstrapperApplicationFactory.cs" />
+    <Compile Include="IBootstrapperEngine.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BootstrapperCore.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="..\..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <HeaderPath Include="$(IntermediateOutputPath)BootstrapperCore.h">
+      <Visible>False</Visible>
+    </HeaderPath>
+    <FileWrites Include="@(HeaderPath)" />
+  </ItemGroup>
+  <Target Name="AfterBuild" DependsOnTargets="GenerateIdentityHeader" />
+  <Target Name="GenerateIdentityHeader" Inputs="$(TargetPath)" Outputs="@(HeaderPath)">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyIdentity" />
+    </GetAssemblyIdentity>
+    <ItemGroup>
+      <Line Include="#define MUX_ASSEMBLY_FULL_NAME L&quot;%(AssemblyIdentity.Identity)&quot;" />
+      <Line Include="#define MUX_ASSEMBLY_NAME L&quot;%(AssemblyIdentity.Name)&quot;" />
+      <Line Include="#define MUX_ASSEMBLY_VERSION L&quot;%(AssemblyIdentity.Version)&quot;" />
+      <Line Include="#define MUX_ASSEMBLY_CULTURE L&quot;%(AssemblyIdentity.Culture)&quot;" Condition="'%(AssemblyIdentity.Culture)'!=''" />
+      <Line Include="#define MUX_ASSEMBLY_CULTURE L&quot;neutral&quot;" Condition="'%(AssemblyIdentity.Culture)'==''" />
+      <Line Include="#define MUX_ASSEMBLY_PUBLICKEYTOKEN L&quot;%(AssemblyIdentity.PublicKeyToken)&quot;" />
+    </ItemGroup>
+    <Message Importance="normal" Text="Generating identity definitions into @(HeaderPath->'%(FullPath)')" />
+    <WriteLinesToFile File="@(HeaderPath)" Lines="@(Line)" Overwrite="True" />
+  </Target>
+</Project>

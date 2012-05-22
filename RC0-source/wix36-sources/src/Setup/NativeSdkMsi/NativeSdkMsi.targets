@@ -1,0 +1,58 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <VisualStudioTargetVersion Condition=" '$(VisualStudioTargetVersion)' == '' ">2010</VisualStudioTargetVersion>
+
+    <BaseIntermediateOutputPath>$(BaseIntermediateOutputPath)$(VisualStudioTargetVersion)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+
+    <ProductVersion>3.6</ProductVersion>
+    <ProjectGuid>{d1931ddb-766c-4886-b8f0-8951840ff836}</ProjectGuid>
+    <OutputPath>$(OutputPath)data\</OutputPath>
+    <OutputName>nsdk$(VisualStudioTargetVersion)</OutputName>
+    <OutputType>Package</OutputType>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>en-us</Cultures>
+    <DefineConstants>$(DefineConstants);BuildIA64=$(BuildIA64);VisualStudioTargetVersion=$(VisualStudioTargetVersion)</DefineConstants>
+    <IncludeSearchPaths>$(ROOT)inc</IncludeSearchPaths>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Headers.wxs" />
+    <Compile Include="Libs.wxs" />
+    <Compile Include="NativeSdkMsi.wxs" />
+    <Compile Include="ProjectTemplates.wxs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BindInputPaths Include="$(OutputPath_x86)" />
+    <BindInputPaths Include="$(OutputPath_x64)" />
+    <BindInputPaths Include="$(OutputPath_ia64)" />
+    <BindInputPaths Include="$(MSBuildProjectDirectory)" />
+    <BindInputPaths Include="$(WIX_ROOT)src" />
+    <BindInputPaths Include="$(WIX_ROOT)bin" />
+    <BindInputPaths Include="$(WIX_ROOT)src\dutil\inc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLib\CommonLib.wixproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WixExtension Include="WixVSExtension">
+      <Private>False</Private>
+      <HintPath>$(OutputPath_x86)WixVSExtension.dll</HintPath>
+    </WixExtension>
+  </ItemGroup>
+
+  <Target Name="Rebuild">
+    <!-- Provide a default Rebuild target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Target Name="Clean">
+    <!-- Provide a default Clean target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
+</Project>

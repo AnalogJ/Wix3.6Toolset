@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DocCompiler xmlns="http://schemas.microsoft.com/wix/2005/DocCompiler">
+  <TableOfContents>
+    <Topic SourceFile="html\main.htm" >
+      <Topic SourceFile="html\wix_learning.htm"/>
+      <Topic SourceFile="html\help.htm"/>
+    </Topic>
+    <Topic SourceFile="html\overview.htm">
+      <Topic SourceFile="html\files.htm" />
+      <Topic SourceFile="html\AllTools.htm"/>
+      <Topic SourceFile="html\tools.htm"/>
+      <Topic SourceFile="html\preprocessor.htm" />
+      <Topic SourceFile="html\candle.htm"/>
+      <Topic SourceFile="html\light.htm"/>
+      <Topic SourceFile="html\lit.htm"/>
+      <Topic SourceFile="html\heat.htm"/>
+      <Topic SourceFile="html\insignia.htm" />
+      <Topic SourceFile="html\wixcop.htm"/>
+      <Topic SourceFile="html\lux.htm"/>
+      <Topic SourceFile="html\msitowix.htm"/>
+      <Topic SourceFile="html\codepage.htm"/>
+      <Topic SourceFile="html\msi_useful_links.htm"/>
+    </Topic>
+    <Topic SourceFile="html\votive.htm">
+      <Topic SourceFile="html\votive_project_templates.htm"/>
+      <Topic SourceFile="html\votive_item_templates.htm"/>
+      <Topic SourceFile="html\votive_property_pages.htm"/>
+      <Topic SourceFile="html\votive_project_template_default.htm"/>
+      <Topic SourceFile="html\authoring_first_votive_project.htm"/>
+      <Topic SourceFile="html\votive_project_references.htm" />
+    </Topic>
+    <Topic SourceFile="html\msbuild.htm">
+      <Topic SourceFile="html\authoring_first_msbuild_project.htm"/>
+      <Topic SourceFile="html\daily_builds.htm"/>
+      <Topic SourceFile="html\wix_with_team_build.htm"/>
+      <Topic SourceFile="html\msbuild_task_reference_toc.htm">
+        <Topic SourceFile="html\msbuild_task_reference_candle.htm"/>
+        <Topic SourceFile="html\msbuild_task_reference_heatdirectory.htm" />
+        <Topic SourceFile="html\msbuild_task_reference_heatfile.htm" />
+        <Topic SourceFile="html\msbuild_task_reference_heatproject.htm" />
+        <Topic SourceFile="html\msbuild_task_reference_light.htm"/>
+        <Topic SourceFile="html\msbuild_task_reference_lit.htm"/>
+      </Topic>
+      <Topic SourceFile="html\msbuild_target_reference_toc.htm">
+        <Topic SourceFile="html\msbuild_target_reference_harvestdirectory.htm" />
+        <Topic SourceFile="html\msbuild_target_reference_harvestfile.htm" />
+        <Topic SourceFile="html\msbuild_target_reference_harvestprojects.htm" />
+      </Topic>
+    </Topic>
+    <Topic SourceFile="html\nant.htm">
+      <Topic SourceFile="html\nant_task_reference_toc.htm">
+        <Topic SourceFile="html\nant_task_reference_candle.htm" />
+        <Topic SourceFile="html\nant_task_reference_light.htm" />
+        <Topic SourceFile="html\nant_task_reference_lit.htm" />
+      </Topic>
+    </Topic>
+    <Topic SourceFile="html\WixUI_index.htm">
+      <Topic SourceFile="html\WixUI_dialog_library.htm"/>
+      <Topic SourceFile="html\WixUI_customizations.htm"/>
+      <Topic SourceFile="html\WixUI_localization.htm"/>
+      <Topic SourceFile="html\WixUI_dialog_reference_toc.htm">
+        <Topic SourceFile="html\WixUI_advanced.htm"/>
+        <Topic SourceFile="html\WixUI_featuretree.htm"/>
+        <Topic SourceFile="html\WixUI_installdir.htm"/>
+        <Topic SourceFile="html\WixUI_minimal.htm"/>
+        <Topic SourceFile="html\WixUI_mondo.htm"/>
+        <Topic SourceFile="html\WixUI_dialogs.htm"/>
+      </Topic>
+    </Topic>
+    <Topic SourceFile="html\authoring_bundle_intro.htm">
+      <Topic SourceFile="html\authoring_bundle_skeleton.htm" />
+      <Topic SourceFile="html\authoring_bundle_application.htm" />
+      <Topic SourceFile="html\authoring_bundle_package_manifest.htm" />
+      <Topic SourceFile="html\bundle_built_in_variables.htm" />
+      <Topic SourceFile="html\bundle_define_searches.htm" />
+      <Topic SourceFile="html\bundle_author_chain.htm" />
+
+      <Topic SourceFile="html\wixstdba_intro.htm">
+        <Topic SourceFile="html\wixstdba_license.htm" />
+        <Topic SourceFile="html\wixstdba_branding.htm" />
+        <Topic SourceFile="html\wixstdba_foundation_customization.htm" />
+      </Topic>
+
+      <Topic SourceFile="html\bootstrapper_application.htm">
+        <Topic SourceFile="html\bootstrapper_application_interface.htm" />
+      </Topic>
+    </Topic>
+    <Topic SourceFile="html\howtos\toc.htm">
+      <Topic SourceFile="html\howtos\files_and_registry_toc.htm">
+        <Topic SourceFile="html\howtos\add_a_file.htm"/>
+        <Topic SourceFile="html\howtos\check_the_version_number.htm"/>
+        <Topic SourceFile="html\howtos\write_a_registry_entry.htm"/>
+        <Topic SourceFile="html\howtos\read_a_registry_entry.htm"/>
+        <Topic SourceFile="html\howtos\create_start_menu_shortcut.htm"/>
+        <Topic SourceFile="html\howtos\create_internet_shortcut.htm"/>
+        <Topic SourceFile="html\howtos\create_an_uninstall_shortcut.htm"/>
+        <Topic SourceFile="html\howtos\ngen_managed_assemblies.htm"/>
+        <Topic SourceFile="html\howtos\directorysearchref.htm"/>
+        <Topic SourceFile="html\howtos\parentdirectorysearch.htm"/>
+      </Topic>
+      <Topic SourceFile="html\howtos\redistributables_and_install_checks_toc.htm">
+        <Topic SourceFile="html\howtos\check_for_dotnet.htm"/>
+        <Topic SourceFile="html\howtos\install_dotnet.htm"/>
+        <Topic SourceFile="html\howtos\install_directx9.htm"/>
+        <Topic SourceFile="html\howtos\install_vcredist.htm"/>
+        <Topic SourceFile="html\howtos\block_install_on_os.htm"/>
+      </Topic>
+      <Topic SourceFile="html\howtos\ui_and_localization_toc.htm">
+        <Topic SourceFile="html\howtos\build_a_localized_version.htm"/>
+        <Topic SourceFile="html\howtos\specifying_cultures_to_build.htm"/>
+        <Topic SourceFile="html\howtos\make_installer_localizable.htm"/>
+        <Topic SourceFile="html\howtos\run_program_after_install.htm"/>
+        <Topic SourceFile="html\howtos\configure_arp_appearance.htm"/>
+      </Topic>
+      <Topic SourceFile="html\howtos\updates_toc.htm">
+        <Topic SourceFile="html\howtos\major_upgrade.htm"/>
+      </Topic>
+      <Topic SourceFile="html\howtos\author_product_dependencies.htm"/>
+      <Topic SourceFile="html\howtos\general_toc.htm">
+        <Topic SourceFile="html\howtos\get_a_log.htm"/>
+        <Topic SourceFile="html\howtos\look_inside_msi.htm"/>
+        <Topic SourceFile="html\howtos\generate_guids.htm"/>
+        <Topic SourceFile="html\howtos\extension_usage_introduction.htm"/>
+        <Topic SourceFile="html\howtos\optimizing_builds.htm"/>
+        <Topic SourceFile="html\howtos\specifying_source_files.htm"/>
+      </Topic>
+    </Topic>
+    
+
+    <Topic SourceFile="html\standard_customactions.htm">
+      <Topic SourceFile="html\using_standard_customactions.htm"/>
+      <Topic SourceFile="html\osinfo.htm"/>
+      <Topic SourceFile="html\perfmon.htm"/>
+      <Topic SourceFile="html\qtexec.htm"/>
+      <Topic SourceFile="html\shellexec.htm"/>
+      <Topic SourceFile="html\wixdirectxextension.htm"/>
+      <Topic SourceFile="html\wixexitearlywithsuccess.htm"/>
+      <Topic SourceFile="html\wixfailwhendeferred.htm"/>
+      <Topic SourceFile="html\wixwaitforevent.htm"/>
+      <Topic SourceFile="html\wixwaitforevent.htm"/>
+      <Topic SourceFile="html\wixgamingextension.htm"/>
+      <Topic SourceFile="html\wixnetfxextension.htm"/>
+      <Topic SourceFile="html\wixvsextension.htm"/>
+    </Topic>
+    
+    <Topic SourceFile="html\patching.htm">
+      <Topic SourceFile="html\patch_restrictions.htm"/>
+      <Topic SourceFile="html\patch_building.htm">
+        <Index Title="Patch Building Using Patch Creation Properties"/>
+      </Topic>
+      <Topic SourceFile="html\wix_patching.htm">
+        <Index Title="Patch Building Using Purely WiX"/>
+      </Topic>    
+    </Topic>
+
+    <Topic SourceFile="html\schema_index.htm">
+      <XmlSchema SourceFile="..\dutil\Xsd\thmutil.xsd" Main="yes"/>
+      <XmlSchema SourceFile="..\wix\Xsd\wix.xsd" Main="yes"/>
+      <XmlSchema SourceFile="..\wix\Xsd\wixloc.xsd" Main="yes"/>
+      <XmlSchema SourceFile="..\ext\ComPlusExtension\wixext\Xsd\complus.xsd" />
+      <XmlSchema SourceFile="..\ext\DependencyExtension\wixext\Xsd\Dependency.xsd"/>
+      <XmlSchema SourceFile="..\ext\DifxAppExtension\wixext\Xsd\difxapp.xsd"/>
+      <XmlSchema SourceFile="..\ext\FirewallExtension\wixext\Xsd\firewall.xsd"/>
+      <XmlSchema SourceFile="..\ext\GamingExtension\wixext\Xsd\gaming.xsd"/>
+      <XmlSchema SourceFile="..\ext\IIsExtension\wixext\Xsd\iis.xsd"/>
+      <XmlSchema SourceFile="..\ext\IsolatedAppExtension\wixext\Xsd\IsolatedApp.xsd"/>
+      <XmlSchema SourceFile="..\lux\wixext\Xsd\lux.xsd" />
+      <XmlSchema SourceFile="..\ext\MsmqExtension\wixext\Xsd\msmq.xsd" />
+      <XmlSchema SourceFile="..\ext\NetFxExtension\wixext\Xsd\netfx.xsd"/>
+      <XmlSchema SourceFile="..\ext\OfficeExtension\wixext\Xsd\OfficeAddin.xsd"/>
+      <XmlSchema SourceFile="..\ext\PSExtension\wixext\Xsd\ps.xsd"/>
+      <XmlSchema SourceFile="..\ext\SqlExtension\wixext\Xsd\sql.xsd"/>
+      <XmlSchema SourceFile="..\ext\UtilExtension\wixext\Xsd\util.xsd"/>
+      <XmlSchema SourceFile="..\ext\VSExtension\wixext\Xsd\vs.xsd"/>
+      <XmlSchema SourceFile="..\ext\BalExtension\wixext\Xsd\bal.xsd"/>
+    </Topic>
+    <Topic SourceFile="html\wixdev.htm">
+      <Topic SourceFile="html\wixdev_getting_started.htm"/>
+      <Topic SourceFile="html\building_wix.htm"/>
+      <Topic SourceFile="html\nant_configuration.htm"/>
+      <Topic SourceFile="html\nant_conventions.htm"/>
+      <Topic SourceFile="html\votive_development.htm"/>
+      <Topic SourceFile="html\help_development.htm"/>
+      <Topic SourceFile="html\tests_testingwix.htm">
+        <Topic SourceFile="html\tests_runningtests.htm"/>
+        <Topic SourceFile="html\tests_writingtests.htm"/>
+      </Topic>
+      <Topic SourceFile="html\extension_development.htm">
+        <Topic SourceFile="html\extension_development_intro.htm"/>
+        <Topic SourceFile="html\extensions.htm" />
+        <Topic SourceFile="html\extension_development_simple_example.htm"/>
+        <Topic SourceFile="html\extension_development_preprocessor.htm"/>
+        <Topic SourceFile="html\authoring_custom_actions.htm"/>
+        <Topic SourceFile="html\localized_extensions.htm"/>
+      </Topic>
+    </Topic>
+  </TableOfContents>
+  <CopyDirectory Source="imgs" Destination="imgs"/>
+  <CopyFile Source="html\style.css" Destination="html\style.css"/>
+</DocCompiler>

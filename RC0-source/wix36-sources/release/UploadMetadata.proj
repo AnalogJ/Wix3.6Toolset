@@ -1,0 +1,40 @@
+<?xml version='1.0' ?>
+<Project DefaultTargets="GenerateUploadMetadata" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\WixBuild.Common.targets" />
+
+  <PropertyGroup>
+    <UploadVersion>$(WixFullVersion)</UploadVersion>
+    <UploadFolder>$(OutputPath_x86)release\</UploadFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <UploadFiles Include="$(UploadFolder)$(UploadVersion)\wix36.exe">
+      <Title>WiX v3.6 Toolset install.</Title>
+      <Promoted>true</Promoted>
+    </UploadFiles>
+
+    <UploadFiles Include="$(UploadFolder)$(UploadVersion)\**\*.msi">
+      <RelativeFolder>data</RelativeFolder>
+    </UploadFiles>
+    <UploadFiles Include="$(UploadFolder)$(UploadVersion)\**\*.cab">
+      <RelativeFolder>data\</RelativeFolder>
+    </UploadFiles>
+
+    <UploadFiles Include="$(UploadFolder)$(UploadVersion)\wix36-binaries.zip">
+      <Title>WiX v3.6 binaries for situations where install cannot be used.</Title>
+      <Protected>true</Protected>
+    </UploadFiles>
+
+    <UploadFiles Include="$(UploadFolder)$(UploadVersion)\wix36-pdbs.zip">
+      <Title>WiX v3.6 debugging symbols.</Title>
+      <Protected>true</Protected>
+    </UploadFiles>
+
+    <UploadFiles Include="$(UploadFolder)$(UploadVersion)\wix36-sources.zip">
+      <Title>WiX v3.6 source code for debugging purposes. Note: this source code will not build.</Title>
+      <Protected>true</Protected>
+    </UploadFiles>
+  </ItemGroup>
+
+  <Target Name="Build" DependsOnTargets="GenerateUploadMetadata" />
+</Project>

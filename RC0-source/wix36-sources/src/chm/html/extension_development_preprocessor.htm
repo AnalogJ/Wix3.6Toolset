@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Creating a Preprocessor Extension</title>
+</head>
+
+<body>
+  <h1>Creating a Preprocessor Extension</h1>
+
+  <p>The preprocessor in WiX allows extensibilty at a few levels. This sample will demonstrate how to add a PreprocessorExtension to your WixExtension that will handle variables and functions you define in your own namespace.</p>
+
+  <p>This sample assumes you have already reviewed the <a href='extension_development_simple_example.htm'>Creating a Skeleton Extension</a> topic.</p>
+
+  <ol>
+    <li>Add a new class to your project called SamplePreprocessorExtension.</li>
+
+    <li>If you added a new file for this class, add a using statement that refers to the Microsoft.Tools.WindowsInstallerXml namespace.
+      <pre>
+using Microsoft.Tools.WindowsInstallerXml;
+</pre>
+    </li>
+
+    <li>Make your SamplePreprocessorExtension class implement PreprocessorExtension.
+      <pre>
+public class SamplePreprocessorExtension : PreprocessorExtension
+</pre>
+    </li>
+
+    <li>Add your SamplePreprocessorExtension to your <a href='extension_development_simple_example.htm'>previously created SampleWixExtension class</a> and override the PreprocessorExtension property from the base class. This will cause your extension to know what to do when WiX asks your extension for its preprocessor extension.
+      <pre>
+private SamplePreprocessorExtension preprocessorExtension; 
+
+public override PreprocessorExtension PreprocessorExtension 
+{ 
+    get  
+    { 
+        if (this.preprocessorExtension == null) 
+        { 
+            this.preprocessorExtension = new SamplePreprocessorExtension();  
+        } 
+        return this.preprocessorExtension; 
+
+    } 
+}
+</pre>
+    </li>
+
+    <li>In your SamplePreprocessorExtension class, specify the prefixes or namespaces that your extension will handle. For example, if you want to be able to define a variable named $(sample.ReplaceMe), then you need to specify that your extension will handle the "sample" prefix.
+      <pre>
+private static string[] prefixes = { "sample" }; 
+public override string[] Prefixes { get { return prefixes; } }
+</pre>
+    </li>
+
+    <li>Now that you have specified the prefixes that your extension will handle, you need to handle variables and functions that are passed to you from WiX. You do this by overriding the GetVariable and EvaluateFunction methods from the PreprocessorExtension base class.
+      <pre>
+public override string GetVariableValue(string prefix, string name) 
+{ 
+     string result = null; 
+    // Based on the namespace and name, define the resulting string. 
+    switch (prefix) 
+    { 
+        case "sample": 
+            switch (name) 
+            { 
+                case "ReplaceMe": 
+                   // This could be looked up from anywhere you can access from your code. 
+                   result = "replaced"; 
+                   break; 
+            } 
+            break; 
+    }  
+    return result; 
+}  
+   
+public override string EvaluateFunction(string prefix, string function, string[] args) 
+{ 
+    string result = null; 
+    switch (prefix) 
+    { 
+        case "sample": 
+            switch (function)  
+            { 
+                case "ToUpper": 
+                    if (0 &lt; args.Length)  
+                    { 
+                        result = args[0].ToUpper(); 
+                    } 
+                    else 
+                    { 
+                        result = String.Empty;  
+                    } 
+                    break;  
+            }  
+            break;  
+    }  
+    return result; 
+}
+</pre>
+    </li>
+
+    <li>Build the project.</li>
+  </ol>
+
+  <p>You can now pass your extension on the command line to Candle and expect variables and functions in your namespace to be passed to your extension and be evaluated. To demonstrate this, try adding the following properties to your WiX source file:</p>
+  <pre>
+    &lt;Property Id="VARIABLETEST" Value="$(sample.ReplaceMe)" /&gt;
+    &lt;Property Id="FUNCTIONTEST" Value="$(sample.ToUpper(uppercase))" /&gt;
+</pre>The resulting .msi file will have entries in the Property table with the values "replaced" and "UPPERCASE" in the Property table.
+</body>
+</html>

@@ -1,0 +1,48 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2D62850C-9F81-4BE9-BDF3-9379389C8F7B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Deployment.Compression</RootNamespace>
+    <AssemblyName>Microsoft.Deployment.Compression</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.Compression.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <FxCopEnabled>false</FxCopEnabled>
+    <DocumentationFile>Microsoft.Deployment.Compression.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArchiveException.cs" />
+    <Compile Include="ArchiveFileInfo.cs" />
+    <Compile Include="ArchiveInfo.cs" />
+    <Compile Include="ArchiveProgressEventArgs.cs" />
+    <Compile Include="ArchiveProgressType.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ArchiveFileStreamContext.cs" />
+    <Compile Include="BasicUnpackStreamContext.cs" />
+    <Compile Include="CompressionEngine.cs" />
+    <Compile Include="CompressionLevel.cs" />
+    <Compile Include="CargoStream.cs" />
+    <Compile Include="DuplicateStream.cs" />
+    <Compile Include="IPackStreamContext.cs" />
+    <Compile Include="IUnpackStreamContext.cs" />
+    <Compile Include="OffsetStream.cs" />
+    <Compile Include="SafeNativeMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Compression.cd" />
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+</Project>

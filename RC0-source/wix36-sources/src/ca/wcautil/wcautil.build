@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="wcautil" default="wcautil.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    wcautil.build - Builds WiX custom action utility library - wcautil.lib.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="wcautil.build" description="Peforms a full rebuild (clean then build)" depends="wcautil.clean, wcautil.inc" />
+  
+  <!-- Clean -->
+  <target name="wcautil.clean" description="Cleans the build">
+    <delete dir="${dir.build.wcautil.vs2005.x86}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2005.x86)}" />
+    <delete dir="${dir.build.wcautil.vs2005.x64}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2005.x64)}" />
+    <delete dir="${dir.build.wcautil.vs2005.ia64}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2005.ia64)}" />
+
+    <delete dir="${dir.build.wcautil.vs2008.x86}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2008.x86)}" />
+    <delete dir="${dir.build.wcautil.vs2008.x64}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2008.x64)}" />
+    <delete dir="${dir.build.wcautil.vs2008.ia64}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2008.ia64)}" />
+
+    <delete dir="${dir.build.wcautil.vs2010.x86}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2010.x86)}" />
+    <delete dir="${dir.build.wcautil.vs2010.x64}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2010.x64)}" />
+    <delete dir="${dir.build.wcautil.vs2010.ia64}" failonerror="false" if="${directory::exists(dir.build.wcautil.vs2010.ia64)}" />
+
+    <delete file="${file.target.wcautil.vs2005.x86}" failonerror="false" if="${file::exists(file.target.wcautil.vs2005.x86)}" />
+    <delete file="${file.target.wcautil.vs2005.x64}" failonerror="false" if="${file::exists(file.target.wcautil.vs2005.x64)}" />
+    <delete file="${file.target.wcautil.vs2005.ia64}" failonerror="false" if="${file::exists(file.target.wcautil.vs2005.ia64)}" />
+
+    <delete file="${file.target.wcautil.vs2008.x86}" failonerror="false" if="${file::exists(file.target.wcautil.vs2008.x86)}" />
+    <delete file="${file.target.wcautil.vs2008.x64}" failonerror="false" if="${file::exists(file.target.wcautil.vs2008.x64)}" />
+    <delete file="${file.target.wcautil.vs2008.ia64}" failonerror="false" if="${file::exists(file.target.wcautil.vs2008.ia64)}" />
+
+    <delete file="${file.target.wcautil.vs2010.x86}" failonerror="false" if="${file::exists(file.target.wcautil.vs2010.x86)}" />
+    <delete file="${file.target.wcautil.vs2010.x64}" failonerror="false" if="${file::exists(file.target.wcautil.vs2010.x64)}" />
+    <delete file="${file.target.wcautil.vs2010.ia64}" failonerror="false" if="${file::exists(file.target.wcautil.vs2010.ia64)}" />
+
+    <delete file="${dir.target.wix}\wcautil.h" failonerror="false" />
+    <delete file="${dir.target.wix}\wcawrapquery.h" failonerror="false" />
+    <delete file="${dir.target.wix}\wcawow64.h" failonerror="false" />
+    <delete file="${file.target.caerr.wxi}" if="${file::exists(file.target.caerr.wxi)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="wcautil.inc" description="Performs an incremental build" depends="makeDirs">
+    <copy file="${dir.src.ca.wcautil}\wcautil.h" todir="${dir.target.wix}" />
+    <copy file="${dir.src.ca.wcautil}\wcawrapquery.h" todir="${dir.target.wix}" />
+    <copy file="${dir.src.ca.wcautil}\wcawow64.h" todir="${dir.target.wix}" />
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.ca.wcautil}">
+      <include name="wcalog.cpp" />
+      <include name="wcascript.cpp" />
+      <include name="wcautil.cpp" />
+      <include name="wcawrapquery.cpp" />
+      <include name="wcawow64.cpp" />
+      <include name="wcawrap.cpp" />
+      <include name="qtexec.cpp" />
+    </fileset>
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2010.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2010.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make x86 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2010.x64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2010.x64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x64" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make x64 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2010.ia64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2010.ia64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="ia64" />
+    <property name="makeNativeLib.vctoolsversion" value="10" />
+    <!-- Make ia64 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2008.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2008.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make VS2005 x86 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2008.x64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2008.x64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x64" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make VS2005 x64 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2008.ia64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2008.ia64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="ia64" />
+    <property name="makeNativeLib.vctoolsversion" value="9" />
+    <!-- Make VS2005 ia64 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2005.x86}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2005.x86}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x86" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make VS2005 x86 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2005.x64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2005.x64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="x64" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make VS2005 x64 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <property name="compileCpp.dir.build" value="${dir.build.wcautil.vs2005.ia64}" dynamic="true" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.ca.wcautil}\precomp.h" />
+    <property name="compileCpp.additionalOptions" value="-WX-" />
+    <property name="makeNativeLib.file.target" value="${file.target.wcautil.vs2005.ia64}" dynamic="true" />
+    <property name="makeNativeLib.platform" value="ia64" />
+    <property name="makeNativeLib.vctoolsversion" value="8" />
+    <!-- Make VS2005 ia64 wcautil.lib -->
+    <call target="makeNativeLib" />
+
+    <!-- Generate caerrs.wxi... -->
+    <mkdir dir="${path::get-directory-name(file.target.caerr.wxi)}" />
+    <exec program="${tool.generatewixinclude}">
+      <arg value="-nologo" />
+      <arg file="${dir.src.ca.wcautil}\custommsierrors.h" />
+      <arg file="${file.target.caerr.wxi}" />
+    </exec>
+  </target>
+</project>

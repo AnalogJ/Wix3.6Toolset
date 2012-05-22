@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Candle Task</title>
+</head>
+
+<body>
+
+<h1>Candle Task</h1>
+
+<p>The Candle task wraps <a href="candle.htm">candle.exe</a>, the WiX compiler. 
+It supports a variety of settings that are described in more detail below. The following 
+is a sample shows a the NAnt code used to run the Candle task:</p>
+
+<pre>
+<font size="2" color="#0000ff">&lt;</font><font size="2" color="#a31515">candle</font>
+  <font size="2" color="#ff0000">exedir</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">${wix.dir}</font><font size="2">&quot;</font>
+  <font size="2" color="#ff0000">out</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">${release.dir}\obj\\</font><font size="2">&quot;</font>
+  <font size="2" color="#ff0000">rebuild</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">true</font><font size="2">&quot;</font>
+  <font size="2" color="#ff0000">extensions</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">WixUIExtension;WixUtilExtension</font><font size="2">&quot;</font>
+  <font size="2" color="#ff0000">warningsaserrors</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">true</font><font size="2">&quot;</font><font size="2" color="#0000ff">&gt;
+  &lt;</font><font size="2" color="#a31515">defines</font><font size="2" color="#0000ff">&gt;
+    &lt;</font><font size="2" color="#a31515">define </font><font size="2" color="#ff0000">name</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">ProjectDir</font><font size="2">&quot; </font><font size="2" color="#ff0000">value</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">${release.dir}</font><font size="2">&quot;</font><font size="2" color="#0000ff"> /&gt;
+    &lt;</font><font size="2" color="#a31515">define </font><font size="2" color="#ff0000">name</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">Configuration</font><font size="2">&quot; </font><font size="2" color="#ff0000">value</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">Release</font><font size="2">&quot;</font><font size="2" color="#0000ff"> /&gt;
+    &lt;</font><font size="2" color="#a31515">define </font><font size="2" color="#ff0000">name</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">Version</font><font size="2">&quot; </font><font size="2" color="#ff0000">value</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">${buildnumber.version}</font><font size="2">&quot;</font><font size="2" color="#0000ff"> /&gt;
+  &lt;/</font><font size="2" color="#a31515">defines</font><font size="2" color="#0000ff">&gt;
+  &lt;</font><font size="2" color="#a31515">sources </font><font size="2" color="#ff0000">basedir</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">${releasemsi.dir}</font><font size="2">&quot;</font><font size="2" color="#0000ff">&gt;
+    &lt;</font><font size="2" color="#a31515">include </font><font size="2" color="#ff0000">name</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">Product.wxs</font><font size="2">&quot;</font><font size="2" color="#0000ff"> /&gt;
+    &lt;</font><font size="2" color="#a31515">include </font><font size="2" color="#ff0000">name</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">Files.wxs</font><font size="2">&quot;</font><font size="2" color="#0000ff"> /&gt;
+ &lt;/</font><font size="2" color="#a31515">sources</font><font size="2" color="#0000ff">&gt;
+&lt;/</font><font size="2" color="#a31515">candle</font><font size="2" color="#0000ff">&gt;</font>
+</pre>
+
+<p>The following table describes the common WiX NAnt parameters that are applicable 
+to the <b>Candle</b> task.</p>
+
+<table border="1" cellspacing="0" cellpadding="4" width="100%">
+	<tr>
+		<td><b>Parameter</b></td>
+		<td><b>Description</b></td>
+	</tr>
+	<tr>
+		<td><b>exedir</b></td>
+		<td>Optional <b>string</b> parameter.<br />
+		<br />
+		Sets the directory to the tool executable. Defaults to the path specified 
+		by the registry key &quot;<i>HKLM\SOFTWARE\Microsoft\Windows Installer XML\3.0\InstallRoot</i>&quot; 
+		which is set by the WiX installation.<br />
+		If no path is found or specified the task assumes the executable is on the 
+		path.</td>
+	</tr>
+	<tr>
+		<td><b>out</b></td>
+		<td>Required <b>string</b> parameter.<br />
+		<br />
+		Sets the file or directory to write the output to. This is equivalent to 
+		the -out switch.</td>
+	</tr>
+	<tr>
+		<td><b>extensions</b></td>
+		<td>Optional <b>string</b> parameter.<br />
+		<br />
+		Semi-colon separated list of WiX extensions to load. This is equivalent 
+		to the -ext switch.</td>
+	</tr>
+	<tr>
+		<td><b>rebuild</b></td>
+		<td>Optional <b>boolean</b> parameter.<br />
+		<br />
+		Instructs NAnt to recompile the output file regardless of the file timestamps..</td>
+	</tr>
+	<tr>
+		<td><b>sources</b></td>
+		<td>Required NAnt <b>fileset</b>.<br />
+		<br />
+		The set of source files for compilation.</td>
+	</tr>
+	<tr>
+		<td><b>warningsaserrors</b></td>
+		<td>Optional <b>boolean</b> parameter.<br />
+		<br />
+		Specifies that certain warnings should be treated as errors. This is equivalent 
+		to the -wx switch.</td>
+	</tr>
+	<tr>
+		<td><b>verbose</b></td>
+		<td>Optional <b>boolean</b> parameter.<br />
+		<br />
+		Specifies that the tool should provide verbose output. This is equivalent 
+		to the -v switch.</td>
+	</tr>
+</table>
+
+<p>The following table describes the parameters that are specific to the <b>Candle</b> 
+task.</p>
+
+<table border="1" cellspacing="0" cellpadding="4" width="100%">
+	<tr>
+		<td><b>Parameter</b></td>
+		<td><b>Description</b></td>
+	</tr>
+	<tr>
+		<td><b>defines</b></td>
+		<td>Optional NAnt <b>fileset</b>.<br />
+		<br />
+		This is equivalent to the -d&lt;name&gt;[=&lt;value&gt;] switch in candle.exe.</td>
+	</tr>
+	<tr>
+		<td><b>includedirs</b></td>
+		<td>Optional NAnt <b>fileset</b>.<br />
+		<br />
+		Specifies directories to add to the compiler include search path. This is 
+		equivalent to the -I&lt;dir&gt; switch in candle.exe.</td>
+	</tr>
+</table>
+
+<p>Additional options can be added by using the standard NAnt <b>&lt;arg&gt;</b> elements, 
+e.g.:</p>
+
+<pre><font size="2" color="#0000ff">&lt;</font><font size="2" color="#a31515">arg </font><font size="2" color="#ff0000">line</font><font size="2" color="#0000ff">=</font><font size="2">&quot;</font><font size="2" color="#0000ff">-pedantic</font><font size="2">&quot;</font><font size="2" color="#0000ff"> /&gt;</font>
+</pre>
+
+</body>
+
+</html>

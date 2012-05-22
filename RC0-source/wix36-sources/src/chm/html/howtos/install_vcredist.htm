@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>How To: Install the Visual C++ Redistributable with your installer</title>
+</head>
+<body>
+<h1>How To: Install the Visual C++ Redistributable with your installer</h1>
+<p>If your application depends on the Visual C++ runtimes you can include them as part of your installer to simplify the installation experience for your end users. This how to describes including the Visual C++ runtime merge modules into your installer and explains the expected ICE warnings you will see.</p>
+<h2>Step 1: Obtain the correct Visual C++ runtime merge modules</h2>
+<p>The Visual C++ runtime merge modules are installed with Visual Studio and are located in <strong>\Program Files\Common Files\Merge Modules</strong>. The Visual C++ 8.0 runtime file is <strong>Microsoft_VC80_CRT_x86.msm</strong>. This same MSM is used for the Visual C++ 8.0 SP1 runtime, however it is updated in place by the Visual Studio 2005 SP1 installer. The Visual Studio 9.0 runtime file is <strong>Microsoft_VC90_CRT_x86.msm</strong>. There is generally no need to include the policy MSMs as part of the installation.</p>
+<h2>Step 2: Include the merge module in your installer</h2>
+<p>To include the merge module in your installer use the <a href="wix_xsd_merge.htm">&lt;Merge&gt;</a> and <a href="wix_xsd_mergeref.htm">&lt;MergeRef&gt;</a> elements. The following example illustrates how these elements are used.</p>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">DirectoryRef</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"TARGETDIR"</font><font size="2" color="#0000FF">&gt;
+    &lt;</font><font size="2" color="#A31515">Merge</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">VCRedist</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">SourceFile</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2">MySourceFiles</font><font size="2" color="#0000FF">\Microsoft_VC80_CRT_x86.msm</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">DiskId</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">1</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Language</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">0</font><font size="2">"</font><font size="2" color="#0000FF">/&gt;
+&lt;/</font><font size="2" color="#A31515">DirectoryRef</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<pre>
+<font size="2" color="#0000FF">&lt;</font><font size="2" color="#A31515">Feature</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">VCRedist</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Title</font><font size="2" color="#0000FF">=</font><font size="2">"Visual C++ 8.0 Runtime"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">AllowAdvertise</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">no</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Display</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">hidden</font><font size="2">"</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Level</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">1</font><font size="2">"</font><font size="2" color="#0000FF">&gt;
+    &lt;</font><font size="2" color="#A31515">MergeRef</font><font size="2" color="#0000FF"> </font><font size="2" color="#FF0000">Id</font><font size="2" color="#0000FF">=</font><font size="2">"</font><font size="2" color="#0000FF">VCRedist</font><font size="2">"</font><font size="2" color="#0000FF">/&gt;
+&lt;/</font><font size="2" color="#A31515">Feature</font><font size="2" color="#0000FF">&gt;</font>
+</pre>
+<p>The Merge element ensures the merge module is included in the final Windows Installer package. A unique id is assigned using the Id attribute. The SourceFile attribute points to the location of the merge module on your machine. The DiskId attribute should match the DiskId specified in your project's Media element. The Language attribute should always be 0.</p>
+<p>The MergeRef element is used within a Feature element to actually install the merge module. In the example above a feature specific to the runtime is created and marked as hidden to prevent it from displaying in any UI your installer may use. The MergeRef refers to the merge module by its unique id.</p>
+<h2>A note about ICE warnings</h2>
+<p>Including the Visual C++ Runtime merge module in your installer will result in the following ICE warnings:</p>
+<pre>
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Component, Column: KeyPath, Key(s): downlevel_manifest.8.0.50727.762.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Component, Column: KeyPath, Key(s): downlevel_manifest.8.0.50727.100.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Component, Column: KeyPath, Key(s): downlevel_manifest.8.0.50727.101.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Component, Column: KeyPath, Key(s): downlevel_manifest.8.0.50727.103.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Component, Column: KeyPath, Key(s): downlevel_manifest.8.0.50727.104.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Component, Column: KeyPath, Key(s): downlevel_manifest.8.0.50727.193.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Registry, Column: Registry, Key(s): reg_downlevel_manifest.8.0.50727.100.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Registry, Column: Registry, Key(s): reg_downlevel_manifest.8.0.50727.101.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Registry, Column: Registry, Key(s): reg_downlevel_manifest.8.0.50727.103.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Registry, Column: Registry, Key(s): reg_downlevel_manifest.8.0.50727.104.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Registry, Column: Registry, Key(s): reg_downlevel_manifest.8.0.50727.193.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE03: String overflow (greater than length permitted in column); Table: Registry, Column: Registry, Key(s): reg_downlevel_manifest.8.0.50727.762.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E
+light.exe(0,0): warning LGHT1076: ICE25: Possible dependency failure as we do not find CRT.Policy.63E949F6_03BC_5C40_FF1F_C8B3B9A1E18E@0 v in ModuleSignature table
+light.exe(0,0): warning LGHT1076: ICE82: This action SystemFolder.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E has duplicate sequence number 1 in the table InstallExecuteSequence
+light.exe(0,0): warning LGHT1076: ICE82: This action SystemFolder.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E has duplicate sequence number 1 in the table InstallUISequence
+light.exe(0,0): warning LGHT1076: ICE82: This action SystemFolder.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E has duplicate sequence number 1 in the table AdminExecuteSequence
+light.exe(0,0): warning LGHT1076: ICE82: This action SystemFolder.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E has duplicate sequence number 1 in the table AdminUISequence
+light.exe(0,0): warning LGHT1076: ICE82: This action SystemFolder.98CB24AD_52FB_DB5F_FF1F_C8B3B9A1E18E has duplicate sequence number 1 in the table AdvtExecuteSequence
+</pre>
+<p>These warnings are expected and are due to how the Visual C++ merge modules were authored. For more details see <a href="http://blogs.msdn.com/astebner/archive/2007/02/13/building-an-msi-using-wix-v3-0-that-includes-the-vc-8-0-runtime-merge-modules.aspx" target="_blank">Aaron Stebner's blog entry</a>.</p>
+</body>
+</html>

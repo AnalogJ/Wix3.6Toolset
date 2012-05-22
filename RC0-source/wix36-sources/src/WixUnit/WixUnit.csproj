@@ -1,0 +1,53 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{EAFD5281-D9AE-4680-AEB5-90AAAF4DBD9D}</ProjectGuid>
+    <AssemblyName>WixUnit</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Unit</RootNamespace>
+    <NoWarn>618</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CandleUnit.cs" />
+    <Compile Include="CompareUnit.cs" />
+    <Compile Include="DarkUnit.cs" />
+    <Compile Include="HeatUnit.cs" />
+    <Compile Include="ICommandArgs.cs" />
+    <Compile Include="InsigniaUnit.cs" />
+    <Compile Include="LightUnit.cs" />
+    <Compile Include="LitUnit.cs" />
+    <Compile Include="ProcessUnit.cs" />
+    <Compile Include="PyroUnit.cs" />
+    <Compile Include="SmokeUnit.cs" />
+    <Compile Include="ToolUtility.cs" />
+    <Compile Include="TorchUnit.cs" />
+    <Compile Include="UnitResults.cs" />
+    <Compile Include="WixProjUnit.cs" />
+    <Compile Include="WixUnit.cs" />
+    <EmbeddedFlattenedResource Include="unitTests.xsd" />
+    <EmbeddedNativeResource Include="wixunit.rc" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WixCop.settings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

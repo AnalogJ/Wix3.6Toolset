@@ -1,0 +1,289 @@
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!--
+*************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+This code is licensed under the Visual Studio SDK license terms.
+THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+*************************************************************************
+-->
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+
+
+  <UsingTask TaskName="EnableExtension" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="EnableLoadingAllExtensions" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="FindInstalledExtension" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="UninstallExtension" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="FindVsixManifest" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="GetExtensionsPath" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="GetDeploymentPathFromVsixManifest" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="CreateZipPackage" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="SignZipPackage" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+
+  <!--
+    Set the general properties for this installation of the SDK
+  -->
+  <PropertyGroup>
+    <VsSDKVersion>10.0</VsSDKVersion>
+    <VSSDKTargetPlatformVersion>10.0</VSSDKTargetPlatformVersion>
+    <VSSDKTargetsPath>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\vMAKE_VERSION_STRING(10, 0)\VSSDK</VSSDKTargetsPath>
+    <VSSDKTargetPlatformRegRoot>Software\Microsoft\VisualStudio\$(VSSDKTargetPlatformVersion)</VSSDKTargetPlatformRegRoot>
+    <VSSDKTargetPlatformRegRootSuffix Condition="'$(VSSDKTargetPlatformRegRootSuffix)' == ''">Exp</VSSDKTargetPlatformRegRootSuffix>
+    <ExtensionsDeploymentSubPath Condition="'$(ExtensionsDeploymentSubPath)' == ''">Microsoft\VisualStudio\$(VSSDKTargetPlatformVersion)$(VSSDKTargetPlatformRegRootSuffix)\Extensions\</ExtensionsDeploymentSubPath>
+  </PropertyGroup>
+
+    <!--
+    =================================================================================
+                                         Find Vsix Manifest File
+    =================================================================================
+    -->
+    <Target Name="FindVsixManifest">
+      <FindVsixManifest ItemsToConsider="@(None);@(VSIXContent)">
+        <Output TaskParameter="VsixManifest" ItemName="VsixManifest"/>
+      </FindVsixManifest>
+    </Target>
+  
+    <!--
+    =================================================================================
+                                         Copy Vsix Manifest File
+    =================================================================================
+
+    Copy the extensions.vsixmanifest file to the output directory.
+    -->
+    <PropertyGroup>
+        <CopyVsixManifestToOutput Condition="'$(CopyVsixManifestToOutput)' == ''">true</CopyVsixManifestToOutput>
+        <CopyVsixManifestFileDependsOn>$(CopyVsixManifestFileDependsOn);FindVsixManifest</CopyVsixManifestFileDependsOn>
+    </PropertyGroup>
+    <Target
+        Name="CopyVsixManifestFile"
+        Condition="'$(CopyVsixManifestToOutput)'=='true'"
+        DependsOnTargets="$(CopyVsixManifestFileDependsOn)">
+
+        <Copy
+            SourceFiles="@(VsixManifest)"
+            DestinationFolder="$(OutDir)"
+            SkipUnchangedFiles="true"
+            OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+            Retries="$(CopyRetryCount)"
+            RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+            Condition="'$(CopyVsixManifestToOutput)'=='true' And '@(VsixManifest)' != ''">
+            <Output TaskParameter="DestinationFiles" ItemName="_VsixOutputManifest"/>
+            <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+      </Copy>
+
+      <Message Importance="Normal" Condition="'$(CopyVsixManifestToOutput)'=='true' And '@(VsixManifest)' != ''" Text="$(MSBuildProjectName) -&gt; @(_VsixOutputManifest->'%(FullPath)')" />
+    </Target>
+
+    <!--
+    =================================================================================
+                                         Copy Vsix Content Files
+    =================================================================================
+
+    Copy VSIXContent files to the output directory.
+    -->
+    <PropertyGroup>
+        <CopyVsixContentToOutput Condition="'$(CopyVsixContentToOutput)' == ''">true</CopyVsixContentToOutput>
+        <CopyVsixContentToOutputDependsOn>$(CopyVsixContentToOutputDependsOn)</CopyVsixContentToOutputDependsOn>
+    </PropertyGroup>
+    <Target
+        Name="CopyVsixContent"
+        Condition="'$(CopyVsixContentToOutput)'=='true' AND '@(VSIXContent)' != ''"
+        DependsOnTargets="$(CopyVsixContentToOutputDependsOn)">
+
+        <Copy
+            SourceFiles="@(VSIXContent)"
+            DestinationFiles="@(VSIXContent->'$(OutDir)%(Identity)')"
+            SkipUnchangedFiles="true"
+            OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+            Retries="$(CopyRetryCount)"
+            RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)">
+            <Output TaskParameter="DestinationFiles" ItemName="_VsixOutputContent"/>
+            <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+      </Copy>
+
+      <Message Importance="Normal" Text="$(MSBuildProjectName) -&gt; @(_VsixOutputContent->'%(FullPath)')" />
+    </Target>
+
+  <!--
+    =======================================================================================================
+                                         Create/Sign Vsix Bundle (.vsix file)
+    =======================================================================================================
+  -->
+
+    <PropertyGroup>
+        <TargetVsix>$(OutDir)$(TargetName).vsix</TargetVsix>
+        <CanPromptForCertificate Condition="'$(CanPromptForCertificate)'==''">false</CanPromptForCertificate>
+        <CreateVsix Condition="'$(CreateVsix)' == ''">true</CreateVsix>
+        <GetVsixItemsToBundleDependsOn>$(GetVsixItemsToBundleDependsOn);CopyVsixManifestFile;CopyVsixContent</GetVsixItemsToBundleDependsOn>
+        <CreateVsixBundleDependsOn>$(CreateVsixBundleDependsOn);GetVsixItemsToBundle</CreateVsixBundleDependsOn>
+    </PropertyGroup>
+
+    <Target
+        Name="GetVsixItemsToBundle"
+        Condition="$(CreateVsix)"
+        DependsOnTargets="$(GetVsixItemsToBundleDependsOn)">
+
+        <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+            <!-- Exclude PDB files on a Release build -->
+            <ZipPackageItems Include="$(OutDir)\**\*.*" Exclude="$(OutDir)\**\*.c;$(OutDir)\**\*.exp;$(OutDir)\**\*.h;$(OutDir)\**\*.idb;$(OutDir)\**\*.ilk;$(OutDir)\**\*.lib;$(OutDir)\**\*.manifest;$(OutDir)\**\*.obj;$(OutDir)\**\*.pdb;$(OutDir)\**\*.pch;$(OutDir)\**\*.rc;$(OutDir)\**\*.res;$(OutDir)\**\*.timestamp;$(OutDir)\**\*.tlb;$(OutDir)\**\*.tlog;$(OutDir)\**\$(TargetName).vsix;$(OutDir)\**\*.lastcodeanalysissucceeded;$(OutDir)\**\*.CodeAnalysisLog.xml" />
+        </ItemGroup>
+
+        <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+            <ZipPackageItems Include="$(OutDir)\**\*.*" Exclude="$(OutDir)\**\*.c;$(OutDir)\**\*.exp;$(OutDir)\**\*.h;$(OutDir)\**\*.idb;$(OutDir)\**\*.ilk;$(OutDir)\**\*.lib;$(OutDir)\**\*.manifest;$(OutDir)\**\*.obj;$(OutDir)\**\*.pch;$(OutDir)\**\*.rc;$(OutDir)\**\*.res;$(OutDir)\**\*.timestamp;$(OutDir)\**\*.tlb;$(OutDir)\**\*.tlog;$(OutDir)\**\$(TargetName).vsix"/>
+        </ItemGroup>
+    </Target>
+    
+    <Target
+        Name="CreateVsixBundle"
+        Condition="$(CreateVsix)"
+        Inputs="@(ZipPackageItems)"
+        Outputs="$(TargetVsix)"
+        DependsOnTargets="$(CreateVsixBundleDependsOn)">
+
+        <Message Importance="High" Text="Packaging VSIX..." />
+
+        <CreateZipPackage 
+             RootFolder="$(OutDir)"
+             Files="@(ZipPackageItems)"
+             ZipPackage="$(TargetVsix)">
+            <Output TaskParameter="ZipPackage" ItemName="FileWrites" />
+            <Output TaskParameter="ZipPackage" ItemName="UnsignedZipPackage" />
+        </CreateZipPackage>
+
+        <SignZipPackage
+             Condition="('$(CanPromptForCertificate)'=='true') Or ('$(VsixCertificateThumbprint)'!='')"
+             ZipPackage="@(UnsignedZipPackage)"
+             CertificateThumbprint = "$(VsixCertificateThumbprint)"
+             CanPromptForCertificate = "$(CanPromptForCertificate)" />
+
+        <Message Importance="High" Text="$(MSBuildProjectName) -&gt; @(UnsignedZipPackage->'%(FullPath)')" />
+    </Target>
+
+
+  <!--
+    =======================================================================================================
+                                         Get Vsix Deployment Path
+    =======================================================================================================
+  -->
+    <PropertyGroup>
+        <DeployExtension Condition="'$(DeployExtension)' == ''">true</DeployExtension>
+        <GetVsixDeploymentPathDependsOn>$(GetVsixDeploymentPathDependsOn);FindVsixManifest</GetVsixDeploymentPathDependsOn>
+    </PropertyGroup>
+
+    <Target
+        Name="GetVsixDeploymentPath"
+        Condition="('$(DeployExtension)'=='true') And ('@(VsixManifest)' != '')"
+        DependsOnTargets="$(GetVsixDeploymentPathDependsOn)">
+      
+        <GetExtensionsPath SubPath="$(ExtensionsDeploymentSubPath)">
+            <Output TaskParameter="LocalExtensionsPath" PropertyName="ExtensionsPath"/>
+        </GetExtensionsPath>
+      
+        <GetDeploymentPathFromVsixManifest
+            ExtensionsPath="$(ExtensionsPath)"
+            VsixManifest="@(VsixManifest)" >
+            <Output TaskParameter="DeploymentPath" PropertyName="VsixDeploymentPath"/>
+            <Output TaskParameter="VsixID" PropertyName="VsixID"/>
+            <Output TaskParameter="VsixVersion" PropertyName="VsixVersion"/>
+        </GetDeploymentPathFromVsixManifest>
+    </Target>
+
+  <!--
+    =======================================================================================================
+                                         Deploy Vsix Extension Files
+    =======================================================================================================
+  -->
+    <PropertyGroup>
+        <DeployVsixExtensionFilesDependsOn>$(DeployVsixExtensionFilesDependsOn);GetVsixDeploymentPath;FindExistingDeploymentPath;CopyVsixManifestFile;CopyVsixContent</DeployVsixExtensionFilesDependsOn>
+    </PropertyGroup>
+
+    <Target Name="FindExistingDeploymentPath"
+	Condition="('$(DeployExtension)'=='true') And ('@(VsixManifest)' != '')"
+        AfterTargets="GetVsixDeploymentPath">
+        <FindInstalledExtension
+            VsixIdentifier="$(VsixID)" 
+            RootSuffix="$(VSSDKTargetPlatformRegRootSuffix)"
+            FailIfNotInstalled="false">
+            <Output TaskParameter="DeploymentPath" PropertyName="ExistingDeploymentPath" />
+        </FindInstalledExtension>
+    </Target>
+
+    <Target Name="DeployVsixExtensionFiles"
+        Condition="('$(DeployExtension)'=='true') And ('@(VsixManifest)' != '')"
+        DependsOnTargets="$(DeployVsixExtensionFilesDependsOn)">
+
+        <!-- Uninstall any existing extension with the same identifier with a different deployment path.
+             We don't always call this because of the way Uninstall is implemented in Extension Manager.
+             An uninstall operation just marks the directory for deletion in the registry and does the actual
+             delete on the next instantiation of the Extension Manager service object. In our case, this happens
+             at the same time (or just after) we are copying files to that directory. Therefore, we should only
+             call uninstall if the existing installation directory is different than the one we're deploying files
+             to. -->
+        <UninstallExtension
+            Condition="'$(ExistingDeploymentPath)' != '$(VsixDeploymentPath)'"
+            VsixIdentifier="$(VsixID)" 
+            RootSuffix="$(VSSDKTargetPlatformRegRootSuffix)"
+            FailIfNotInstalled="false" />
+      
+        <Message Text="VsixID = $(VsixID)" />
+        <Message Text="VsixVersion = $(VsixVersion)" />
+        <Message Text="VsixDeploymentPath = $(VsixDeploymentPath)" />
+
+        <CreateItem Include="$(OutDir)\**\*.*" Exclude="$(OutDir)\**\$(TargetName).vsix" >
+            <Output ItemName="VsixExtensionFiles" TaskParameter="Include" />
+        </CreateItem>
+        <Copy
+            SourceFiles="@(VsixExtensionFiles)"
+            DestinationFiles="@(VsixExtensionFiles->'$(VsixDeploymentPath)%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true"
+            OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+            Retries="$(CopyRetryCount)"
+            RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+
+        <!--Enable always loading extensions from LocalAppData -->
+        <EnableLoadingAllExtensions
+            RootSuffix="$(VSSDKTargetPlatformRegRootSuffix)" />
+       
+        <!--Enable this extension via Extension Manager-->
+        <EnableExtension
+            VsixIdentifier="$(VsixID)"
+            RootSuffix="$(VSSDKTargetPlatformRegRootSuffix)"
+            FailIfNotInstalled="true" />
+    </Target>
+
+  <!--
+    =======================================================================================================
+                     Get files to copy to another project's output folder for VSIX deployment
+    =======================================================================================================
+  -->
+  <!-- GetVSIXDeploymentItems is called by a project which references this project to get the list of
+       items to include in a VSIX Deployment. This targets file should be included in both native and managed
+       VSPackages.-->
+  <Target Name="_GetVSIXDeploymentItems" BeforeTargets="GetVSIXDeploymentItems">
+    <ItemGroup>
+      <_VSIXDeploymentItem Include="$(OutDir)**\*.dll;$(OutDir)**\*.pdb;$(OutDir)**\*.pkgdef" />
+    </ItemGroup>
+    <ItemGroup>
+      <VSIXDeploymentItem Include="@(_VSIXDeploymentItem)">
+        <OrigFullPath>%(FullPath)</OrigFullPath>
+        <OrigRecursiveDir>%(RecursiveDir)</OrigRecursiveDir>
+      </VSIXDeploymentItem>
+    </ItemGroup>
+  </Target>
+  <Target Name="GetVSIXDeploymentItems" Outputs="@(VSIXDeploymentItem)" />
+</Project>

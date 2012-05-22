@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Specifying Cultures to Build</title>
+</head>
+<body>
+    <h1>
+        Specifying Cultures to Build</h1>
+    <h2>
+        Specifying Cultures to build on the Command Line</h2>
+    <p>
+        You can specify a specific culture for light.exe to build using the culture switch:
+        <pre>light.exe myinstaller.wixobj -cultures:en-us -ext WixUIExtension 
+        -out myinstaller-en-us.msi</pre>
+        This will cause light to build an en-us installer using the en-us resources from
+        WixUIExtension.
+    </p>
+    <p>
+        You can still use cultures when specifying localization files:
+        <pre>light.exe myinstaller.wixobj -cultures:en-us -loc mystrings_en-US.wxl 
+        -loc mystrings_fr-FR.wxl -out myinstaller-en-us.msi</pre>
+        This will cause light to build an en-us installer using the en-us resources from
+        the specified en-US .wxl file. Note that when specifying -cultures any wxl files
+        specified with the -loc switch that do not map will be ignored (mystrings_fr-FR.wxl
+        in this case.)
+    </p>
+    <p>
+        The neutral (invariant) culture can be specified by using <em>neutral</em>:
+        <pre>light.exe myinstaller.wixobj -cultures:netural -loc mystrings_en-US.wxl 
+        -loc mystrings_fr-FR.wxl -loc mystrings.wxl -out myinstaller.msi</pre>
+        This will cause light to build a neutral installer using the neutral resources from
+        the mystrings.wxl file. 
+    <p>
+    <p>
+        You can use cultures and localization files together to specify fallback cultures:
+        <pre>light.exe myinstaller.wixobj -cultures:en-us;en -loc mystrings_en-US.wxl 
+        -loc mystrings_en.wxl -ext WixUIExtension -out myinstaller-en-us.msi</pre>
+        This will cause light to build an en-us installer first using localization variables
+        from the en-US localization file (mystrings_en-US.wxl), then the en localization
+        file (mystrings_en.wxl), then finally WixUIExtension.
+    </p>
+    <h2>
+        Specifying Cultures to build in Visual Studio</h2>
+    <p>
+        During the development of your installer you may want to temporarily disable building
+        some of the languages to speed up build time. You can do this by going to <strong>Project</strong>
+        &gt; <em><strong>Projectname</strong></em> <strong>Properties</strong> on the menu
+        and selecting the <strong>Build</strong> tab. In the <strong>Cultures to build</strong>
+        field enter the semicolon list of cultures or culture groups you would like built.</p>
+    <p>
+        <strong>Cultures to build</strong> may be used to specify cultures to build when
+        a .wxl file is not provided for a target culture. For example, to build an en-US
+        installer and an ru-RU installer when only an ru-RU .wxl file is provided, specify
+        en-US;ru-RU. Wix localization variables for the ru-RU installer will first come
+        from the provided .wxl file, then referenced WiX exstensions (IE: WixUIExtension).
+        Wix localization variables for the en-US installer will only come from referenced
+        extensions.</p>
+    <p>
+        The neutral (invariant) culture can be specified by using <em>neutral</em>. 
+        To build English (United States), French (France), and neutral installers specify 
+        the following:</p>
+    <pre>en-US;fr-FR;neutral</pre>
+    <p>
+        <strong>Cultures to build</strong> may also be used to specify how to use multiple
+        WxL files to build a single installer. Each culture or culture group will build
+        an individual MSI. A <strong>culture group</strong> consists of a list of cultures
+        seperated by <em>commas</em> and is useful for specifying fallback cultures used to locate
+        WiX localization variables.  Multiple culture groups may be seperated by <em>semi-colons</em>
+        to build multiple outputs.</p>
+    <pre>primary1,fallback1;primary2,fallback2</pre>
+    <p>
+        The example below demonstrates the settings needed to build two installers from
+        three .wxl files. Both en-US and en-GB installers will be built, using three localization
+        files: setupStrings_en-US.wxl, setupStrings_en-GB.wxl, and setupStrings_en.wxl.
+        The sample uses two culture groups to share the neutral English translations between
+        both of the fully localized installers.</p>
+    <img src="../imgs/build_a_localized_version_votive_culture_fallback.jpg" />
+</body>
+</html>

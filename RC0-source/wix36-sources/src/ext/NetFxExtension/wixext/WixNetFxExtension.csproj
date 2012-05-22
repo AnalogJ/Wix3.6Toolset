@@ -1,0 +1,38 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{EA867716-8FF0-4008-B197-9F326420ABE4}</ProjectGuid>
+    <AssemblyName>WixNetFxExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="NetFxCompiler.cs" />
+    <Compile Include="NetFxDecompiler.cs" />
+    <Compile Include="NetFxExtension.cs" />
+    <EmbeddedFlattenedResource Include="Data\tables.xml">
+      <LogicalName>$(RootNamespace).Data.tables.xml</LogicalName>
+    </EmbeddedFlattenedResource>
+    <EmbeddedFlattenedResource Include="Xsd\netfx.xsd">
+      <LogicalName>$(RootNamespace).Xsd.netfx.xsd</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\netfx.xsd">
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.NetFx</Namespace>
+    </XsdGenSource>
+    <EmbeddedResource Include="$(OutputPath)\netfx.wixlib">
+      <Link>Data\netfx.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\Wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

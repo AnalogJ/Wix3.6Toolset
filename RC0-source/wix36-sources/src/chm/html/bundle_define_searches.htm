@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Define Searches Using Variables</title>
+</head>
+
+<body>
+<h1>Define Searches Using Variables</h1>
+
+<p>Searches are used to detect if the target machine meets certain conditions. The result of a search is stored into a variable. Variables are then used to construct install conditions through the use of operands. The search schemas are in the WixUtilExtension. Here is the list of supported searches:</p>
+
+<ul>
+  <li><a href="util_xsd_filesearch.htm">&lt;FileSearch&gt;</a></li>
+
+  <li><a href="util_xsd_registrysearch.htm">&lt;RegistrySearch&gt;</a></li>
+
+  <li><a href="util_xsd_directorysearch.htm">&lt;DirectorySearch&gt;</a></li>
+
+  <li><a href="util_xsd_componentsearch.htm">&lt;ComponentSearch&gt;</a></li>
+
+  <li><a href="util_xsd_productsearch.htm">&lt;ProductSearch&gt;</a></li>
+</ul>
+
+<p class="MsoNormal">A search can be dependent on the result of another search. Keep in mind that all searches are in the WiXUtilExtension. So remember to add the WiXUtilExtension namespace in the authoring. Here is an example:</p>
+
+<pre>    &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;<a href="http://schemas.microsoft.com/wix/2006/wi">http://schemas.microsoft.com/wix/2006/wi</a>&quot;
+         xmlns:util=&quot;<a href="http://schemas.microsoft.com/wix/UtilExtension">http://schemas.microsoft.com/wix/UtilExtension</a>&quot;&gt;
+      &lt;Fragment&gt;
+        &lt;util:RegistrySearch Id=&quot;Path&quot;
+            Variable=&quot;UniqueId&quot;
+            Root=&quot;HKLM,SOFTWARE\Microsoft\MyProduct\Unique Id\&quot;
+            Key=&quot;Product&quot;
+            Result=&quot;Value&quot; /&gt;
+        &lt;util:RegistrySearch 
+            Variable=&quot;patchLevel&quot;
+            Root=&quot;HKLM,SOFTWARE\Microsoft\MyProduct\[UniqueId]\Setup&quot;
+            Key=&quot;PatchLevel&quot;
+            Result=&quot;Exists&quot; 
+            After=&quot;Path&quot; /&gt;
+      &lt;/Fragment&gt;
+    &lt;/Wix&gt;</pre>
+
+<p>After the searches are defined and stored into variables, the variables can then be used in install conditions. For example, I can use the result of the registry searches in the install condition of my package by adding both the searches and the install conditions. Here's an example of a complete fragment that contains a package definition with conditions and searches:</p>
+
+<pre>   &lt;?xml version=&quot;1.0&quot;&gt;
+    &lt;Wix xmlns=&quot;<a href="http://schemas.microsoft.com/wix/2006/wi">http://schemas.microsoft.com/wix/2006/wi</a>&quot;
+         xmlns:util=&quot;<a href="http://schemas.microsoft.com/wix/UtilExtension">http://schemas.microsoft.com/wix/UtilExtension</a>&quot;&gt;
+      &lt;Fragment&gt;
+        &lt;util:RegistrySearch Id=&quot;Path&quot;
+            Variable=&quot;UniqueId&quot;
+            Root=&quot;HKLM,SOFTWARE\Microsoft\MyProduct\Unique Id\&quot;
+            Key=&quot;Product&quot;
+            Result=&quot;Value&quot; /&gt;
+        &lt;util:RegistrySearch 
+            Variable=&quot;patchLevel&quot;
+            Root=&quot;HKLM,SOFTWARE\Microsoft\MyProduct\[UniqueId]\Setup&quot;
+            Key=&quot;PatchLevel&quot;
+            Result=&quot;Exists&quot; 
+            After=&quot;Path&quot; /&gt;
+
+        &lt;PackageGroup Id=&quot;MyPackage&quot;&gt;
+          &lt;ExePackage 
+            SourceFile=&quot;[sources]\packages\shared\MyPackage.exe&quot;
+            DownloadURL=&quot;http://mywebdomain.com/?mypackage.exe
+            InstallCommand=&quot;/q /ACTION=Install&quot;
+            RepairCommand=&quot;/q ACTION=Repair /hideconsole&quot;
+            UninstallCommand=&quot;/q ACTION=Uninstall /hideconsole &quot;
+            InstallCondition=&quot;x86 = 1 AND OSVersion &gt;= v5.0.5121.0 <strong class="highlight">AND patchLevel = 0&quot;</strong> /&gt;
+        &lt;/PackageGroup&gt;
+      &lt;/Fragment&gt;
+    &lt;/Wix&gt;  </pre>
+
+<p>Now you have a fully-defined fragment that can be shared to be consumed by other Burn packages. To see how to chain this package into a Burn package, see <a href="bundle_author_chain.htm">Chain Packages into a Bundle</a>.</p>
+</body>
+</html>

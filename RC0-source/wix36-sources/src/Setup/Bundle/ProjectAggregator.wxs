@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+
+    <!--
+      Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+      ProjectAggregator.wxs - WiX source for the VS2005 Project Aggregator.
+    -->
+
+    <Fragment>
+        <PackageGroup Id='ProjectAggregator'>
+            <MsiPackage Id='ProjectAggregator2' Compressed='no' Vital='yes' ForcePerMachine='yes' InstallCondition='VS2005InstallFolder'
+                        DownloadUrl='http://wixtoolset.org/releases/v3.6/ProjectAggregator2.msi'
+                        SourceFile='x86\ProjectAggregator2.msi' />
+        </PackageGroup>
+    </Fragment>
+</Wix>

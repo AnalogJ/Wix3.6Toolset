@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="zip" default="zip.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    zip.build - Create the distribution .zip files (binaries, PDBs, and sources).
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!-- get the build number (regexes are the duct tape of build automation) -->
+  <loadfile file="${dir.wixroot.inc}\wixver.cs" property="dist.wixver.cs" />
+  <regex input="${dist.wixver.cs}" options="Multiline" pattern="^\[assembly: AssemblyFileVersion\(&quot;(?'wixver'.*)&quot;\)\]" />
+
+  <property name="version.wixmajor" value="36" readonly="true" />
+  <property name="dir.target.zips" value="${dir.target.wix}\release\${wixver}" readonly="true" />
+  <property name="file.target.binaries.zip" value="${dir.target.zips}\wix${version.wixmajor}-binaries.zip" readonly="true" />
+  <property name="file.target.pdbs.zip" value="${dir.target.zips}\wix${version.wixmajor}-pdbs.zip" readonly="true" />
+  <property name="file.target.otherpdbs.zip" value="${dir.target.zips}\wix${version.wixmajor}-other-pdbs.zip" readonly="true" />
+  <property name="file.target.sources.zip" value="${dir.target.zips}\wix${version.wixmajor}-sources.zip" readonly="true" />
+  <property name="zip" value="${ship}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="zip.build" description="Peforms a full rebuild (clean then build)" depends="zip.clean, zip.inc" />
+
+  <!-- Clean -->
+  <target name="zip.clean" description="Cleans the build">
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix}">
+        <include name="${file.target.binaries.zip}" />
+        <include name="${file.target.pdbs.zip}" />
+        <include name="${file.target.sources.zip}" />
+        <include name="${dir.target.zips}\history.txt" />
+        <include name="${dir.target.zips}\Wix${version.wixmajor}.exe" />
+        <include name="${dir.target.zips}\data\*" />
+        <include name="${dir.target.zips}\*.json" />
+      </fileset>
+    </delete>
+    <delete dir="${dir.target.wix}\wix${version.wixmajor}" failonerror="false" />
+  </target>
+
+  <!-- Inc -->
+  <target name="zip.inc" description="Performs an incremental build" depends="dozip, dometadata" if="${zip}"/>
+
+  <target name="dozip">
+    <mkdir dir="${dir.target.zips}" />
+    <copy file="${dir.wixroot}\history.txt" todir="${dir.target.zips}" />
+    <copy file="${dir.target.wix}\Wix${version.wixmajor}.exe" todir="${dir.target.zips}" />
+    <copy todir="${dir.target.zips}\data">
+      <fileset basedir="${dir.target.wix}\data">
+        <include name="**/*.*" />
+        <exclude name="**/*.wixpdb" />
+      </fileset>
+    </copy>
+
+    <zip zipfile="${file.target.binaries.zip}">
+      <fileset basedir="${dir.target.wix}">
+        <include name="x86\burn.exe" />
+        <include name="candle.exe" />
+        <include name="candle.exe.config" />
+        <include name="${dir.root}\CPL.TXT" />
+        <include name="dark.exe" />
+        <include name="dark.exe.config" />
+        <include name="heat.exe" />
+        <include name="heat.exe.config" />
+        <include name="insignia.exe" />
+        <include name="insignia.exe.config" />
+        <include name="light.exe" />
+        <include name="light.exe.config" />
+        <include name="lit.exe" />
+        <include name="lit.exe.config" />
+        <include name="melt.exe" />
+        <include name="melt.exe.config" />
+        <include name="Microsoft.Deployment.Compression.dll" />
+        <include name="Microsoft.Deployment.Compression.Cab.dll" />
+        <include name="Microsoft.Deployment.Resources.dll" />
+        <include name="Microsoft.Deployment.WindowsInstaller.dll" />
+        <include name="Microsoft.Deployment.WindowsInstaller.Package.dll" />
+        <include name="Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" />
+        <include name="pyro.exe" />
+        <include name="pyro.exe.config" />
+        <include name="retina.exe" />
+        <include name="retina.exe.config" />
+        <include name="sconce2005.dll" />
+        <include name="sconce2008.dll" />
+        <include name="sconce2010.dll" />
+        <include name="setup.exe" />
+        <include name="setupbld.exe" />
+        <include name="SetupBuilder.dll" />
+        <include name="shine.exe" />
+        <include name="shine.exe.config" />
+        <include name="smoke.exe" />
+        <include name="smoke.exe.config" />
+        <include name="ThmViewer.exe" />
+        <include name="torch.exe" />
+        <include name="torch.exe.config" />
+        <include name="votive2005.dll" />
+        <include name="votive2008.dll" />
+        <include name="votive2010.dll" />
+        <include name="wconsole.dll" />
+        <include name="winterop.dll" />
+        <include name="wix.dll" />
+        <include name="wix.targets" />
+        <include name="wix200x.targets" />
+        <include name="wix2010.targets" />
+        <include name="WixCop.exe" />
+        <include name="WixTasks.dll" />
+        <include name="WixTests.dll" />
+        <include name="WixTestTools.dll" />
+        <include name="WixUnit.exe" />
+        <include name="WixUnit.exe.config" />
+        <include name="wui.dll" />
+
+        <include name="darice.cub" />
+        <include name="mergemod.cub" />
+        <include name="mergemod.dll" />
+        <include name="mspatchc.dll" />
+
+        <!-- icons for WiX file extensions -->
+        <include name="IncludeFile.ico" />
+        <include name="LocalizationFile.ico" />
+        <include name="ProductFile.ico" />
+        <include name="ProjectFile.ico" />
+        <include name="WixLibraryFile.ico" />
+
+        <!-- extensions -->
+        <include name="WixBalExtension.dll" />
+        <include name="WixComPlusExtension.dll" />
+        <include name="WixDifxAppExtension.dll" />
+        <include name="${dir.target.wix.x86}\difxapp_x86.wixlib" />
+        <include name="${dir.target.wix.x64}\difxapp_x64.wixlib" />
+        <include name="${dir.target.wix.ia64}\difxapp_ia64.wixlib" if="${ia64}" />
+
+        <include name="WixDependencyExtension.dll" />
+        <include name="WixDirectXExtension.dll" />
+        <include name="WixFirewallExtension.dll" />
+        <include name="WixGamingExtension.dll" />
+        <include name="WixIIsExtension.dll" />
+        <include name="WixIsolatedAppExtension.dll" />
+        <include name="WixMsmqExtension.dll" />
+        <include name="WixNetFxExtension.dll" />
+        <include name="WixOfficeExtension.dll" />
+        <include name="WixPSExtension.dll" />
+        <include name="WixSqlExtension.dll" />
+        <include name="WixUIExtension.dll" />
+        <include name="WixUtilExtension.dll" />
+        <include name="WixVSExtension.dll" />
+
+        <!-- Votive templates -->
+        <include name="BlankFile.zip" />
+        <include name="IncludeFile.zip" />
+        <include name="LocalizationFile.zip" />
+        <include name="MergeModuleFile.zip" />
+        <include name="ProductFile.zip" />
+        <include name="TextFile.zip" />
+        <include name="WixLibrary.zip" />
+        <include name="WixMergeModule.zip" />
+        <include name="WixProject.zip" />
+        <include name="WixBundleProject.zip" />
+        <include name="CustomActionCS.zip" />
+        <include name="CustomActionVB.zip" />
+        <include name="CustomActionCPP_2005.zip" />
+        <include name="CustomActionCPP_2008.zip" />
+
+        <!-- Lux -->
+        <include name="lux.exe" />
+        <include name="lux.exe.config" />
+        <include name="nit.exe" />
+        <include name="nit.exe.config" />
+        <include name="WixLuxExtension.dll" />
+        <include name="lux.targets" />
+        <include name="LuxTasks.dll" />
+      </fileset>
+
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\dutil\Xsd">
+        <include name="thmutil.xsd" />
+      </fileset>
+
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\lux\wixext\Xsd">
+        <include name="lux.xsd" />
+      </fileset>
+
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\BalExtension\wixext\Xsd">
+        <include name="bal.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.target.wix}\src\ext\ComPlusExtension\wixext\Xsd">
+        <include name="complus.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\DifxAppExtension\wixext\Xsd">
+        <include name="difxapp.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\FirewallExtension\wixext\Xsd">
+        <include name="firewall.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\GamingExtension\wixext\Xsd">
+        <include name="gaming.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\IIsExtension\wixext\xsd">
+        <include name="iis.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\MsmqExtension\wixext\Xsd">
+        <include name="msmq.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\NetFxExtension\wixext\Xsd">
+        <include name="netfx.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\PSExtension\wixext\xsd">
+        <include name="ps.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\SqlExtension\wixext\Xsd">
+        <include name="sql.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\UtilExtension\wixext\Xsd">
+        <include name="util.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\ext\VSExtension\wixext\xsd">
+        <include name="vs.xsd" />
+      </fileset>
+      <fileset prefix="doc" basedir="${dir.wixroot}\src\wix\Xsd">
+        <include name="wix.xsd" />
+        <include name="wixloc.xsd" />
+      </fileset>
+
+      <fileset prefix="doc" basedir="${dir.target.wix}">
+        <include name="WiX.chm" />
+        <include name="DTF.chm" if="${ship}" />
+        <include name="DTFAPI.chm" if="${ship}" />
+      </fileset>
+
+      <fileset prefix="sdk" basedir="${dir.target.wix}">
+        <include name="MsgGen.exe" />
+        <include name="XsdGen.exe" />
+        <include name="DocCompiler.exe" />
+        <include name="XsdStitch.exe" />
+
+        <!-- Burn binaries -->
+        <include name="BootstrapperCore.dll" />
+        <include name="BootstrapperCore.config" />
+
+        <!-- DTF binaries -->
+        <include name="wix.ca.targets" />
+        <include name="Microsoft.Deployment.Compression.dll" />
+        <include name="Microsoft.Deployment.Compression.xml" />
+        <include name="Microsoft.Deployment.Compression.Cab.dll" />
+        <include name="Microsoft.Deployment.Compression.Cab.xml" />
+        <include name="Microsoft.Deployment.Compression.Zip.dll" />
+        <include name="Microsoft.Deployment.Compression.Zip.xml" />
+        <include name="Microsoft.Deployment.Resources.dll" />
+        <include name="Microsoft.Deployment.Resources.xml" />
+        <include name="Microsoft.Deployment.WindowsInstaller.dll" />
+        <include name="Microsoft.Deployment.WindowsInstaller.xml" />
+        <include name="Microsoft.Deployment.WindowsInstaller.Linq.dll" />
+        <include name="Microsoft.Deployment.WindowsInstaller.Linq.xml" />
+        <include name="Microsoft.Deployment.WindowsInstaller.Package.dll" />
+        <include name="Microsoft.Deployment.WindowsInstaller.Package.xml" />
+        <include name="MakeSfxCA.exe" />
+        <include name="MakeSfxCA.exe.config" />
+      </fileset>
+
+      <fileset prefix="sdk/x86" basedir="${dir.target.wix}">
+        <include name="sfxca.dll" />
+      </fileset>
+        
+      <fileset prefix="sdk/x64" basedir="${dir.target.wix.x64}">
+        <include name="sfxca.dll" />
+      </fileset>
+      
+      <fileset prefix="sdk/inc" basedir="${dir.target.wix}">
+        <include name="${dir.inc.burn}\IBootstrapperEngine.h" />
+        <include name="${dir.inc.burn}\IBootstrapperApplication.h" />
+        <include name="${dir.inc.balutil}\BalBaseBootstrapperApplication.h" />
+        <include name="${dir.inc.balutil}\balcondition.h" />
+        <include name="${dir.inc.balutil}\balretry.h" />
+        <include name="${dir.inc.balutil}\balutil.h" />
+        <include name="${dir.inc.deputil}\deputil.h" />
+        <include name="${dir.inc.dutil}\aclutil.h" />
+        <include name="${dir.inc.dutil}\apuputil.h" />
+        <include name="${dir.inc.dutil}\atomutil.h" />
+        <include name="${dir.inc.dutil}\buffutil.h" />
+        <include name="${dir.inc.dutil}\cabcutil.h" />
+        <include name="${dir.inc.dutil}\cabutil.h" />
+        <include name="${dir.inc.dutil}\certutil.h" />
+        <include name="${dir.inc.dutil}\conutil.h" />
+        <include name="${dir.inc.dutil}\cryputil.h" />
+        <include name="${dir.inc.dutil}\dictutil.h" />
+        <include name="${dir.inc.dutil}\dirutil.h" />
+        <include name="${dir.inc.dutil}\dutil.h" />
+        <include name="${dir.inc.dutil}\eseutil.h" />
+        <include name="${dir.inc.dutil}\fileutil.h" />
+        <include name="${dir.inc.dutil}\gdiputil.h" />
+        <include name="${dir.inc.dutil}\inetutil.h" />
+        <include name="${dir.inc.dutil}\jsonutil.h" />
+        <include name="${dir.inc.dutil}\locutil.h" />
+        <include name="${dir.inc.dutil}\logutil.h" />
+        <include name="${dir.inc.dutil}\memutil.h" />
+        <include name="${dir.inc.dutil}\metautil.h" />
+        <include name="${dir.inc.dutil}\osutil.h" />
+        <include name="${dir.inc.dutil}\pathutil.h" />
+        <include name="${dir.inc.dutil}\perfutil.h" />
+        <include name="${dir.inc.dutil}\procutil.h" />
+        <include name="${dir.inc.dutil}\regutil.h" />
+        <include name="${dir.inc.dutil}\resrutil.h" />
+        <include name="${dir.inc.dutil}\reswutil.h" />
+        <include name="${dir.inc.dutil}\rexutil.h" />
+        <include name="${dir.inc.dutil}\rssutil.h" />
+        <include name="${dir.inc.dutil}\sceutil.h" />
+        <include name="${dir.inc.dutil}\shelutil.h" />
+        <include name="${dir.inc.dutil}\sqlutil.h" />
+        <include name="${dir.inc.dutil}\strutil.h" />
+        <include name="${dir.inc.dutil}\thmutil.h" />
+        <include name="${dir.inc.dutil}\timeutil.h" />
+        <include name="${dir.inc.dutil}\uriutil.h" />
+        <include name="${dir.inc.dutil}\userutil.h" />
+        <include name="${dir.inc.dutil}\wiutil.h" />
+        <include name="${dir.inc.dutil}\xmlutil.h" />
+        <include name="${dir.src.wcautil}\wcautil.h" />
+        <include name="${dir.src.wcautil}\wcawow64.h" />
+        <include name="${dir.src.wcautil}\wcawrapquery.h" />
+      </fileset>
+
+      <fileset prefix="sdk/lib" basedir="${dir.target.wix}">
+        <include name="dutil_2005.lib" if="${BuildVC8}" />
+        <include name="dutil_2008.lib" if="${BuildVC9}" />
+        <include name="dutil_2010.lib" if="${BuildVC10}" />
+        <include name="${dir.target.wix.x64}\dutil_2005_x64.lib" if="${BuildVC8}"/>
+        <include name="${dir.target.wix.x64}\dutil_2008_x64.lib" if="${BuildVC9}"/>
+        <include name="${dir.target.wix.x64}\dutil_2010_x64.lib" if="${BuildVC10}"/>
+
+        <include name="${dir.target.wix.ia64}\dutil_2005_ia64.lib" if="${BuildVC8 and ia64}" />
+        <include name="${dir.target.wix.ia64}\dutil_2008_ia64.lib" if="${BuildVC9 and ia64}" />
+        <include name="${dir.target.wix.ia64}\dutil_2010_ia64.lib" if="${BuildVC10 and ia64}" />
+
+        <include name="balutil_2005.lib" if="${BuildVC8}" />
+        <include name="balutil_2008.lib" if="${BuildVC9}" />
+        <include name="balutil_2010.lib" if="${BuildVC10}" />
+
+        <include name="${dir.target.wix.x64}\balutil_2005_x64.lib" if="${BuildVC8}" />
+        <include name="${dir.target.wix.x64}\balutil_2008_x64.lib" if="${BuildVC9}" />
+        <include name="${dir.target.wix.x64}\balutil_2010_x64.lib" if="${BuildVC10}" />
+
+        <include name="deputil_2005.lib" if="${BuildVC8}" />
+        <include name="deputil_2008.lib" if="${BuildVC9}" />
+        <include name="deputil_2010.lib" if="${BuildVC10}" />
+
+        <include name="wcautil_2005.lib" if="${BuildVC8}" />
+        <include name="wcautil_2008.lib" if="${BuildVC9}" />
+        <include name="wcautil_2010.lib" if="${BuildVC10}" />
+        <include name="${dir.target.wix.x64}\wcautil_2005_x64.lib" if="${BuildVC8}" />
+        <include name="${dir.target.wix.x64}\wcautil_2008_x64.lib" if="${BuildVC9}" />
+        <include name="${dir.target.wix.x64}\wcautil_2010_x64.lib" if="${BuildVC10}" />
+
+        <include name="${dir.target.wix.ia64}\wcautil_2005_ia64.lib" if="${BuildVC8 and ia64}" />
+        <include name="${dir.target.wix.ia64}\wcautil_2008_ia64.lib" if="${BuildVC9 and ia64}" />
+        <include name="${dir.target.wix.ia64}\wcautil_2010_ia64.lib" if="${BuildVC10 and ia64}" />
+      </fileset>
+    </zip>
+
+    <zip zipfile="${file.target.sources.zip}">
+      <fileset basedir="${dir.wixroot}">
+        <include name="**/*.avi" />
+        <include name="**/*.bat" />
+        <include name="**/*.bmp" />
+        <include name="**/*.build" />
+        <include name="**/*.burnproj" />
+        <include name="**/*.cd" />
+        <include name="**/*.config" />
+        <include name="**/*.cpp" />
+        <include name="**/*.cs" />
+        <include name="**/*.css" />
+        <include name="**/*.csproj" />
+        <include name="**/*.ctc" />
+        <include name="**/*.def" />
+        <include name="**/*.files" />
+        <include name="**/*.js" />
+        <include name="**/*.jsl" />
+        <include name="**/*.jpg" />
+        <include name="**/*.h" />
+        <include name="**/*.hh?" />
+        <include name="**/*.htm" />
+        <include name="**/*.ico" />
+        <include name="**/*.include" />
+        <include name="**/*.manifest" />
+        <include name="**/*.manifest.xml" />
+        <include name="**/*.mc" />
+        <include name="**/*.pp" />
+        <include name="**/*.png" />
+        <include name="**/*.proj" />
+        <include name="**/*.rc" />
+        <include name="**/*.reg" />
+        <include name="**/*.resx" />
+        <include name="**/*.rgs" />
+        <include name="**/*.rsp" />
+        <include name="**/*.rtf" />
+        <include name="**/*.Settings" />
+        <include name="**/*.shfb" />
+        <include name="**/*.sln" />
+        <include name="**/*.targets" />
+        <include name="**/*.testrunconfig" />
+        <include name="**/*.thm" />
+        <include name="**/*.txt" />
+        <include name="**/*.wixproj" />
+        <include name="**/*.wxl" />
+        <include name="**/*.wxs" />
+        <include name="**/*.wxi" />
+        <include name="**/*.vb" />
+        <include name="**/*.vbproj" />
+        <include name="**/*.vbs" />
+        <include name="**/*.vcproj" />
+        <include name="**/*.vcxproj" />
+        <include name="**/*.vjsproj" />
+        <include name="**/*.vsdir" />
+        <include name="**/*.vsmdi" />
+        <include name="**/*.vstemplate" />
+        <include name="**/*.xsd" />
+        <include name="**/*.xaml" />
+        <include name="**/thm.xml" />
+        <include name="**/*theme.xml" />
+
+        <!-- skip the files we don't want that match one of the above extensions -->
+        <exclude name="doc/**/*" />
+        <exclude name="examples/**/*" />
+        <exclude name="test/**/*" />
+        <exclude name="**/*proj.FileList.txt" />
+
+        <!-- explicitly list .xml files we want, as opposed to the .xml files the compiler generates from doc comments -->
+        <include name="**/test*.xml" />
+        <include name="**/toc.xml" />
+        <include name="**/actions.xml" />
+        <include name="**/messages.xml" />
+        <include name="**/tables.xml" />
+        <include name="**/CustomDictionary.xml" />
+
+        <!-- other explicitly named files we want -->
+        <include name="src/Votive/SDK/Tools/Build/Microsoft.VsSDK.Build.Tasks.dll" />
+
+        <include name="src/DTF/Libraries/Compression.Cab/Errors.resources.resources" />
+        <include name="src/DTF/Libraries/WindowsInstaller/Errors.resources.resources" />
+
+        <!-- skip the externals and the intermediate build files -->
+        <exclude name="external/**/*" />
+        <exclude name="build/**/*" />
+      </fileset>
+    </zip>
+
+    <zip zipfile="${file.target.pdbs.zip}">
+      <fileset prefix="x86" basedir="${dir.target.wix.x86}">
+        <include name="*.pdb" />
+      </fileset>
+
+      <fileset prefix="x86" basedir="${dir.target.wix.x86}\x86">
+        <include name="*.pdb" />
+      </fileset>
+
+      <fileset prefix="x64" basedir="${dir.target.wix.x64}">
+        <include name="*.pdb" />
+      </fileset>
+
+      <fileset prefix="x64" basedir="${dir.target.wix.x86}\x64">
+        <include name="*.pdb" />
+      </fileset>
+
+      <fileset prefix="ia64" basedir="${dir.target.wix.ia64}">
+        <include name="*.pdb" if="${ia64}" />
+      </fileset>
+
+      <fileset prefix="ia64" basedir="${dir.target.wix.x86}\ia64">
+        <include name="*.pdb" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="dometadata">
+    <property name="msbuild.project" value="${dir.wixroot}\release\UploadMetadata.proj" />
+    <call target="msbuild" />
+  </target>
+</project>

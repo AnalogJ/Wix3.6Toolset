@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="burn" default="balextension.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    balextension.build - Builds the extensions.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Includes
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <include buildfile="balutil\balutil.build" unless="${property::exists('balutil.properties.defined')}" />
+  <include buildfile="mba\mba.build"  unless="${property::exists('mba.properties.defined')}" />
+  <include buildfile="wixstdba\wixstdba.build" unless="${property::exists('wixstdba.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="balextension.build" description="Peforms a full rebuild (clean then build)" depends="balextension.clean, balextension.inc" />
+
+  <!-- Clean -->
+  <target name="balextension.clean" description="Cleans the build"
+          depends="balutil.clean, mba.clean, wixstdba.clean">
+    <delete dir="${dir.build.ext.balextension}" failonerror="false" if="${directory::exists(dir.build.ext.balextension)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="balextension.inc" description="Performs an incremental build" depends="balutil, mba, wixstdba" />
+
+  <target name="balutil" depends="balutil.inc" />
+  <target name="mba" depends="balutil, wixstdba, mba.inc" />
+  <target name="wixstdba" depends="balutil, wixstdba.inc" />
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="balextension.properties.defined" value="true" readonly="true" />
+
+</project>

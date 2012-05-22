@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Compiler</title>
+</head>
+
+<body>
+  <h1>Compiler</h1>
+
+  <p>The Windows Installer XML compiler is exposed by candle.exe. Candle is responsible for preprocessing the input .wxs files into valid well-formed XML documents against the WiX schema, wix.xsd. Then, each post-processed source file is compiled into a .wixobj file.</p>
+
+  <p>The compilation process is relatively straight forward. The WiX schema lends itself to a simple recursive descent parser. The compiler processes each element in turn creating new symbols, calculating the necessary references and generating the raw data for the .wixobj file.</p>
+</body>
+</html>

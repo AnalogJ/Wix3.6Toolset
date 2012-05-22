@@ -1,0 +1,53 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{B0FD938D-C569-457D-AFF0-25EE5E99386E}</ProjectGuid>
+    <AssemblyName>WixVSExtension</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Extensions</RootNamespace>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="VSCompiler.cs" />
+    <Compile Include="VSDecompiler.cs" />
+    <Compile Include="VSExtension.cs" />
+    <Compile Include="VSHeatExtension.cs" />
+    <Compile Include="VSProjectHarvester.cs" />
+    <EmbeddedFlattenedResource Include="Data\tables.xml">
+      <LogicalName>$(RootNamespace).Data.tables.xml</LogicalName>
+    </EmbeddedFlattenedResource>
+    <MsgGenSource Include="Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+    <EmbeddedFlattenedResource Include="Xsd\vs.xsd">
+      <LogicalName>$(RootNamespace).Xsd.vs.xsd</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedFlattenedResource>
+    <XsdGenSource Include="Xsd\vs.xsd">
+      <CommonNamespace>Microsoft.Tools.WindowsInstallerXml.Serialize</CommonNamespace>
+      <Namespace>Microsoft.Tools.WindowsInstallerXml.Extensions.Serialize.VS</Namespace>
+    </XsdGenSource>
+    <EmbeddedResource Include="$(OutputPath)\vs.wixlib">
+      <Link>Data\vs.wixlib</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\heat\heat.csproj">
+      <Project>{97B3B5DF-70D2-4658-9259-1DB34976F89F}</Project>
+      <Name>heat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\WixTasks\WixTasks.csproj">
+      <Project>{21E8F2D3-EF19-49C8-88CA-A22C5B91DFDC}</Project>
+      <Name>WixTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\wix\Wix.csproj">
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Name>Wix</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Building Installation Package Bundles</title>
+</head>
+
+<body>
+<h1>Building Installation Package Bundles</h1>
+
+<p>In this section, we will cover the basics of creating a simple setup that produces a bundle using the WiX toolset.</p>
+
+<p>A bundle is a collection of installation packages that are chained together in a single user experience. Bundles are often used to install prerequisites, such as the .NET Framework or C++ Run Time, before an application's .MSI file. Bundles also allow very large applications or suites of applications to be broken into smaller, logical installation packages while still presenting a single product to the end-user.</p>
+
+<p>To create a seamless setup experience across multiple installation packages, the WiX toolset provides an engine (often referred to as a bootstrapper or chainer) named Burn. The Burn engine is an executable that hosts a DLL called the "bootstrapper application". The bootstrapper application DLL is responsible for displaying UI to the end-user and directs the Burn engine when to carry out download, install, repair and uninstall actions. Most developers will not need to interact directly with Burn engine because the WiX toolset provides a standard bootstrapper application and the language necessary to create bundles.</p>
+
+<p>Creating bundles with the WiX toolset is directly analogous to creating Windows Installer packages (.MSI files) using the language and standard UI extension provided by the WiX toolset.</p>
+
+<p>This section will give you an overview of the WiX bundle language and how to use it to create a bundle.</p>
+
+<ul>
+  <li><a href="authoring_bundle_skeleton.htm">Create the Skeleton Bundle Authoring</a></li>
+
+  <li><a href="authoring_bundle_application.htm">Author the Bootstrapper Application for a Bundle</a></li>
+
+  <li><a href="authoring_bundle_package_manifest.htm">Author a Bundle Package Manifest</a></li>
+
+  <li><a href="bundle_built_in_variables.htm">Burn Built-In Variables</a></li>
+
+  <li><a href="bundle_define_searches.htm">Define Searches Using Variables</a></li>
+
+  <li><a href="bundle_author_chain.htm">Chain Packages into a Bundle</a></li>
+
+  <li><a href="wixstdba_intro.htm">Working with WiX Standard Bootstrapper Application</a></li>
+
+  <li><a href="bootstrapper_application.htm">Building a Bootstrapper Application</a></li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,117 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8214FF8E-ACCB-4F5B-B7CB-FAAD7CAC3900}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>sconce2008</AssemblyName>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+
+    <!--
+    CA1725 has been disabled because of an error in the rule that we cannot work around.
+    https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=433705
+    -->
+    <CodeAnalysisRules>-!Microsoft.Naming#CA1725;</CodeAnalysisRules>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>VS2008;TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>VS2008;TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE90">
+      <HintPath>..\..\..\..\dtools\lib\x86\VSIP\EnvDTE90.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Engine, Version=3.5.0.0" />
+    <Reference Include="Microsoft.Build.Framework, Version=3.5.0.0" />
+    <Reference Include="Microsoft.Build.Utilities.v3.5, Version=3.5.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Shell.9.0">
+      <HintPath>..\..\..\..\dtools\lib\x86\VSIP\Microsoft.VisualStudio.Shell.9.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0">
+      <HintPath>..\..\..\..\dtools\lib\x86\VSIP\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <PropertyGroup>
+    <ProjectBasePath>..\SDK_VS2008\Common\Source\CSharp\Project</ProjectBasePath>
+  </PropertyGroup>
+  <Import Project="sconce.common.targets" />
+  <ItemGroup>
+    <Compile Include="$(ProjectBasePath)\DontShowAgainDialog.cs">
+      <SubType>Form</SubType>
+      <Link>ProjectBase\DontShowAgainDialog.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\DontShowAgainDialog.Designer.cs">
+      <DependentUpon>DontShowAgainDialog.cs</DependentUpon>
+      <Link>ProjectBase\DontShowAgainDialog.Designer.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\FileOverwriteDialog.cs">
+      <SubType>Form</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\FileOverwriteDialog.Designer.cs">
+      <DependentUpon>FileOverwriteDialog.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\ProjectSecurityChecker.cs">
+      <Link>ProjectBase\ProjectSecurityChecker.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\SecurityWarningDialog.cs">
+      <SubType>Form</SubType>
+      <Link>ProjectBase\SecurityWarningDialog.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\SecurityWarningDialog.Designer.cs">
+      <DependentUpon>SecurityWarningDialog.cs</DependentUpon>
+      <Link>ProjectBase\SecurityWarningDialog.Designer.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\UpdateSolutionEventsListener.cs">
+      <Link>ProjectBase\UpdateSolutionEventsListener.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\UserProjectSecurityChecker.cs">
+      <Link>ProjectBase\UserProjectSecurityChecker.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(ProjectBasePath)\SecurityWarningDialog.resx">
+      <Link>ProjectBase\SecurityWarningDialog.resx</Link>
+      <Visible>true</Visible>
+      <SubType>Designer</SubType>
+      <DependentUpon>SecurityWarningDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(ProjectBasePath)\DontShowAgainDialog.resx">
+      <Link>ProjectBase\DontShowAgainDialog.resx</Link>
+      <Visible>true</Visible>
+      <SubType>Designer</SubType>
+      <DependentUpon>DontShowAgainDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(ProjectBasePath)\FileOverwriteDialog.resx">
+      <Link>ProjectBase\FileOverwriteDialog.resx</Link>
+      <Visible>true</Visible>
+      <SubType>Designer</SubType>
+      <DependentUpon>FileOverwriteDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <!-- Include this before the CSharp targets file -->
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <Import Project="..\SDK_VS2008\Tools\Build\Microsoft.VsSDK.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

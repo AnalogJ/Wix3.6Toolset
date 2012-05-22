@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include caSuffix.wxi ?>
+  <Fragment>
+    <!-- print EULA functionality -->
+    <CustomAction Id="WixUIPrintEula$(var.Suffix)" BinaryKey="WixUIWixca$(var.Suffix)" DllEntry="PrintEula" Return="ignore" Execute="immediate" />
+  </Fragment>
+
+  <Fragment>
+    <!-- Validate install directory -->
+    <CustomAction Id="WixUIValidatePath$(var.Suffix)" BinaryKey="WixUIWixca$(var.Suffix)" DllEntry="ValidatePath" Return="ignore" Execute="immediate" />
+  </Fragment>
+
+  <Fragment>
+    <Binary Id="WixUIWixca$(var.Suffix)" SourceFile="!(bindpath.$(var.platform))PrintEula.dll" />
+  </Fragment>
+</Include>

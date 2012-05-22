@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="gamingextension" default="gamingextension.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    gamingextension.build - Builds the GamingExtension project
+  </description>
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- extension directories -->
+  <property name="gamingextension.ca.dir.src" value="${dir.src.ext}\GamingExtension\ca" readonly="true" />
+
+  <!-- targets -->
+  <property name="file.target.gamingcadll" value="${dir.target.wix}\gaming.dll" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="gamingextension.build" description="Peforms a full rebuild (clean then build)" depends="gamingextension.clean, gamingextension.inc" />
+
+  <!-- Clean -->
+  <target name="gamingextension.clean" description="Cleans the build">
+    <delete dir="${dir.build.ext.gamingextension}" failonerror="false" if="${directory::exists(dir.build.ext.gamingextension)}" />
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix}">
+        <include name="gaming.dll" />
+        <include name="gaming.pdb" />
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="gamingExtension.clean" description="Another clean call">
+    <call target="gamingextension.clean"/>
+  </target>
+
+  <!-- Inc -->
+  <target name="gamingextension.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile">
+    <fileset id="compileCpp.fileset.sources" basedir="${gamingextension.ca.dir.src}">
+      <include name="gaming.cpp" />
+      <include name="dllmain.cpp" />
+    </fileset>
+    <property name="cl.standardIncludes" value="-I&quot;${dir.externalroot}\WindowsSDK\v7.0\Include&quot; ${cl.standardIncludes} -I&quot;${dir.src.ca.wcautil}&quot;" />
+    <property name="compileCpp.dir.build" value="${dir.build.ext.gamingextension}" />
+    <property name="compileCpp.file.precomp.h" value="${gamingextension.ca.dir.src}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${gamingextension.ca.dir.src}\gaming.rc" />
+    <property name="makeNativeDll.file.target" value="${file.target.gamingcadll}" />
+    <property name="makeNativeDll.file.def" value="${gamingextension.ca.dir.src}\gaming.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.wcautil}&quot; &quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" />
+
+    <!-- Make scaexec.dll -->
+    <call target="makeNativeDll" />
+  </target>
+
+</project>

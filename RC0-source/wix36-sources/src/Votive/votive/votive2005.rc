@@ -1,0 +1,24 @@
+//--------------------------------------------------------------------------------------------------
+// <copyright file="Votive2005.rc" company="Microsoft">
+//    Copyright (c) Microsoft Corporation.  All rights reserved.
+//    
+//    The use and distribution terms for this software are covered by the
+//    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+//    which can be found in the file CPL.TXT at the root of this distribution.
+//    By using this software in any fashion, you are agreeing to be bound by
+//    the terms of this license.
+//    
+//    You must not remove this notice, or any other, from this software.
+// </copyright>
+// 
+// <summary>
+// Resource file for the votive2005.dll containing the icons for the file extensions.
+// </summary>
+//--------------------------------------------------------------------------------------------------
+
+#define VER_DLL
+#define VER_LANG_NEUTRAL
+#define VER_ORIGINAL_FILENAME  "votive2005.dll"
+#define VER_INTERNAL_NAME      "votive2005"
+#define VER_FILE_DESCRIPTION   "WiX Visual Studio 2005 Package"
+#include "wix.rc"

@@ -1,0 +1,15 @@
+;-------------------------------------------------------------------------------------------------
+; <copyright file="wixstdba.def" company="Microsoft">
+;    Copyright (c) Microsoft Corporation.  All rights reserved.
+; </copyright>
+; 
+; <summary>
+;    WiX Standard Bootstrapper Application DLL entry points.
+; </summary>
+;-------------------------------------------------------------------------------------------------
+
+EXPORTS
+    BootstrapperApplicationCreate
+    BootstrapperApplicationDestroy
+    MbaPrereqBootstrapperApplicationCreate
+    MbaPrereqBootstrapperApplicationDestroy

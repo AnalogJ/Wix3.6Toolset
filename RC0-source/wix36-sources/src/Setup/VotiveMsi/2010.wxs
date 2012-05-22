@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+-->
+
+<?include WixVer.wxi ?>
+
+<!-- Preprocessor definitions -->
+<?define VsVersion = "2010"?>
+<?define VsRegPath = "SOFTWARE\Microsoft\VisualStudio\10.0" ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Fragment>
+        <PropertyRef Id="VS2010DEVENV" />
+        <PropertyRef Id="VS2010_ROOT_FOLDER" />
+        <PropertyRef Id="VS2010_SCHEMAS_DIR" />
+
+        <!-- Devenv /setup isn't needed for VS2010.  VS automatically scans for package updates at startup -->
+
+        <ComponentGroup Id="Votive2010Components">
+            <ComponentGroupRef Id="Votive2010BinaryComponents"/>
+            <ComponentGroupRef Id="Votive2010ExtensionComponents"/>
+            <ComponentGroupRef Id="Votive2010ItemTemplateComponents" />
+            <ComponentGroupRef Id="Votive2010ProjectTemplateComponents" />
+        </ComponentGroup>
+
+        <ComponentGroup Id="Votive$(var.VsVersion)BinaryComponents" Directory="BinFolder">
+            <Component>
+                <File Source="sconce2010.dll" />
+            </Component>
+
+            <Component>
+                <File Source="votive2010.dll" />
+                <util:RestartResource Path="[VS2010DEVENV]" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="Votive$(var.VsVersion)ExtensionComponents" Directory="VsExtensions$(var.VsVersion)MicrosoftWix">
+            <Component>
+                <File Id="extension$(var.VsVersion).vsixmanifest" Source="extension.vsixmanifest"/>
+            </Component>
+
+            <Component>
+                <File Id="Votive$(var.VsVersion).pkgdef" Source="votive2010.pkgdef"/>
+            </Component>
+
+            <Component>
+                <File Id="wix$(var.VsVersion).ico" Name="wix.ico" Source="ProjectFile.ico"/>
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="Votive$(var.VsVersion)ItemTemplateComponents" Directory="VsItemTemplatesWix$(var.VsVersion)Folder">
+            <Component>
+                <File Id="BlankFile$(var.VsVersion).zip" Source="BlankFile.zip" />
+            </Component>
+            <Component>
+                <File Id="IncludeFile$(var.VsVersion).zip" Source="IncludeFile.zip" />
+            </Component>
+            <Component>
+                <File Id="LocalizationFile$(var.VsVersion).zip" Source="LocalizationFile.zip" />
+            </Component>
+            <Component>
+                <File Id="TextFile$(var.VsVersion).zip" Source="TextFile.zip" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="Votive$(var.VsVersion)ProjectTemplateComponents" Directory="VsProjectTemplatesWix$(var.VsVersion)Folder">
+            <Component>
+                <File Id="WixLibrary$(var.VsVersion).zip" Source="WixLibrary2010.zip" />
+            </Component>
+            <Component>
+                <File Id="WixMergeModule$(var.VsVersion).zip" Source="WixMergeModule2010.zip" />
+            </Component>
+            <Component>
+                <File Id="WixBundleProject$(var.VsVersion).zip" Source="WixBundleProject2010.zip" />
+            </Component>
+            <Component>
+                <File Id="WixProject$(var.VsVersion).zip" Source="WixProject2010.zip" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="Votive$(var.VsVersion)SchemaComponents" Directory="VS2010_SCHEMAS_DIR">
+            <Component>
+                <File Id="ThmutilSchema$(var.VsVersion)" Source="thmutil.xsd" />
+            </Component>
+            <Component>
+                <File Id="WixSchema$(var.VsVersion)" Source="wix.xsd" />
+            </Component>
+            <Component>
+                <File Id="WixLocSchema$(var.VsVersion)" Source="wixloc.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdDifxApp$(var.VsVersion)" Source="difxapp.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdFirewall$(var.VsVersion)" Source="firewall.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdGaming$(var.VsVersion)" Source="gaming.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdIis$(var.VsVersion)" Source="iis.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdNetFx$(var.VsVersion)" Source="netfx.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdPS$(var.VsVersion)" Source="ps.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdSql$(var.VsVersion)" Source="sql.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdUtil$(var.VsVersion)" Source="util.xsd" />
+            </Component>
+            <Component>
+                <File Id="ExtensionXsdVS$(var.VsVersion)" Source="vs.xsd" />
+            </Component>
+        </ComponentGroup>
+
+    </Fragment>
+</Wix>

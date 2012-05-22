@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>WixUI_InstallDir Dialog Set</title>
+</head>
+
+<body>
+  <h1>WixUI_InstallDir Dialog Set</h1>
+
+  <p>WixUI_InstallDir does not allow the user to choose what features to install, but it adds a dialog to let the user choose a directory where the product will be installed.</p>
+
+  <p>This dialog set is defined in the file <b>WixUI_InstallDir.wxs</b> in the WixUIExtension in the WiX source code.</p>
+
+  <h2>Using WixUI_InstallDir</h2>
+
+  <p>To use WixUI_InstallDir, you must set a property named WIXUI_INSTALLDIR with a value of the ID of the directory you want the user to be able to specify the location of. The directory ID must be all uppercase characters because it must be passed from the UI to the execute sequence to take effect. For example:</p>
+
+  <blockquote>
+    <pre>
+&lt;Directory Id="TARGETDIR" Name="SourceDir"&gt;
+  &lt;Directory Id="ProgramFilesFolder" Name="PFiles"&gt;
+    &lt;Directory Id="<b>TESTFILEPRODUCTDIR</b>" Name="Test File"&gt;
+      ...
+    &lt;/Directory&gt;
+   &lt;/Directory&gt;
+&lt;/Directory&gt;
+...
+&lt;Property Id="WIXUI_INSTALLDIR" Value="<b>TESTFILEPRODUCTDIR</b>" /&gt;
+&lt;UIRef Id="WixUI_InstallDir" /&gt;
+</pre>
+  </blockquote>
+
+  <h2>WixUI_InstallDir Dialogs</h2>
+
+  <p>WixUI_InstallDir includes the following dialogs:</p>
+
+  <ul>
+    <li>BrowseDlg</li>
+    <li>DiskCostDlg</li>
+    <li>InstallDirDlg</li>
+    <li>InvalidDirDlg</li>
+    <li>LicenseAgreementDlg</li>
+    <li>WelcomeDlg</li>
+  </ul>
+
+  <p>In addition, WixUI_InstallDir includes the following common dialogs that appear in all WixUI dialog sets:</p>
+
+  <ul>
+    <li>CancelDlg</li>
+    <li>ErrorDlg</li>
+    <li>ExitDlg</li>
+    <li>FatalError</li>
+    <li>FilesInUse</li>
+    <li>MaintenanceTypeDlg</li>
+    <li>MaintenanceWelcomeDlg</li>
+    <li>MsiRMFilesInUse</li>
+    <li>OutOfDiskDlg</li>
+    <li>OutOfRbDiskDlg</li>
+    <li>PrepareDlg</li>
+    <li>ProgressDlg</li>
+    <li>ResumeDlg</li>
+    <li>UserExit</li>
+    <li>VerifyReadyDlg</li>
+    <li>WaitForCostingDlg</li>
+  </ul>
+
+  <p>See <a href="WixUI_dialogs.htm">the WixUI dialog reference</a> for detailed descriptions of each of the above dialogs.</p>
+
+</body>
+</html>

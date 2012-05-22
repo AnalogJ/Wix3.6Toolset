@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Writing WiX Tests</title>
+</head>
+
+<body>
+  <h1>Writing WiX Tests</h1>
+
+  <p>This document describes how to write tests for WiX.</p>
+
+  <h2>Location of the Tests</h2>
+
+  <p>The root directory for the tests is %WIX_ROOT%\test. There are three main subdirectories:</p>
+
+  <ul>
+    <li>data: contains test data, eg wxs files</li>
+
+    <li>src: contains source code for the tests</li>
+
+    <li>WixTestTools: contains source code for the WixTestTools library</li>
+  </ul><br />
+  <img src="../imgs/tests_writingtests_directorytree1.jpg" alt="Test Directory Tree" /><br />
+
+  <p>The <i>data</i> and <i>src</i> directories are further organized by feature area:</p>
+
+  <ul>
+    <li>Examples: Example tests</li>
+
+    <li>Extensions: Tests for WiX extensions</li>
+
+    <li>Integration: Tests for integration of two or more tools. Eg. Building an MSI from source with Candle and Light.</li>
+
+    <li>QTests: Tests migrated from the previous test infrastructure</li>
+
+    <li>SharedData: Test data that is shared across multiple tests</li>
+
+    <li>Tools: Tests for a particular tool's command line options</li>
+
+    <li>Wixproj: Tests for building .wixproj's with MSBuild</li>
+  </ul><br />
+  <img src="../imgs/tests_writingtests_directorytree2.jpg" alt="Test Directory Tree" /><br />
+
+  <h2>WixTests Solution</h2>
+
+  <p>The test solution file, WixTests.sln, is located in %WIX_ROOT%\test\WixTests.sln. The WixTests solution currently contains two projects:</p>
+
+  <ul>
+    <li>WixTests: Contains all of the tests</li>
+
+    <li>WixTestsTools: A library of wrapper classes and verification methods used by the tests</li>
+  </ul>
+
+  <p>The solution should be opened from the WiX command window to ensure that the %WIX_ROOT% environment variable is set.</p><br />
+
+  <h2>Example Tests</h2>
+
+  <h3>Example: Build and Verify an MSI</h3>
+
+  <p>The following example shows how to test building an MSI from WiX source.</p>
+
+  <p>[TestMethod]<br />
+  [Description("An example test that verifies an MSI is built correctly")]<br />
+  [Priority(3)]<br />
+  public void ExampleTest1()<br />
+  {<br />
+  &nbsp;&nbsp;&nbsp; // Use the BuildPackage method to build an MSI from source<br />
+  &nbsp;&nbsp;&nbsp; string actualMSI = Builder.BuildPackage(@"%WIX_ROOT%\test\data\SharedData\Authoring\BasicProduct.wxs");<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // The expected MSI to compare against<br />
+  &nbsp;&nbsp;&nbsp; string expectedMSI = @"%WIX_ROOT%\test\data\SharedData\Baselines\MSIs\BasicProduct.msi";<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Use the VerifyResults method to compare the actual and expected MSIs<br />
+  &nbsp;&nbsp;&nbsp; Verifier.VerifyResults(expectedMSI, actualMSI);<br />
+  }<br /></p><br />
+
+  <h3>Example: Check for a Warning and Query an MSI</h3>
+
+  <p>The following example shows how to build an MSI using the Candle and Light wrapper classes. It also demonstrates how to check for a warning from Light and query the resuling MSI.</p>
+
+  <p>[TestMethod]<br />
+  [Description("An example test that checks for a Light warning and queries the resulting MSI")]<br />
+  [Priority(3)]<br />
+  public void ExampleTest2()<br />
+  {<br />
+  &nbsp;&nbsp;&nbsp; // Compile a wxs file<br />
+  &nbsp;&nbsp;&nbsp; Candle candle = new Candle();<br />
+  &nbsp;&nbsp;&nbsp; candle.SourceFiles.Add(@"%WIX_ROOT%\test\data\Examples\ExampleTest2\product.wxs");<br />
+  &nbsp;&nbsp;&nbsp; candle.Run();<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Create a Light object that uses some properties of the Candle object<br />
+  &nbsp;&nbsp;&nbsp; Light light = new Light(candle);<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Define the Light warning that we expect to see<br />
+  &nbsp;&nbsp;&nbsp; WixMessage LGHT1079 = new WixMessage(1079, WixMessage.MessageTypeEnum.Warning);<br />
+  &nbsp;&nbsp;&nbsp; light.ExpectedWixMessages.Add(LGHT1079);<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Link<br />
+  &nbsp;&nbsp;&nbsp; light.Run();<br />
+  &nbsp;&nbsp;&nbsp; // Query the resulting MSI for verification<br />
+  &nbsp;&nbsp;&nbsp; string query = "SELECT `Value` FROM `Property` WHERE `Property` = 'Manufacturer'";<br />
+  &nbsp;&nbsp;&nbsp; Verifier.VerifyQuery(light.OutputFile, query, "Microsoft Corporation");<br />
+  }</p><br />
+
+  <h3>Example: ICE Validation with Smoke</h3>
+
+  <p>The following example shows how to verify that Smoke catches a particular ICE violation and how to use the Result object to perform further verification.</p>
+
+  <p>[TestMethod]<br />
+  [Description("An example test that verifies an ICE violation is caught by smoke")]<br />
+  [Priority(3)]<br />
+  public void ExampleTest3()<br />
+  {<br />
+  &nbsp;&nbsp;&nbsp; string testDirectory = Environment.ExpandEnvironmentVariables(@"%WIX_ROOT%\test\data\Examples\ExampleTest3");<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Build the MSI that will be run against Smoke. Pass the -sval argument to delay validation until Smoke is run<br />
+  &nbsp;&nbsp;&nbsp; string msi = Builder.BuildPackage(testDirectory, "product.wxs", "product.msi", null, "-sval");<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Create a new Smoke object<br />
+  &nbsp;&nbsp;&nbsp; Smoke smoke = new Smoke();<br />
+  &nbsp;&nbsp;&nbsp; smoke.DatabaseFiles.Add(msi);<br />
+  &nbsp;&nbsp;&nbsp; smoke.CubFiles.Add(@"%WIX_ROOT%\test\data\Examples\ExampleTest3\test.cub");<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Define the expected ICE error<br />
+  &nbsp;&nbsp;&nbsp; WixMessage LGHT1076 = new WixMessage(1076, "ICE1000: Component 'ExtraICE.0.ProductComponent' installs into directory 'TARGETDIR', which will get installed into the volume with the most free space unless explicitly set.", WixMessage.MessageTypeEnum.Warning);<br />
+  &nbsp;&nbsp;&nbsp; smoke.ExpectedWixMessages.Add(LGHT1076);<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Run Smoke and keep a reference to the Result object that is returned by the Run() method<br />
+  &nbsp;&nbsp;&nbsp; Result result = smoke.Run();<br />
+  <br />
+  &nbsp;&nbsp;&nbsp; // Use the Result object to verify the exit code<br />
+  &nbsp;&nbsp;&nbsp; // Note: checking for an exit code of 0 is done implicitly in the Run() method but<br />
+  &nbsp;&nbsp;&nbsp; // this is just for demonstration purposes.<br />
+  &nbsp;&nbsp;&nbsp; Assert.AreEqual(0, result.ExitCode, "Actual exit code did not match expected exit code");<br />
+  }<br /></p><br />
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Running WiX Tests</title>
+</head>
+
+<body>
+  <h1>Running WiX Tests</h1>
+
+  <p>There is a suite of tests that are included with WiX. They can be used to verify that changes to the toolset do not regress existing functionality.</p>
+
+  <h2>Building the Tests</h2>
+
+  <p>The tests will build as part of the normal WiX build. They have a dependency on Microsoft.VisualStudio.QualityTools.UnitTestFramework 9.0.0.0 assembly that ships with the following editions of Visual Studio:</p>
+
+  <ul>
+    <li>Visual Studio 2008 Professional Edition</li>
+
+    <li>Visual Studio Team System 2008 Database Edition</li>
+
+    <li>Visual Studio Team System 2008 Development Edition</li>
+
+    <li>Visual Studio Team System 2008 Team Suite</li>
+
+    <li>Visual Studio Team System 2008 Test Edition</li>
+  </ul><br />
+
+  <p>The build system searches the registry to detect if one of the above mentioned editions is installed on the machine. If the <a href="http://blogs.msdn.com/astebner/archive/2007/10/18/5516901.aspx">detection key</a> cannot be found then the tests will not build from Nant but they can still be built by MSBuild if the required UnitTestFramework assembly exists.<br />
+  <br />
+  The tests are built into an assembly called wixtests.dll to the same location as the other WiX binaries.</p>
+
+  <h3>Building the tests using Nant</h3>
+
+  <p>Nant must be run from the WiX root directory. To build only the tests, specify the 'wixtests' target.</p>
+  <pre>
+c:\delivery\dev\wix&gt;nant.exe wixtests
+</pre>
+
+  <h3>Building the tests in Visual Studio</h3>
+
+  <p>Open c:\delivery\dev\wix\test\wixtests.sln from a WiX command window. The solution should build from within Visual Studio.</p>
+  <pre>
+devenv.exe c:\delivery\dev\wix\test\wixtests.sln
+</pre>
+
+  <h2>Running the tests</h2>
+
+  <p>The tests can be run from within Visual Studio or from the command line. Before the tests are run, the environment variable 'WIX_ROOT' must be set to the WiX root directory. It should be set if you are in a WiX command window, but if it is not:</p>
+  <pre>
+set WIX_ROOT=c:\delivery\dev\wix
+</pre><br />
+
+  <p>The WIX_ROOT environment variable requirement is used in many tests to locate test data.</p>
+
+  <h3>Running the tests from the command line with MSTest.bat</h3>
+
+  <p>There is a batch file, test.bat, which can be used to run the tests.</p>
+  <pre>
+c:\delivery\dev\wix\test\test.bat [all|smoke|test name]
+</pre>
+
+  <h3>Running the tests from the command line with MSTest.exe</h3>
+
+  <p>Run MSTest with the test binaries.</p>
+  <pre>
+mstest.exe c:\delivery\Dev\wix\build\debug\x86\wixtests.dll
+</pre>
+
+  <h3>Running the tests from Visual Studio</h3>
+
+  <p>Open wixtests.sln from a WiX command window.</p>
+  <pre>
+devenv.exe c:\delivery\dev\wix\test\wixtests.sln
+</pre>
+
+  <p>Run the tests from Visual Studio Test Manager.</p><br />
+  <br />
+</body>
+</html>

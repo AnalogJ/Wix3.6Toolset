@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <Property Id="VS2010_VSIX_INSTALLER_PATH" Secure="yes">
+            <RegistrySearch Id="WixVS2010EnvDir" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS" Name="EnvironmentDirectory" Type="directory">
+                <FileSearch Id="WixVS2010VsixInstaller" Name="VSIXInstaller.exe" />
+            </RegistrySearch>
+        </Property>
+    </Fragment>
+
+    <Fragment>
+        <SetProperty Id="WixVsixAdmin" Value="/admin" Sequence="execute" After="WriteRegistryValues">ALLUSERS=1</SetProperty>
+    </Fragment>
+</Wix>

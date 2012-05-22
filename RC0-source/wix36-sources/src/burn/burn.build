@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="burn" default="burn.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    burn.build - Builds the extensions.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Includes
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <include buildfile="engine\engine.build" />
+  <include buildfile="stub\stub.build" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <property name="dir.src.burn.inc" value="${dir.src.burn}\inc" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="burn.build" description="Peforms a full rebuild (clean then build)" depends="burn.clean, burn.inc" />
+
+  <!-- Clean -->
+  <target name="burn.clean" description="Cleans the build"
+          depends="burnengine.clean,
+                   stub.clean">
+    <delete dir="${dir.build.burn.x86}" failonerror="false" if="${directory::exists(dir.build.burn.x86)}" />
+    
+    <delete failonerror="false">
+      <fileset basedir="${dir.target.wix}">
+        <include name="IBoostrapperEngine.h" />
+        <include name="IBoostrapperApplication.h" />
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- Inc -->
+  <target name="burn.inc" description="Performs an incremental build" depends="burnengine, stub">
+    <copy todir="${dir.target.wix}">
+      <fileset basedir="${dir.src.burn.inc}">
+        <include name="IBootstrapperEngine.h" />
+        <include name="IBootstrapperApplication.h" />
+      </fileset>
+    </copy>
+   </target>
+
+  <target name="burnengine" depends="burnengine.inc" />
+  <target name="stub" depends="burnengine, stub.inc" />
+</project>

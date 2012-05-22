@@ -1,0 +1,59 @@
+//-------------------------------------------------------------------------------------------------
+// <copyright file="setup.rc" company="Microsoft">
+//    Copyright (c) Microsoft Corporation.  All rights reserved.
+//    
+//    The use and distribution terms for this software are covered by the
+//    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+//    which can be found in the file CPL.TXT at the root of this distribution.
+//    By using this software in any fashion, you are agreeing to be bound by
+//    the terms of this license.
+//    
+//    You must not remove this notice, or any other, from this software.
+// </copyright>
+//
+// <summary>
+// ClickThrough setup.exe resource file.
+// </summary>
+//-------------------------------------------------------------------------------------------------
+
+#define VER_APP
+#define VER_ORIGINAL_FILENAME "setup.exe"
+#define VER_INTERNAL_NAME "setup"
+#define VER_FILE_DESCRIPTION "Software Installer"
+#include "wix.rc"
+
+#define MANIFEST_RESOURCE_ID 1
+MANIFEST_RESOURCE_ID RT_MANIFEST "setup.exe.manifest"
+
+#define SETUP_RESOURCE_IDS_PRODUCTNAME               51001
+#define SETUP_RESOURCE_IDS_LICENSETEXT               51002
+#define SETUP_RESOURCE_IDB_BACKGROUND                51003
+
+#include "resource.h"
+
+STRINGTABLE
+
+BEGIN
+IDS_INTRODUCTIONFORMAT "Please read the %ws License Agreement"
+IDS_SUCCESSFORMAT "Completed the %ws Setup successfully."
+IDS_FAILEDFORMAT "%ws Setup ended prematurely because of an error. Your system has not been modified. To install this program at a later time, run Setup again."
+IDS_REBOOTFORMAT "%ws Setup was successful. Changes will not be effective until the system is rebooted."
+IDS_HELP "Installation options\n    /extract ""<Directory>""\n        Extracts all installation packages to the specified directory\n    /msicl ""[PROPERTY=PropertyValue] ...""\n        Properties to set for installation\n    /lang <LCID>\n        Locale ID of transform to apply to installation\n    /quiet\n        Quiet mode, no user interaction\n    /passive\n        Unattended mode - progress bar only\n    /norestart\n        Do not restart after the installation is complete\n    /promptrestart\n        Prompts the user for restart if necessary\n    /forcerestart\n        Always restart the computer after installation\n    /uninstall\n        Uninstalls the product\n    /log ""<LogFile>""\n        Create a log"
+SETUP_RESOURCE_IDS_PRODUCTNAME "Product"
+//SETUP_RESOURCE_IDS_LICENSETEXT "Your license goes here."
+END
+
+SETUP_RESOURCE_IDB_BACKGROUND BITMAP Resources\bk.bmp
+
+IDD_LICENSEDIALOG DIALOGEX 0, 0, 325, 220
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL    SETUP_RESOURCE_IDB_BACKGROUND,IDC_STATIC,"Static",SS_BITMAP, 0, 0, 1, 1
+    LTEXT      "Please read the License Agreement provided below.",IDC_INTRODUCTION, 115, 5, 205, 20
+    CONTROL    "",IDC_RTFLICENSE,"RichEdit20A", ES_MULTILINE | ES_READONLY | WS_VSCROLL | WS_BORDER,115,30,205,140
+    CONTROL    "I &accept the terms in the License Agreement",IDC_CHECKACCEPT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,115,175,205,10
+    CONTROL    "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,192,325,1
+    PUSHBUTTON "&Install",IDC_INSTALL,190,200,50,14
+    PUSHBUTTON "Cancel",IDCANCEL,260,200,50,14
+END

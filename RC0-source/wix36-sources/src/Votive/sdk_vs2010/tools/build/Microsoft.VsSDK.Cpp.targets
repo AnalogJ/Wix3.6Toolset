@@ -1,0 +1,55 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!--
+*************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+This code is licensed under the Visual Studio SDK license terms.
+THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+*************************************************************************
+-->
+
+  <PropertyGroup>
+    <AfterBuildLinkTargets>
+      $(AfterBuildLinkTargets);
+      CopyNativeProjectReferencesToOutput;
+      CreateVsixBundle;
+      DeployVsixExtensionFiles
+    </AfterBuildLinkTargets>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PropertyPageSchema Include="$(VSSDKTargetsPath)\ProjectItemsSchema.xml"/>
+  </ItemGroup>
+
+  <!--
+    =======================================================================================================
+                      Copy the native project references to the output folder                 
+    =======================================================================================================
+  -->
+
+  <Target Name="CopyNativeProjectReferencesToOutput"
+          AfterTargets="ResolveProjectReferences"
+          BeforeTargets="GetVsixItemsToBundle">
+      <MSBuild
+          Projects="@(_MSBuildProjectReferenceExistent)"
+          Targets="GetVSIXDeploymentItems"
+          Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform)"
+          Condition="'@(_MSBuildProjectReferenceExistent)'!=''">
+        <Output TaskParameter="TargetOutputs" ItemName="VSIXDeploymentItem"/>
+      </MSBuild>
+
+      <Copy
+          SourceFiles="@(VSIXDeploymentItem->'%(OrigFullPath)')"
+          DestinationFiles="@(VSIXDeploymentItem->'$(OutDir)%(OrigRecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)">
+        <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+      </Copy>
+    </Target>
+
+  <Import Project="Microsoft.VsSDK.Common.targets" />
+</Project>

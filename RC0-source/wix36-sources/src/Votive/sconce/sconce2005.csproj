@@ -1,0 +1,76 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E155DD19-796B-44F0-9941-153C44C0BB06}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>sconce2005</AssemblyName>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>VS2005;TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>VS2005;TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Engine, Version=2.0.0.0" />
+    <Reference Include="Microsoft.Build.Framework, Version=2.0.0.0" />
+    <Reference Include="Microsoft.Build.Utilities, Version=2.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Shell">
+      <HintPath>..\..\..\..\dtools\lib\x86\VSIP\Microsoft.VisualStudio.Shell.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <PropertyGroup>
+    <ProjectBasePath>..\SDK_VS2008\Common\Source\CSharp\Project</ProjectBasePath>
+  </PropertyGroup>
+  <Import Project="sconce.common.targets" />
+  <ItemGroup>
+    <Compile Include="$(ProjectBasePath)\Misc\SafeNativeMethods.cs">
+      <Link>ProjectBase\Misc\SafeNativeMethods.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\AggregatableProjectInterops.cs">
+      <Link>ProjectBase\AggregatableProjectInterops.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\FileOverwriteDialog.cs">
+      <SubType>Form</SubType>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\FileOverwriteDialog.Designer.cs">
+      <DependentUpon>FileOverwriteDialog.cs</DependentUpon>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\FlavoredProjectFactoryBase.cs">
+      <Link>ProjectBase\FlavoredProjectFactoryBase.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ProjectBasePath)\ProjectAggregator2Interops.cs">
+      <Link>ProjectBase\ProjectAggregator2Interops.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(ProjectBasePath)\FileOverwriteDialog.resx">
+      <Link>ProjectBase\FileOverwriteDialog.resx</Link>
+      <Visible>true</Visible>
+      <SubType>Designer</SubType>
+      <DependentUpon>FileOverwriteDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <!-- Include this before the CSharp targets file -->
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <Import Project="..\SDK_VS2008\Tools\Build\Microsoft.VsSDK.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Quiet Execution Custom Action</title>
+</head>
+
+<body>
+  <h1>Quiet Execution Custom Action</h1>
+
+  <p>The QtExec custom action allows you to run an arbitrary command line in an MSI-based setup in silent mode. QtExec is commonly used to suppress console windows that would otherwise appear appear when invoking the executable directly. The custom action is located in the WixCA library, which is a part of the WixUtilExtension.</p>
+
+  <h2>Immediate execution</h2>
+
+  <p>When the QtExec action is run as an immediate custom action, it will try to execute the command stored in the QtExecCmdLine property. The following is an example of authoring an immediate QtExec custom action:</p>
+  <pre>
+&lt;Property Id="QtExecCmdLine" Value="command line to run"/&gt;
+&lt;CustomAction Id="QtExecExample" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="immediate" Return="check"/&gt;
+.
+.
+.
+&lt;InstallExecuteSequence&gt;
+    &lt;Custom Action="QtExecExample" After="TheActionYouWantItAfter"/&gt;
+&lt;/InstallExecuteSequence&gt;
+</pre>
+
+  <p>This will result in running the command line in the immediate sequence. If the exit code of the command line in this example indicates an error (meaning that the return code is not equal to 0) then the setup will fail because the Return value is set to &ldquo;check." Changing the Return value to "ignore" will cause the setup to log the failure but skip it and continue instead of failing the entire setup.</p>
+
+  <p>If you want to run more than one command line in the immediate sequence then you will need to schedule multiple QtExec custom actions and set the QtExecCmdLine property to a new value by scheduling a property-setting custom action immediately before each instance of the QtExec custom action.</p>
+
+  <h2>Deferred execution</h2>
+
+  <p>When the QtExec action is run as a deferred custom action, it will try to execute the command line stored in the value of the custom action data. For deferred QtExec custom actions, the custom action data is a property that has the same Id value as the custom action Id. The following is an example of authoring a deferred QtExec custom action:</p>
+  <pre>
+&lt;Property Id="QtExecDeferredExample" Value="command line to run"/&gt;
+&lt;CustomAction Id="QtExecDeferredExample" BinaryKey="WixCA" DllEntry="CAQuietExec"
+              Execute="deferred" Return="check" Impersonate="no"/&gt;
+.
+.
+.
+&lt;InstallExecuteSequence&gt;
+    &lt;Custom Action="QtExecDeferredExample" After="TheActionYouWantItAfter"/&gt;
+&lt;/InstallExecuteSequence&gt;
+</pre>
+
+  <p>If you need to set a command line that uses other Windows Installer properties, you must schedule an immediate custom action to set the command line property value and schedule a deferred custom action to run QtExec. The Property value used in the immediate custom action must match the Id value used in the deferred custom action. A common use of this pattern for QtExec custom actions is to run an executable that will be installed as a part of the setup. The following is an example of authoring a deferred QtExec custom action that relies on another property value:</p>
+  <pre>
+&lt;CustomAction Id="QtExecDeferredExampleWithProperty_Cmd" Property="QtExecDeferredExampleWithProperty"
+              Value="&amp;quot;[#MyExecutable.exe]&amp;quot;" Execute="immediate"/&gt;
+&lt;CustomAction Id="QtExecDeferredExampleWithProperty" BinaryKey="WixCA" DllEntry="CAQuietExec"
+              Execute="deferred" Return="check" Impersonate="no"/&gt;
+.
+.
+.
+&lt;InstallExecuteSequence&gt;
+    &lt;Custom Action="QtExecDeferredExampleWithProperty_Cmd" After="CostFinalize"/&gt;
+    &lt;Custom Action="QtExecDeferredExampleWithProperty" After="TheActionYouWantItAfter"/&gt;
+&lt;/InstallExecuteSequence&gt;
+</pre>
+
+  <h2>Running 64-bit executables</h2>
+
+  <p>If you need to run a 64-bit executable, use the 64-bit aware QtExec. To use the 64-bit QtExec change the CustomAction element's DllEntry attribute to "CAQuietExec64" and for immediate execution use the "QtExec64CmdLine" property. The following example combines the examples above the 64-bit aware QtExec for both. Notice that the CustomAction element's Id attributes do not need to change:</p>
+  <pre>
+&lt;Property Id="QtExec64CmdLine" Value="64-bit command line to run"/&gt;
+&lt;CustomAction Id="QtExecExample" BinaryKey="WixCA" DllEntry="CAQuietExec64" Execute="immediate" Return="check"/&gt;
+.
+.
+.
+&lt;CustomAction Id="QtExecDeferredExampleWithProperty_Cmd" Property="QtExecDeferredExampleWithProperty"
+              Value="&amp;quot;[#MyExecutable.exe]&amp;quot;" Execute="immediate" Return="ignore"/&gt;
+&lt;CustomAction Id="QtExecDeferredExampleWithProperty" BinaryKey="WixCA" DllEntry="CAQuietExec64"
+              Execute="deferred" Return="check" Impersonate="no"/&gt;
+.
+.
+.
+&lt;InstallExecuteSequence&gt;
+    &lt;Custom Action="QtExecExample" After="TheImmediateActionYouWantItAfter"/&gt;
+
+    &lt;Custom Action="QtExecDeferredExampleWithProperty_Cmd" After="CostFinalize"/&gt;
+    &lt;Custom Action="QtExecDeferredExampleWithProperty" After="TheDeferredActionYouWantItAfter"/&gt;
+&lt;/InstallExecuteSequence&gt;
+</pre>
+
+  <h2>Building an MSI that uses QtExec</h2>
+
+  <p>In order to use QtExec, you must include a reference to the WixUtilExtension when building your MSI. To do this, add the command line argument -ext WixUtilExtension.dll when calling Light.exe.</p>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>NAnt Conventions</title>
+</head>
+
+<body>
+  <h1>NAnt Conventions</h1>
+
+  <h2>Build File Format</h2>
+
+  <p>In order to promote consitency and readability, the .build files will be laid out in the following way. &lt;TODO JRock: add the rest of the content&gt;</p>
+
+  <h2>Properties</h2>
+
+  <h3>Prefixes</h3>
+
+  <p>Since properties defined in a .build file are visible to other .build files that use &lt;include&gt;, each project's .build file should use the file name for its prefix on properties. For example, the candle.build project should use the prefix 'candle.' before any local properties. Global properties (those that appear in the wix.include file) do not have a prefix.</p>
+</body>
+</html>

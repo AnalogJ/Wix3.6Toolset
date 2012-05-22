@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <!-- Referenced by project registration. -->
+        <DirectoryRef Id="MSBuildMSWix3xFolder" />
+
+        <PropertyRef Id="LATEST_DEVENV_EXE_COMMAND" />
+
+        <ComponentGroup Id="FileAssociationComponents" Directory="BinFolder">
+            <!--
+                File extension registration
+
+                Note that we're keeping the versioned progid the same
+                The properties are used here so that if a user installs Votive
+                on a system with both VS 2005 and VS 2008 installed, the file
+                associations will be directed to the latest version of VS.
+            -->
+            <Component>
+                <!-- Icons to use for WiX file types -->
+                <File Source="ProjectFile.ico" />
+
+                <ProgId Id="WindowsInstallerXml.wixprojfile.3.6" Description="WiX Project File" Icon="ProjectFile.ico">
+                    <Extension Id="wixproj" ContentType="text/plain">
+                        <Verb Id="Open" Command="[LATEST_DEVENV_EXE_COMMAND]" TargetProperty="LATEST_DEVENV_EXE" Argument="&quot;%1&quot;" />
+                    </Extension>
+                </ProgId>
+            </Component>
+
+            <Component>
+                <File Source="ProductFile.ico" />
+
+                <ProgId Id="WindowsInstallerXml.wxsfile.3.6" Description="WiX Source File" Icon="ProductFile.ico">
+                    <Extension Id="wxs" ContentType="text/xml">
+                        <Verb Id="Open" Command="[LATEST_DEVENV_EXE_COMMAND]" TargetProperty="LATEST_DEVENV_EXE" Argument="&quot;%1&quot;" />
+                    </Extension>
+                </ProgId>
+            </Component>
+
+            <Component>
+                <File Source="IncludeFile.ico" />
+
+                <ProgId Id="WindowsInstallerXml.wxifile.3.6" Description="WiX Include File" Icon="IncludeFile.ico">
+                    <Extension Id="wxi" ContentType="text/xml">
+                        <Verb Id="Open" Command="[LATEST_DEVENV_EXE_COMMAND]" TargetProperty="LATEST_DEVENV_EXE" Argument="&quot;%1&quot;" />
+                    </Extension>
+                </ProgId>
+            </Component>
+
+            <Component>
+                <File Source="LocalizationFile.ico" />
+
+                <ProgId Id="WindowsInstallerXml.wxlfile.3.6" Description="WiX Localization File" Icon="LocalizationFile.ico">
+                    <Extension Id="wxl" ContentType="text/xml">
+                        <Verb Id="Open" Command="[LATEST_DEVENV_EXE_COMMAND]" TargetProperty="LATEST_DEVENV_EXE" Argument="&quot;%1&quot;" />
+                    </Extension>
+                </ProgId>
+            </Component>
+
+            <Component>
+                <File Source="WixLibraryFile.ico" />
+
+                <ProgId Id="WindowsInstallerXml.wixlibfile.3.6" Description="WiX Library File" Icon="WixLibraryFile.ico">
+                    <Extension Id="wixlib" ContentType="text/xml" />
+                </ProgId>
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

@@ -1,0 +1,971 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+****************************************************************************************************
+WixBuild.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process for the Wix .NET 2.0 projects.
+
+Copyright (c) Microsoft Corporation.  All rights reserved.
+****************************************************************************************************
+-->
+<Project InitialTargets="CheckRequiredProperties;GetSdkDirectories" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+  In order to fully build the wix projects that are .NET 2.0 based, you must have the following
+  Frameworks and SDKs installed:
+    * .NET Framework 2.0 (SDK is optional)
+    * Windows Server 2008 and .NET Framework 3.5 SDK OR Visual Studio 2008
+    * (To install Votive on Visual Studio 2005, you must have the Standard edition or higher)
+  -->
+
+  <!--
+  ================================================================================================
+  CheckRequiredProperties
+
+    Checks for required properties that should be specified via environment variables or on the
+    command line.
+
+    [IN]
+    $(WIX_ROOT) - The root directory of the wix source files.
+  ================================================================================================
+  -->
+  <Target Name="CheckRequiredProperties">
+
+    <!-- These are handy debugging messages only shown when /verbosity:detailed is set. -->
+    <Message Importance="low" Text="WIX_ROOT = $(WIX_ROOT)" />
+    <Message Importance="low" Text="WIX_OBJROOT = $(WIX_OBJROOT)" />
+    <Message Importance="low" Text="WIX_BUILDROOT = $(WIX_BUILDROOT)" />
+
+    <!-- The root directory properties must be set by now. -->
+    <Error
+      Code="WIX001"
+      Condition=" '$(WIX_ROOT)' == '' or !Exists('$(WIX_ROOT)')"
+      Text="Use make.bat found in the root of your WiX enlistment to build or set the WIX_ROOT environment variable to build via nant or MSBuild directly. WIX_ROOT = $(WIX_ROOT)" />
+  </Target>
+
+  <!--
+  ================================================================================================
+  GetBuildDirectories
+
+    Gets the root directories to use for building. (This would have been a target but the
+    CreateProperty task doesn't expose the properties to Microsoft.Common.targets.
+    The properties need to be in a PropertyGroup in order for Microsoft.Common.targets to see them).
+
+    [IN]
+    $(WIX_ROOT) - The root directory of the wix source files.
+
+    [OUT]
+    $(BaseIntermediateOutputPath) - The path for intermediate build files.
+    $(IntermediateOutputPath) - Same as BaseIntermediateOutputPath. Visual Studio uses both of these properties.
+    $(OutputPath) - The path in which to build assemblies and other project output.
+  ================================================================================================
+    -->
+
+  <!-- Converts the VS-standard Debug and Release to the wix-standard debug and ship -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' or '$(Configuration)' == '' ">
+    <WixFlavor>debug</WixFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <WixFlavor>ship</WixFlavor>
+  </PropertyGroup>
+
+  <!--
+  Root-level directories that are defined by make.bat, but can be overridden by environment variables.
+  WIX_ROOT must be defined by an environment variable or passed into MSBuild if building from the
+  command line, however.
+  -->
+  <PropertyGroup>
+    <WIX_ROOT Condition=" '$(WIX_ROOT)' != '' and !HasTrailingSlash('$(WIX_ROOT)') ">$(WIX_ROOT)\</WIX_ROOT>
+    <ROOT>$(WIX_ROOT)</ROOT>
+
+    <WIX_OBJROOT Condition=" '$(WIX_OBJROOT)' == '' ">$(WIX_ROOT)build\obj\</WIX_OBJROOT>
+    <WIX_OBJROOT Condition="!HasTrailingSlash('$(WIX_OBJROOT)')">$(WIX_OBJROOT)\</WIX_OBJROOT>
+    <OBJROOT>$(WIX_OBJROOT)</OBJROOT>
+
+    <WIX_BUILDROOT Condition=" '$(WIX_BUILDROOT)' == '' ">$(WIX_ROOT)build\</WIX_BUILDROOT>
+    <WIX_BUILDROOT Condition="!HasTrailingSlash('$(WIX_BUILDROOT)')">$(WIX_BUILDROOT)\</WIX_BUILDROOT>
+    <TARGETROOT>$(WIX_BUILDROOT)</TARGETROOT>
+
+    <EXTERNALROOT>$(WIX_ROOT)external\</EXTERNALROOT>
+  </PropertyGroup>
+
+  <!-- Directories derived from the current platform and flavor -->
+  <PropertyGroup>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputPath_x86>$(WIX_BUILDROOT)$(WixFlavor)\x86\</OutputPath_x86>
+    <OutputPath_x64>$(WIX_BUILDROOT)$(WixFlavor)\x64\</OutputPath_x64>
+    <OutputPath_ia64>$(WIX_BUILDROOT)$(WixFlavor)\ia64\</OutputPath_ia64>
+    <WixToolPath>$(OutputPath_x86)</WixToolPath>
+    <WixTargetsPath>$(OutputPath_x86)wix.targets</WixTargetsPath>
+    <WixTargets200xPath>$(OutputPath_x86)wix200x.targets</WixTargets200xPath>
+    <WixTargets2010Path>$(OutputPath_x86)wix2010.targets</WixTargets2010Path>
+    <WixTasksPath>$(OutputPath_x86)WixTasks.dll</WixTasksPath>
+    <WixSdkPath>$(OutputPath_x86)</WixSdkPath>
+    <WixSdkX86Path>$(OutputPath_x86)</WixSdkX86Path>
+    <WixSdkX64Path>$(OutputPath_x64)</WixSdkX64Path>
+    <WixCATargetsPath>$(OutputPath_x86)wix.ca.targets</WixCATargetsPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' or '$(Platform)' == 'AnyCPU' ">
+    <OutputPath>$(OutputPath_x86)</OutputPath>
+    <BaseIntermediateOutputPath>$(WIX_OBJROOT)$(WixFlavor)\x86\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
+    <OutputPath>$(OutputPath_x64)</OutputPath>
+    <BaseIntermediateOutputPath>$(WIX_OBJROOT)$(WixFlavor)\x64\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'ia64' ">
+    <OutputPath>$(OutputPath_ia64)</OutputPath>
+    <BaseIntermediateOutputPath>$(WIX_OBJROOT)$(WixFlavor)\ia64\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BindInputPaths Include="$(OutputPath)" />
+    <BindInputPaths Include="$(OutputPath_x86)">
+        <BindName>x86</BindName>
+    </BindInputPaths>
+    <BindInputPaths Include="$(OutputPath_x64)">
+        <BindName>x64</BindName>
+    </BindInputPaths>
+    <BindInputPaths Include="$(OutputPath_ia64)">
+        <BindName>ia64</BindName>
+    </BindInputPaths>
+  </ItemGroup>
+
+  <!-- Include the version properties. -->
+  <Import Project="$(WIX_ROOT)\inc\wixver.targets" />
+
+  <!-- Global properties for .wixproj projects -->
+  <PropertyGroup>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+  </PropertyGroup>
+
+  <!-- Define these only after the $(OutputPath_x86) has been defined. -->
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="DeleteRegistry" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="DocCompiler" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="FlattenXml" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="GenerateUploadMetadata" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="MsgGen" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="Rc" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="ReadRegistry" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="WriteRegistry" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+  <UsingTask AssemblyFile="$(OutputPath_x86)WixBuild.dll" TaskName="XsdGen" Condition=" '$(MSBuildProjectName)' != 'WixBuild' " />
+
+  <!-- Steal some tasks from the MSBuild tasks assembly -->
+  <UsingTask TaskName="AssignTargetPath" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+
+  <!--
+  ================================================================================================
+  GetSdkDirectories
+
+    Gets the Platform SDK and other directories needed to build.
+
+    [IN]
+
+    [OUT]
+    $(PlatformSDKIncludePath) - The path for the Platform SDK include files.
+    $(PlatformSdkBinPath) - The path for the Platform SDK bin directory.
+    $(VCIncludePath) - The path for the Visual C++ include files.
+  ================================================================================================
+    -->
+
+  <!-- We don't need to run this on a clean build since WixBuild.dll will have been deleted already. -->
+  <Target
+   Name="GetSdkDirectories"
+   DependsOnTargets="CheckRequiredProperties"
+   Condition=" '$(MSBuildProjectName)' != 'WixBuild' and Exists('$(OutputPath_x86)WixBuild.dll') ">
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.0A"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.0"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.1"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v6.1"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0a"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v6.0a"
+      Name="InstallationFolder"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkInstallPath" Condition="'$(PlatformSdkInstallPath)' == '' or !Exists('$(PlatformSdkInstallPath)')" />
+    </ReadRegistry>
+
+    <CreateProperty Value="$(PlatformSdkInstallPath)\Include">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkIncludePath"/>
+    </CreateProperty>
+    <CreateProperty Value="$(PlatformSdkInstallPath)\Bin">
+      <Output TaskParameter="Value" PropertyName="PlatformSdkBinPath"/>
+    </CreateProperty>
+    <Message Importance="low" Text="PlatformSdkIncludePath=$(PlatformSdkIncludePath)" />
+    <Error
+      Condition=" '$(PlatformSdkIncludePath)' == '' or !Exists('$(PlatformSdkIncludePath)') or '$(PlatformSdkBinPath)' == '' or !Exists('$(PlatformSdkBinPath)')"
+      Text="Please install the Windows Server 2008 and .NET Framework 3.5 SDK, or Visual Studio 2008." />
+
+    <!-- Use Visual Studio 2008 if available. -->
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Microsoft\VisualStudio\9.0\Setup\VC"
+      Name="ProductDir"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="VCPath" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\9.0\Setup\VC"
+      Name="ProductDir"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="VCPath" Condition=" '$(VCPath)' == '' or !Exists('$(VCPath)')" />
+    </ReadRegistry>
+
+    <!-- Use Visual Studio 2010 if available and only if Visual Studio 2008 is not available. -->
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VC"
+      Name="ProductDir"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="VCPath" Condition=" '$(VCPath)' == '' or !Exists('$(VCPath)')" />
+    </ReadRegistry>
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\Setup\VC"
+      Name="ProductDir"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="VCPath" Condition=" '$(VCPath)' == '' or !Exists('$(VCPath)')" />
+    </ReadRegistry>
+
+    <!-- Make sure paths contain a trailing backslash. -->
+    <CreateProperty Value="$(VCPath)\" Condition="!HasTrailingSlash('$(VCPath)')">
+      <Output TaskParameter="Value" PropertyName="VCPath" />
+    </CreateProperty>
+
+    <CreateProperty Value="$(VCPath)Include">
+      <Output TaskParameter="Value" PropertyName="VCIncludePath" />
+    </CreateProperty>
+    <CreateProperty Value="$(VCPath)Bin">
+      <Output TaskParameter="Value" PropertyName="VCBinPath" />
+    </CreateProperty>
+
+    <Message Importance="low" Text="VCIncludePath=$(VCIncludePath)" />
+    <Error
+      Condition=" '$(VCIncludePath)' == '' or !Exists('$(VCIncludePath)')"
+      Text="Please install the Windows Server 2008 and .NET Framework 3.5 SDK, Visual Studio 2008, the Windows 7 SDK, or Visual Studio 2010." />
+
+    <!-- VS common tools path -->
+    <Message Importance="low" Text="VCBinPath=$(VCBinPath)" />
+    <Error
+      Condition=" '$(VCBinPath)' == '' or !Exists('$(VCBinPath)')"
+      Text="Please install the Windows Server 2008 and .NET Framework 3.5 SDK, Visual Studio 2008, the Windows 7 SDK, or Visual Studio 2010." />
+  </Target>
+
+  <!--
+  On the build machine the OFFICIAL_WIX_BUILD env var will point to the private key, otherwise
+  use the public key in the enlistment.  We must find a key file.
+  -->
+  <PropertyGroup Condition="Exists('$(OFFICIAL_WIX_BUILD)')">
+    <AssemblyOriginatorKeyFile>$(OFFICIAL_WIX_BUILD)</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition="!Exists('$(OFFICIAL_WIX_BUILD)')">
+    <AssemblyOriginatorKeyFile>$(WIX_ROOT)bin\publickey_wix.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
+  </PropertyGroup>
+
+  <!-- This makes the project files a dependency of all targets so that things rebuild if they change -->
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(WIX_ROOT)WixBuild.Common.targets</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!-- Default C# properties -->
+  <PropertyGroup>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <AllowUnsafeBlocks Condition=" '$(AllowUnsafeBlocks)' == '' ">false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow Condition=" '$(OverrideCheckForOverflowUnderflow)' == '' ">true</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow Condition=" '$(OverrideCheckForOverflowUnderflow)' != '' ">$(OverrideCheckForOverflowUnderflow)</CheckForOverflowUnderflow>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <!-- StyleCop settings -->
+  <PropertyGroup>
+    <StyleCopTargetsPath>$(EXTERNALROOT)StyleCop\4.0.20.4\MSBuild\Microsoft.StyleCop.targets</StyleCopTargetsPath>
+    <StyleCopEnabled Condition=" '$(StyleCopEnabled)' == '' or !Exists('$(StyleCopTargetsPath)')">false</StyleCopEnabled>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
+
+  <!-- FxCop settings -->
+  <PropertyGroup>
+    <FXCOPDIR Condition=" '$(FXCOPDIR)' == '' and Exists('$(EXTERNALROOT)FxCop\')">$(EXTERNALROOT)FxCop\</FXCOPDIR>
+    <FxCopEnabled Condition=" '$(FxCopEnabled)' == '' and '$(Configuration)' == 'Release' ">true</FxCopEnabled>
+    <FxCopEnabled Condition=" '$(FxCopEnabled)' == '' ">false</FxCopEnabled>
+    <CodeAnalysisRuleSet Condition=" '$(CodeAnalysisRuleSet)' == '' ">$(WIX_ROOT)Wix.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis Condition=" '$(FxCopEnabled)' == 'true' and ( '$(BuildingInsideVisualStudio)' == 'true' or '$(FXCOPDIR)' != '' )">true</RunCodeAnalysis>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" $(UseDocumentationFile) == true ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(VersionCS)' == '' ">
+    <VersionCS>wixver.cs</VersionCS>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(DistCS)' == '' ">
+    <DistCS>wixdistribution.cs</DistCS>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(Language)' == 'C#' ">
+    <!-- Include the current version in all of the wix projects (this won't show up in the Solution Explorer, but it is used when building). -->
+    <Compile Include="$(WIX_ROOT)inc\$(VersionCS)">
+      <Link>Properties\$(VersionCS)</Link>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <Visible>true</Visible>
+    </Compile>
+    <Compile Include="$(ROOT)inc\$(DistCS)">
+      <Link>Properties\$(DistCS)</Link>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <Visible>true</Visible>
+    </Compile>
+
+    <!--Provide support for setting type (BuildAction) from VS-->
+    <AvailableItemName Include="EmbeddedFlattenedResource" />
+    <AvailableItemName Include="EmbeddedNativeResource" />
+    <AvailableItemName Include="MsgGenSource" />
+    <AvailableItemName Include="XsdGenSource" />
+  </ItemGroup>
+
+  <!-- This must be included before the targets below -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" Condition=" '$(MSBuildProjectExtension)' == '.csproj' " />
+  <Import Project="$(StyleCopTargetsPath)" Condition=" '$(MSBuildProjectExtension)' == '.csproj' and '$(StyleCopEnabled)' == 'true' " />
+
+  <!--
+  ================================================================================================
+  FlattenResources
+
+    Flattens an xml/xsd file by removing excess whitespace before embedding it as a resource
+    in the assembly.
+
+    [IN]
+    @(EmbeddedFlattenedResource) - The EmbeddedFlattenedResource items.
+
+    [OUT]
+    @(EmbeddedResource) - The flattened file is added to the list of embedded resources.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <FlattenResourcesDependsOn>
+      _AssignFlattenedTargetPaths
+    </FlattenResourcesDependsOn>
+    <PrepareResourcesDependsOn>
+      FlattenResources;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="FlattenResources"
+    DependsOnTargets="$(FlattenResourcesDependsOn)"
+    Condition=" '@(EmbeddedFlattenedResource)' != '' "
+    Inputs="@(_EmbeddedFlattenedResourceWithTargetPath->'$(MSBuildProjectDirectory)\%(Identity)')"
+    Outputs="@(_EmbeddedFlattenedResourceWithTargetPath->'$(IntermediateOutputPath)%(TargetPath)')">
+
+    <FlattenXml
+      ToolPath="$(OutputPath_x86)"
+      SourceFiles="@(_EmbeddedFlattenedResourceWithTargetPath->'$(MSBuildProjectDirectory)\%(Identity)')"
+      FlattenedFiles="@(_EmbeddedFlattenedResourceWithTargetPath->'$(IntermediateOutputPath)%(TargetPath)')">
+
+      <Output TaskParameter="FlattenedFiles" ItemName="_FlattenedFiles" />
+
+      <!-- This will tell MSBuild to clean up the .res file during a Clean build -->
+      <Output TaskParameter="FlattenedFiles" ItemName="FileWrites" />
+
+      <!-- Add the file to the list of embedded resources -->
+      <Output TaskParameter="FlattenedFiles" ItemName="EmbeddedResource" />
+    </FlattenXml>
+
+    <Message Importance="normal" Text="Flattened XML files @(_FlattenedFiles)" />
+
+  </Target>
+
+  <!--
+  ================================================================================================
+  _AssignFlattenedTargetPaths
+
+    Creates <TargetPath> tags for items. <TargetPath> is a relative folder plus filename
+    for the destination of this item. Handles linked items correctly.
+
+
+    [IN]
+    @(EmbeddedFlattenedResource) - The EmbeddedFlattenedResource items.
+
+    [OUT]
+    @(_EmbeddedFlattenedResourceWithTargetPath) - The EmbeddedFlattenedResource with the <TargetPath> metadata added.
+  ================================================================================================
+  -->
+  <Target
+    Name="_AssignFlattenedTargetPaths">
+
+    <AssignTargetPath Files="@(EmbeddedFlattenedResource)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_EmbeddedFlattenedResourceWithTargetPath" />
+    </AssignTargetPath>
+
+    <Message Importance="low" Text="Assigned target paths to @(_EmbeddedFlattenedResourceWithTargetPath)" />
+    <Message Importance="low" Text="Assigned target paths to @(_EmbeddedFlattenedResourceWithTargetPath->'%(TargetPath)')" />
+
+  </Target>
+
+  <!--
+  ================================================================================================
+  CompileNativeResources
+
+    Compiles an .rc file into a .res file and then embeds the .res file into the managed assembly.
+
+    [IN]
+    @(EmbeddedNativeResource) - The EmbeddedNativeResource items with extension equal to '.rc'.
+    @(RcIncludePath) - The list of paths to include in the search.
+
+    [OUT]
+    $(Win32Resource) - The compiled .res file to embed into the managed assembly.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <CompileNativeResourcesDependsOn>
+      _CreateRcStandardPaths;
+      GetSdkDirectories
+    </CompileNativeResourcesDependsOn>
+    <PrepareResourcesDependsOn>
+      CompileNativeResources;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+    <ResFile>$(IntermediateOutputPath)$(TargetName).res</ResFile>
+    <RcIncludeStandardPaths>true</RcIncludeStandardPaths>
+    <RcStandardPaths></RcStandardPaths>
+  </PropertyGroup>
+  <Target
+    Name="_CreateRcStandardPaths"
+    DependsOnTargets="GetSdkDirectories"
+    Condition="$(RcIncludeStandardPaths) and '$(RcStandardPaths)' == '' ">
+
+    <CreateProperty Value="$(WIX_ROOT)inc;$(PlatformSdkIncludePath);$(VCIncludePath)">
+      <Output TaskParameter="Value" PropertyName="RcStandardPaths" />
+    </CreateProperty>
+  </Target>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <RcPreprocessorDefinitions>$(RcPreprocessorDefinitions);DEBUG</RcPreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <RcPreprocessorDefinitions>$(RcPreprocessorDefinitions)</RcPreprocessorDefinitions>
+  </PropertyGroup>
+
+  <Target
+    Name="CompileNativeResources"
+    DependsOnTargets="$(CompileNativeResourcesDependsOn)"
+    Condition=" '@(EmbeddedNativeResource)' != '' "
+    Inputs="$(MSBuildAllProjects);@(EmbeddedNativeResource)"
+    Outputs="$(ResFile)">
+
+    <Rc
+      SourceFiles="@(EmbeddedNativeResource)"
+      PreprocessorDefinitions="$(RcPreprocessorDefinitions)"
+      ResFile="$(ResFile)"
+      IncludePaths="@(RcIncludePath);$(RcStandardPaths)"
+      ToolPath="$(PlatformSdkBinPath)">
+
+      <!-- This tells the csc compiler to embed the .res file into the assembly -->
+      <Output TaskParameter="ResFile" PropertyName="Win32Resource" />
+      <!-- This will tell MSBuild to clean up the .res file during a Clean build -->
+      <Output TaskParameter="ResFile" ItemName="FileWrites" />
+      <!-- Add the .res file to the inputs of the compile so that it will build when the .res file has changed -->
+      <Output TaskParameter="ResFile" ItemName="CustomAdditionalCompileInputs" />
+    </Rc>
+  </Target>
+
+  <!--
+  ================================================================================================
+  MsgGen
+
+    Generates a .cs class file and a .resx file from an XML file.
+
+    [IN]
+    @(MsgGenSource) - The items to run through the MsgGen tool.
+
+    [OUT]
+    $(IntermediateOutputPath)%(Filename).cs - The generated .cs files to include in the compilation.
+    $(IntermediateOutputPath)%(MsgGenSource.ResourcesLogicalName) - The generated .resources file to embed in the assembly.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <MsgGenDependsOn>
+      PrepareMsgGen
+    </MsgGenDependsOn>
+    <PrepareResourcesDependsOn>
+      MsgGen;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="MsgGen"
+    DependsOnTargets="$(MsgGenDependsOn)"
+    Condition=" '@(MsgGenSource)' != '' "
+    Inputs="@(MsgGenSource)"
+    Outputs="$(IntermediateOutputPath)%(MsgGenSource.Filename).cs;
+             $(IntermediateOutputPath)%(MsgGenSource.ResourcesLogicalName)">
+
+    <MsgGen
+      SourceFile="%(MsgGenSource.FullPath)"
+      ClassFile="$(MsgGenCsFile)"
+      ResourcesFile="$(MsgGenResourcesFile)"
+      ToolPath="$(OutputPath_x86)">
+
+      <!-- This will tell MSBuild to clean up the .cs and .resources file during a Clean build -->
+      <Output TaskParameter="ClassFile" ItemName="FileWrites" />
+      <Output TaskParameter="ResourcesFile" ItemName="FileWrites" />
+    </MsgGen>
+
+  </Target>
+
+  <!--
+  ================================================================================================
+  PrepareMsgGen
+
+    Creates properties and Include items for MsgGen. This must be separate from the MsgGen target
+    to workaround an MSBuild bug: AdditionalMetadata is ignored when the target is up-to-date.
+
+  ================================================================================================
+  -->
+  <Target
+    Name="PrepareMsgGen"
+    Condition=" '@(MsgGenSource)' != '' ">
+
+    <CreateProperty Value="$(IntermediateOutputPath)%(MsgGenSource.Filename).cs">
+      <Output TaskParameter="Value" PropertyName="MsgGenCsFile" />
+    </CreateProperty>
+
+    <CreateProperty
+      Value="$(IntermediateOutputPath)%(MsgGenSource.ResourcesLogicalName)"
+      Condition=" '%(MsgGenSource.ResourcesLogicalName)' != '' ">
+
+      <Output TaskParameter="Value" PropertyName="MsgGenResourcesFile" />
+    </CreateProperty>
+
+    <!-- Add the generated .cs file to the list of source files to compile -->
+    <CreateItem
+      Include="$(MsgGenCsFile)"
+      AdditionalMetadata="Link=%(MsgGenCsFile.Filename)%(MsgGenCsFile.Extension)">
+
+      <Output TaskParameter="Include" ItemName="Compile" />
+    </CreateItem>
+
+    <!-- Add the generated .resources file to the list of resources to embed -->
+    <CreateItem
+      Include="$(MsgGenResourcesFile)"
+      AdditionalMetadata="Link=%(MsgGenResourcesFile.Filename)%(MsgGenResourcesFile.Extension);
+                          LogicalName=%(MsgGenSource.ResourcesLogicalName)"
+      Condition=" '$(MsgGenResourcesFile)' != '' ">
+
+      <Output TaskParameter="Include" ItemName="EmbeddedResource" />
+    </CreateItem>
+  </Target>
+
+  <!--
+  ================================================================================================
+  GenerateUploadMetadata
+
+    Generates a .json class file from input files to be uploaded.
+
+    [IN]
+    $(UploadFolder) - Base folder for the items.
+    $(UploadVersion) - Version of the release to upload.
+    @(UploadFiles) - The items to add to the metadata.
+
+    [OUT]
+    $(UploadFolder)\$(UploadVersion).json - The generated .json metadata file.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <GenerateUploadMetadataDependsOn>
+    </GenerateUploadMetadataDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="GenerateUploadMetadata"
+    DependsOnTargets="$(GenerateUploadMetadataDependsOn)"
+    Condition=" '@(UploadFiles)' != '' "
+    Inputs="$(MSBuildAllProjects);
+            @(UploadFiles)"
+    Outputs="$(UploadFolder)\v$(UploadVersion).json">
+
+    <GenerateUploadMetadata
+      UploadFiles="@(UploadFiles)"
+      Version="$(UploadVersion)"
+      OutputFile="$(UploadFolder)v$(UploadVersion).json">
+
+      <!-- This will tell MSBuild to clean up the .json file during a Clean build -->
+      <Output TaskParameter="OutputFile" ItemName="FileWrites" />
+    </GenerateUploadMetadata>
+  </Target>
+
+  <!--
+  ================================================================================================
+  XsdGen
+
+    Generates a .cs class file from an .xsd file.
+
+    [IN]
+    @(XsdGenSource) - The items to run through the XsdGen tool.
+
+    [OUT]
+    $(IntermediateOutputPath)%(Filename).cs - The generated .cs files to include in the compilation.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <XsdGenDependsOn>
+    </XsdGenDependsOn>
+    <PrepareResourcesDependsOn>
+      XsdGen;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="XsdGen"
+    DependsOnTargets="$(XsdGenDependsOn)"
+    Condition=" '@(XsdGenSource)' != '' "
+    Inputs="$(MSBuildAllProjects);
+            @(XsdGenSource)"
+    Outputs="$(IntermediateOutputPath)%(XsdGenSource.Filename).cs">
+
+    <CreateProperty Value="$(IntermediateOutputPath)%(XsdGenSource.Filename).cs">
+      <Output TaskParameter="Value" PropertyName="XsdGenCsFile" />
+    </CreateProperty>
+
+    <CreateProperty
+      Value="%(XsdGenSource.CommonNamespace)"
+      Condition=" '%(XsdGenSource.CommonNamespace)' != '' ">
+
+      <Output TaskParameter="Value" PropertyName="XsdGenCommonNamespace" />
+    </CreateProperty>
+
+    <XsdGen
+      SourceFile="%(XsdGenSource.FullPath)"
+      OutputFile="$(XsdGenCsFile)"
+      Namespace="%(XsdGenSource.Namespace)"
+      CommonNamespace="$(XsdGenCommonNamespace)"
+      ToolPath="$(OutputPath_x86)">
+
+      <!-- This will tell MSBuild to clean up the .cs file during a Clean build -->
+      <Output TaskParameter="OutputFile" ItemName="FileWrites" />
+    </XsdGen>
+
+    <!-- Add the generated .cs file to the list of source files to compile -->
+    <CreateItem
+      Include="$(XsdGenCsFile)"
+      AdditionalMetadata="Link=%(XsdGenCsFile.Filename)%(XsdGenCsFile.Extension)">
+
+      <Output TaskParameter="Include" ItemName="Compile" />
+    </CreateItem>
+  </Target>
+
+  <!--
+  ================================================================================================
+  SetVsSdkTargetRegistryRoot
+
+    The Microsoft.VsSDK.targets file includes tasks to zip the Votive project and project item
+    templates, but it requires that the TargetRegistryRoot is defined to an existing registry key.
+    When the VS SDK is installed, then the registry root is Software\Microsoft\VisualStudio\8.0Exp.
+    However, we don't want the build to break when the VS SDK is not installed, so we'll check
+    the existence of the Exp registry key. If it's not there, then we'll create it temporarily
+    and point it to the buildroot directory so the zip files can be created.
+
+    [IN]
+
+    [OUT]
+    $(VsExpRegistryExists) - Indicates whether the 8.0Exp registry root exists.
+    $(_CleanVsSdkTargetRegistryRootFile) - sentinel file that indicates that we created the
+                                           8.0Exp registry root.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <_CleanVsSdkTargetRegistryRootFile Condition=" '$(_CleanVsSdkTargetRegistryRootFile)' == '' ">$(IntermediateOutputPath)$(MSBuildProjectFile).Wrote80ExpKey.txt</_CleanVsSdkTargetRegistryRootFile>
+    <TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>
+    <VsTemplatePathsTargetDependsOn>
+      $(VsTemplatePathsTargetDependsOn);
+      SetVsSdkTargetRegistryRoot
+    </VsTemplatePathsTargetDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="SetVsSdkTargetRegistryRoot"
+    DependsOnTargets="$(SetVsSdkTargetRegistryRootDependsOn)">
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(TargetRegistryRoot)"
+      FailIfMissing="false">
+
+      <Output TaskParameter="KeyExists" PropertyName="VsExpRegistryExists" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(TargetRegistryRoot)\VSTemplate\Project"
+      Name="UserFolder"
+      Value="$(IntermediateOutputPath)"
+      ValueKind="String"
+      Condition="!$(VsExpRegistryExists)" />
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(TargetRegistryRoot)\VSTemplate\Item"
+      Name="UserFolder"
+      Value="$(IntermediateOutputPath)"
+      ValueKind="String"
+      Condition="!$(VsExpRegistryExists)" />
+
+    <WriteLinesToFile
+      File="$(_CleanVsSdkTargetRegistryRootFile)"
+      Lines="Wrote '$(TargetRegistryRoot)'"
+      Overwrite="true"
+      Condition="!$(VsExpRegistryExists)" />
+
+    <Delete
+      Files="$(_CleanVsSdkTargetRegistryRootFile)"
+      TreatErrorsAsWarnings="false"
+      Condition="$(VsExpRegistryExists) and Exists('$(_CleanVsSdkTargetRegistryRootFile)')" />
+
+  </Target>
+
+  <!--
+  ================================================================================================
+  CleanVsSdkTargetRegistryRoot
+
+    Cleans the output files and registry keys that were generated from SetVsSdkTargetRegistryRoot.
+
+    [IN]
+    $(_CleanVsSdkTargetRegistryRootFile) - sentinel file that indicates that we created the
+                                           8.0Exp registry root.
+
+    [OUT]
+
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <CleanDependsOn>$(CleanDependsOn);CleanVsSdkTargetRegistryRoot</CleanDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="CleanVsSdkTargetRegistryRoot"
+    DependsOnTargets="$(CleanVsSdkTargetRegistryRootDependsOn)">
+
+    <DeleteRegistry
+      Hive="LocalMachine"
+      Key="$(TargetRegistryRoot)"
+      Condition="Exists('$(_CleanVsSdkTargetRegistryRootFile)')" />
+
+    <Delete
+      Files="$(_CleanVsSdkTargetRegistryRootFile)"
+      TreatErrorsAsWarnings="false" />
+  </Target>
+
+  <!--
+  ================================================================================================
+  TrustMSBuildTargetsFiles
+
+    All of our managed projects that build with MSBuild include this file. Also, the setup projects
+    include wix.targets. In order to turn off the warning when opening a project in Visual Studio
+    that includes an "untrusted" .targets file, we have to write the paths to a specific registry
+    key. This target is called from the NAnt wix.build file to setup the development environment
+    before building.
+    
+    To successfully write to HKLM\..., the build must be running as an Administrator, or the user
+    must have granted themselves write priveleges to the key.  We don't want either to be the
+    typical case, so we only write if the value hasn't already been set.  To set these the first
+    time, a user can "nant trustmsbuildfiles" from an elevated environment.
+  ================================================================================================
+  -->
+  <PropertyGroup>
+    <SafeImports>SOFTWARE\Microsoft\VisualStudio\9.0\MSBuild\SafeImports</SafeImports>
+  </PropertyGroup>
+  <Target
+    Name="TrustMSBuildTargetsFiles">
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix1"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForWixTargetsPath" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix1"
+      Value="$(WixTargetsPath)"
+      ValueKind="String"
+      Condition=" '$(SafeImportForWixTargetsPath)' != '$(WixTargetsPath)' " />
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix200x.targets"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForWixTargets200xPath" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix200x.targets"
+      Value="$(WixTargets200xPath)"
+      ValueKind="String"
+      Condition=" '$(SafeImportForWixTargets200xPath)' != '$(WixTargets200xPath)' " />
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix2010.targets"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForWixTargets2010Path" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix2010.targets"
+      Value="$(WixTargets2010Path)"
+      ValueKind="String"
+      Condition=" '$(SafeImportForWixTargets2010Path)' != '$(WixTargets2010Path)' " />
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix2"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForWixBuildCommonTargets" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix2"
+      Value="$(WIX_ROOT)WixBuild.Common.targets"
+      ValueKind="String"
+      Condition=" '$(SafeImportForWixBuildCommonTargets)' != '$(WIX_ROOT)WixBuild.Common.targets' " />
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix3"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForVotiveVsSdkTargets" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix3"
+      Value="$(WIX_ROOT)src\Votive\SDK\Tools\Build\Microsoft.VsSDK.targets"
+      ValueKind="String"
+      Condition=" '$(SafeImportForVotiveVsSdkTargets)' != '$(WIX_ROOT)src\Votive\SDK\Tools\Build\Microsoft.VsSDK.targets' " />
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix4"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForVotiveProjectBaseFiles" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix4"
+      Value="$(WIX_ROOT)src\Votive\SDK\Common\Source\CSharp\Project\ProjectBase.Files"
+      ValueKind="String"
+      Condition=" '$(SafeImportForVotiveProjectBaseFiles)' != '$(WIX_ROOT)src\Votive\SDK\Common\Source\CSharp\Project\ProjectBase.Files' " />
+
+    <ReadRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix5"
+      FailIfMissing="false">
+      <Output TaskParameter="Value" PropertyName="SafeImportForDtfCommonTargets" />
+    </ReadRegistry>
+
+    <WriteRegistry
+      Hive="LocalMachine"
+      Key="$(SafeImports)"
+      Name="Wix5"
+      Value="$(WIX_ROOT)src\DTF\DTF.Common.Targets"
+      ValueKind="String"
+      Condition=" '$(SafeImportForDtfCommonTargets)' != '$(WIX_ROOT)src\DTF\DTF.Common.Targets' " />
+  </Target>
+
+</Project>

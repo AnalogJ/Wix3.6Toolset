@@ -1,0 +1,83 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{24121677-0ED0-41B5-833F-1B9A18E87BF4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Deployment.WindowsInstaller</RootNamespace>
+    <AssemblyName>Microsoft.Deployment.WindowsInstaller</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.WindowsInstaller.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <FxCopEnabled>false</FxCopEnabled>
+    <DocumentationFile>Microsoft.Deployment.WindowsInstaller.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ColumnCollection.cs" />
+    <Compile Include="ColumnEnums.cs" />
+    <Compile Include="ColumnInfo.cs" />
+    <Compile Include="ComponentInfo.cs" />
+    <Compile Include="ComponentInstallation.cs" />
+    <Compile Include="CustomActionAttribute.cs" />
+    <Compile Include="CustomActionData.cs" />
+    <Compile Include="CustomActionProxy.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="DatabaseQuery.cs" />
+    <Compile Include="EmbeddedUIProxy.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="ExternalUIHandler.cs" />
+    <Compile Include="FeatureInfo.cs" />
+    <Compile Include="FeatureInstallation.cs" />
+    <Compile Include="Handle.cs" />
+    <Compile Include="IEmbeddedUI.cs" />
+    <Compile Include="Installation.cs" />
+    <Compile Include="InstallationPart.cs" />
+    <Compile Include="InstallCost.cs" />
+    <Compile Include="Installer.cs" />
+    <Compile Include="InstallerAdvertise.cs" />
+    <Compile Include="Transaction.cs" />
+    <Compile Include="MediaDisk.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="PatchInstallation.cs" />
+    <Compile Include="ProductInstallation.cs" />
+    <Compile Include="Record.cs" />
+    <Compile Include="RecordStream.cs" />
+    <Compile Include="RemotableNativeMethods.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="ShortcutTarget.cs" />
+    <Compile Include="SourceList.cs" />
+    <Compile Include="SourceMediaList.cs" />
+    <Compile Include="SummaryInfo.cs" />
+    <Compile Include="TableCollection.cs" />
+    <Compile Include="TableInfo.cs" />
+    <Compile Include="DatabaseTransform.cs" />
+    <Compile Include="InstallerUtils.cs" />
+    <Compile Include="ValidationErrorInfo.cs" />
+    <Compile Include="View.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Errors.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WindowsInstaller.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Errors.resources" />
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+</Project>

@@ -1,0 +1,55 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>3.6</ProductVersion>
+    <ProjectGuid>{c2340adc-d4c8-4a3e-be85-cf97e3d1c615}</ProjectGuid>
+    <OutputPath>$(OutputPath)data\</OutputPath>
+    <OutputName>msdk</OutputName>
+    <OutputType>Package</OutputType>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>en-us</Cultures>
+    <DefineConstants>$(DefineConstants);BuildIA64=$(BuildIA64);</DefineConstants>
+    <IncludeSearchPaths>$(ROOT)inc</IncludeSearchPaths>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="BurnSdk.wxs" />
+    <Compile Include="Dtf.wxs" />
+    <Compile Include="ExtensionSdk.wxs" />
+    <Compile Include="ManagedSdkMsi.wxs" />
+    <Compile Include="ProjectTemplates.wxs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BindInputPaths Include="$(OutputPath_x86)" />
+    <BindInputPaths Include="$(OutputPath_x64)" />
+    <BindInputPaths Include="$(OutputPath_ia64)" />
+    <BindInputPaths Include="$(MSBuildProjectDirectory)" />
+    <BindInputPaths Include="$(WIX_ROOT)src" />
+    <BindInputPaths Include="$(WIX_ROOT)bin" />
+    <BindInputPaths Include="$(WIX_ROOT)src\dutil\inc" />
+    <BindInputPaths Include="$(BindInputPaths)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLib\CommonLib.wixproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WixExtension Include="WixVSExtension">
+      <Private>False</Private>
+      <HintPath>$(OutputPath_x86)WixVSExtension.dll</HintPath>
+    </WixExtension>
+  </ItemGroup>
+
+  <Target Name="Rebuild">
+    <!-- Provide a default Rebuild target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Target Name="Clean">
+    <!-- Provide a default Clean target if $(WixTargetsPath) doesn't exist like when cleaning the entire project  -->
+  </Target>
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
+</Project>

@@ -1,0 +1,27 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+  <PropertyGroup>
+    <ProjectGuid>{aa3c1930-8c3e-4568-beb1-03238fe771cd}</ProjectGuid>
+    <OutputName>iis</OutputName>
+    <OutputType>Library</OutputType>
+    <BindFiles>True</BindFiles>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>en-us</Cultures>
+    <IncludeSearchPaths>$(ROOT)inc;..\..\..\..\inc;..\..\..\ca\inc</IncludeSearchPaths>
+    <DefineConstants>
+      $(DefineConstants);
+      caerrwxi=$(OutputPath)\caerr.wxi;
+    </DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="IIsExtension.wxs" />
+    <Compile Include="IIsExtension_x86.wxs" />
+    <EmbeddedResource Include="en-us.wxl" />
+    <EmbeddedResource Include="ja-jp.wxl" />
+    <EmbeddedResource Include="pt-br.wxl" />
+  </ItemGroup>
+
+  <Import Project="$(WixTargetsPath)" />
+</Project>

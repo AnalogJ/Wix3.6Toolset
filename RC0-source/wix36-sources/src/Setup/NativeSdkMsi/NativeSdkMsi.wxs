@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+-->
+
+<?include WixVer.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="WiX Toolset v$(var.WixVersion) Native $(var.VisualStudioTargetVersion) SDK Package" Language="1033" Manufacturer="Microsoft Corporation" Version="$(var.WixVersion)" UpgradeCode="C1450CC3-3F3F-481E-AC13-E09FAF44FA54">
+        <Package Compressed="yes" InstallerVersion="200" SummaryCodepage="1252" InstallScope="perMachine" />
+
+        <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed." />
+
+        <Media Id="1" Cabinet="nsdk$(var.VisualStudioTargetVersion).cab" CompressionLevel="high" />
+
+        <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+
+        <Feature Id="NativeSdkFeature" Title="Native $(var.VisualStudioTargetVersion) SDK" Level="1">
+            <ComponentGroupRef Id="HeaderComponents" />
+            <ComponentGroupRef Id="LibComponents" />
+            <ComponentGroupRef Id="ProjectTemplates" />
+        </Feature>
+    </Product>
+
+    <Fragment>
+        <DirectoryRef Id="SdkFolder">
+            <Directory Id="VisualStudioTargetSdkFolder" Name ="VS$(var.VisualStudioTargetVersion)">
+                <Directory Id="SdkIncFolder" Name="inc" />
+                <Directory Id="SdkLibFolder" Name="lib">
+                    <Directory Id="SdkX86LibFolder" Name="x86" />
+                    <Directory Id="SdkX64LibFolder" Name="x64" />
+                    <Directory Id="SdkIA64LibFolder" Name="ia64" />
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+
+</Wix>

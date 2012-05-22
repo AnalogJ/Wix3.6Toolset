@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="wixstdba" default="wixstdba.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    wixstdba.build - Builds the WiX Standard Bootstrapper Application DLL.
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <property name="dir.src.wixstdba" value="${dir.src.balextension}\wixstdba" readonly="true" />
+
+  <!-- wixstdba-specific properties -->
+  <property name="dir.build.wixstdba.x86" value="${dir.build.ext.balextension.x86}\wixstdba" readonly="true" />
+  <property name="wixstdba.file.dll.target.x86" value="${dir.target.wix.x86}\wixstdba.dll" readonly="true" />
+  <property name="wixstdba.file.dll.targetpdb.x86" value="${dir.target.wix.x86}\wixstdba.pdb" readonly="true" />
+
+  <property name="wixstdba.additionalOptions" value="/I &quot;${dir.src.burn}\inc&quot; /I &quot;${dir.src.balutil}\inc&quot;"/>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="wixstdba.build" description="Peforms a full rebuild (clean then build)" depends="wixstdba.clean, wixstdba.inc" />
+
+  <!-- Clean -->
+  <target name="wixstdba.clean" description="Cleans the build">
+    <delete dir="${dir.build.wixstdba.x86}" failonerror="false" if="${directory::exists(dir.build.wixstdba.x86)}" />
+    <delete file="${wixstdba.file.dll.target.x86}" failonerror="false" if="${file::exists(wixstdba.file.dll.target.x86)}" />
+    <delete file="${wixstdba.file.dll.targetpdb.x86}" failonerror="false" if="${file::exists(wixstdba.file.dll.targetpdb.x86)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="wixstdba.inc" description="Performs an incremental build" depends="makeDirs, wixstdba.inc.dll" />
+
+  <!-- wixstdba.inc.dll -->
+  <target name="wixstdba.inc.dll" description="Performs an incremental build of wixstdba.dll">
+    <copy todir="${dir.target.wix}\WixstdbaResources">
+      <fileset basedir="${dir.src.wixstdba}\Resources">
+        <include name="HyperlinkTheme.wxl" />
+        <include name="HyperlinkTheme.xml" />
+        <include name="logo.png" />
+        <include name="LoremIpsumLicense.rtf" />
+        <include name="mbapreq.png" />
+        <include name="mbapreq.thm" />
+        <include name="mbapreq.wxl" />
+        <include name="RtfTheme.wxl" />
+        <include name="RtfTheme.xml" />
+      </fileset>
+    </copy>
+
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.wixstdba}">
+      <include name="wixstdba.cpp" />
+      <include name="WixStandardBootstrapperApplication.cpp" />
+    </fileset>
+
+    <!-- Build x86 -->
+    <property name="compileCpp.dir.build" value="${dir.build.wixstdba.x86}\dll" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.wixstdba}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.wixstdba}\wixstdba.rc" />
+    <property name="compileCpp.additionalOptions" value="${wixstdba.additionalOptions}"/>
+    <property name="makeNativeDll.file.target" value="${wixstdba.file.dll.target.x86}" />
+    <property name="makeNativeDll.file.def" value="${dir.src.wixstdba}\wixstdba.def" />
+    <property name="makeNativeDll.additionalLibs" value="&quot;${file.target.dutil.x86}&quot; &quot;${file.target.balutil.x86}&quot; &quot;${dir.platformsdk.lib}\shlwapi.lib&quot; &quot;${dir.platformsdk.lib}\Comdlg32.lib&quot; &quot;${dir.platformsdk.lib}\comctl32.lib&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot; &quot;${dir.platformsdk.lib}\gdiplus.lib&quot; &quot;${dir.platformsdk.lib}\gdi32.lib&quot; &quot;${dir.platformsdk.lib}\wininet.lib&quot; &quot;${dir.platformsdk.lib}\version.lib&quot;" dynamic="true" />
+    <property name="makeNativeDll.platform" value="x86" />
+    <call target="makeNativeDll" />
+  </target>
+
+  <!-- This prevents this file from being included more than once (by convention, not by syntax) -->
+  <property name="wixstdba.properties.defined" value="true" readonly="true" />
+
+</project>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Include xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+    <?include caSuffix.wxi ?>
+    <Fragment>
+        <BootstrapperApplication Id='WixStandardBootstrapperApplication.RtfLicense$(var.Suffix)' SourceFile='!(bindpath.$(var.platform))\wixstdba.dll'>
+            <PayloadGroupRef Id='WixStdbaRtfLicensePayloads' />
+        </BootstrapperApplication>
+    </Fragment>
+
+    <Fragment>
+        <BootstrapperApplication Id='WixStandardBootstrapperApplication.HyperlinkLicense$(var.Suffix)' SourceFile='!(bindpath.$(var.platform))\wixstdba.dll'>
+            <PayloadGroupRef Id='WixStdbaHyperlinkLicensePayloads' />
+        </BootstrapperApplication>
+    </Fragment>
+
+    <Fragment>
+        <BootstrapperApplication Id='WixStandardBootstrapperApplication.Foundation$(var.Suffix)' SourceFile='!(bindpath.$(var.platform))\wixstdba.dll' />
+    </Fragment>
+</Include>

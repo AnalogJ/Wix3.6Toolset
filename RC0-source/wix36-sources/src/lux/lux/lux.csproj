@@ -1,0 +1,54 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{C50F3641-33F8-4865-8581-E369503937FB}</ProjectGuid>
+    <AssemblyName>lux</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Tools.WindowsInstallerXml.Lux</RootNamespace>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <FxCopEnabled>false</FxCopEnabled>
+    <ProductVersion>9.0.30729</ProductVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\shared\Constants.cs">
+      <Link>Constants.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Generator.cs" />
+    <Compile Include="lux.cs" />
+    <Compile Include="LuxStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LuxStrings.resx</DependentUpon>
+    </Compile>
+    <MsgGenSource Include="Data\messages.xml">
+      <ResourcesLogicalName>$(RootNamespace).Data.Messages.resources</ResourcesLogicalName>
+    </MsgGenSource>
+    <EmbeddedNativeResource Include="lux.rc" />
+    <None Include="app.config" />
+    <EmbeddedResource Include="LuxStrings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LuxStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\..\..\WixBuild.Common.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\wconsole\wconsole.csproj">
+      <Project>{4B2BD779-59F7-4BF1-871C-A75952BCA749}</Project>
+      <Name>wconsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Wix\Wix.csproj">
+      <Name>Wix</Name>
+      <Project>{9E03A94C-C70E-45C6-A269-E737BBD8B319}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\wixext\WixLuxExtension.csproj">
+      <Project>{4E633314-DF9D-4828-BCB4-D959EBBBF114}</Project>
+      <Name>WixLuxExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

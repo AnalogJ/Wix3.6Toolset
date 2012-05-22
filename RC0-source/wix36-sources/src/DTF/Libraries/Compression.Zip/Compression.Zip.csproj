@@ -1,0 +1,48 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{261F2857-B521-42A4-A3E0-B5165F225E50}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Deployment.Compression.Zip</RootNamespace>
+    <AssemblyName>Microsoft.Deployment.Compression.Zip</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.Compression.Zip.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>Microsoft.Deployment.Compression.Zip.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ConcatStream.cs" />
+    <Compile Include="CrcStream.cs" />
+    <Compile Include="ZipCompressionMethod.cs" />
+    <Compile Include="ZipException.cs" />
+    <Compile Include="ZipEngine.cs" />
+    <Compile Include="ZipFileInfo.cs" />
+    <Compile Include="ZipFormat.cs" />
+    <Compile Include="ZipInfo.cs" />
+    <Compile Include="ZipPacker.cs" />
+    <Compile Include="ZipUnpacker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Compression\Compression.csproj">
+      <Project>{2D62850C-9F81-4BE9-BDF3-9379389C8F7B}</Project>
+      <Name>Compression</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\..\..\..\WixBuild.Common.targets" />
+</Project>

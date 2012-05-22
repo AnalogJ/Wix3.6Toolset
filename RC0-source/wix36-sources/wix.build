@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<project name="WiX Toolset" default="inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    wix.build - Builds the entire Windows Installer XML toolset.
+  </description>
+
+  <!--
+  To add a new projects you must do at least the following:
+  
+  1. Create a ${dir.src.project} property in wix.include
+  2. Create the project .build file
+  3. Add an <include/> for the .build file below.
+  4. Add the project as a dependency of the 'clean' target.
+  5. Add the project as a dependency of the 'inc' target.
+  6. Add a <target> with the correct dependencies on other projects.
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Includes
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Wix toolset build files -->
+  <include buildfile="${dir.src.ambient}\appsynup\appsynup.build" />
+  <include buildfile="${dir.src.burn}\burn.build" />
+  <include buildfile="${dir.wixroot.src}\DTF\dtf.build" />
+  <include buildfile="${dir.src.dutil}\dutil.build" unless="${property::exists('dutil.properties.defined')}" />
+  <include buildfile="${dir.src.ext}\ext.build" />
+  <include buildfile="${dir.src.shine}\shine.build" />
+  <include buildfile="${dir.src.ca.serverca}\serverca.build" />
+  <include buildfile="${dir.wixroot.src}\setup\setup.build" />
+  <include buildfile="${dir.wixroot.src}\setupbld\setupbld.build" />
+  <include buildfile="${dir.wixroot.src}\setupexe\setupexe.build" />
+  <include buildfile="${dir.src.toolsrc}\toolsrc.build" />
+  <include buildfile="${dir.wixroot.src}\updateexe\updateexe.build" />
+  <include buildfile="${dir.src.votive}\votive2005.build" />
+  <include buildfile="${dir.src.votive}\votive2008.build" />
+  <include buildfile="${dir.src.votive}\votive2010.build" />
+  <include buildfile="${dir.src.wcautil}\wcautil.build" />
+  <include buildfile="${dir.src.winterop}\winterop.build" />
+  <include buildfile="${dir.src.wixca}\wixca.build" />
+  <include buildfile="${dir.wixroot}\release\zip.build" />
+
+  <!-- WixTests build files -->
+  <include buildfile="${dir.wixroot.test}\wixtests.build" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="build" description="Builds the entire WiX toolset" depends="clean, inc" />
+
+  <!-- Clean: Make sure wixbuild.clean is last since it contains MSBuild tasks for the other projects -->
+  <target name="clean" description="Cleans the entire WiX toolset" 
+          depends="initbuildenv,
+                   appsynup.clean,
+                   burn.clean,
+                   chm.clean,
+                   core.clean,
+                   dtf.clean,
+                   dutil.clean,
+                   ext.clean,
+                   setup.clean,
+                   setupbld.clean,
+                   setupexe.clean,
+                   serverca.clean,
+                   shine.clean,
+                   votive2005.clean,
+                   votive2008.clean,
+                   votive2010.clean,
+                   wcautil.clean,
+                   winterop.clean,
+                   wixca.clean,
+                   wixtests.clean,
+                   toolsrc.clean,
+                   zip.clean">
+
+    <delete dir="${dir.build.wix.x86}" failonerror="false" if="${directory::exists(dir.build.wix.x86)}" />
+    <delete dir="${dir.build.wix.x64}" failonerror="false" if="${directory::exists(dir.build.wix.x64)}" />
+    <delete dir="${dir.build.wix.ia64}" failonerror="false" if="${directory::exists(dir.build.wix.ia64)}" />
+    <delete dir="${dir.target.wix.x86}" failonerror="false" if="${directory::exists(dir.target.wix.x86)}" />
+    <delete dir="${dir.target.wix.x64}" failonerror="false" if="${directory::exists(dir.target.wix.x64)}" />
+    <delete dir="${dir.target.wix.ia64}" failonerror="false" if="${directory::exists(dir.target.wix.ia64)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="inc" description="Incrementally builds the entire WiX toolset" 
+          depends="initbuildenv,
+                   appsynup.inc,
+                   burn,
+                   core,
+                   dtf,
+                   dutil,
+                   ext,
+                   runbvts,
+                   serverca,
+                   setup,
+                   votive2005,
+                   votive2008,
+                   votive2010,
+                   wcautil,
+                   winterop,
+                   wixca,
+                   wixtests,
+                   zip" />
+
+  <!-- Pre-req checking and build environment setup -->
+  <target name="prereqcheck" depends="global.initTools">
+    <fail message="Building WiX requires NAnt 0.86.2962.0 or later for .NET 3.5 support. Until NAnt 0.86 is released, that requires a nightly build (2008-02-10-0.86 or later), available from http://nant.sourceforge.net/nightly/." unless="${version::get-build(assemblyname::get-version(assembly::get-name(nant::get-assembly()))) >= 2962}" />
+    <fail message="Building WiX requires the .NET Framework 3.5 or 4.0" unless="${framework::exists('net-3.5') or framework::exists('net-4.0') or environment::variable-exists('COMPLUSBUILD')}" />
+    <fail message="Building WiX requires the Windows Server 2008 and .NET Framework 3.5 SDK, Visual Studio 2008, Microsoft Windows 7 SDK, or Visual Studio 2010" unless="${framework::sdk-exists('net-3.5') or framework::sdk-exists('net-4.0')}" />
+
+    <!-- Use .NET 4.0 if available. -->
+    <if test="${framework::exists('net-4.0') and framework::sdk-exists('net-4.0')}">
+      <property name="framework.sdk.path" value="${framework::get-sdk-directory('net-4.0')}" />
+      <property name="framework.sdk.path.x64" value="${framework::get-sdk-directory('net-4.0')}\x64" />
+    </if>
+
+    <!-- Override with .NET 3.5 if available. -->
+    <if test="${framework::sdk-exists('net-3.5')}">
+      <property name="framework.sdk.path" value="${framework::get-sdk-directory('net-3.5')}" />
+      <property name="framework.sdk.path.x64" value="${framework::get-sdk-directory('net-3.5')}\x64" />
+    </if>
+
+    <fail message="Building WiX requires the Windows Server 2008 and .NET Framework 3.5 SDK or Visual Studio 2008 Visual Studio 2010" unless="${directory::exists(framework.sdk.path)}" />
+  </target>
+  
+  <target name="snskip" depends="prereqcheck">    
+    <property name="wix.snskip.tempname" value="${path::get-temp-file-name()}" />
+    <exec program="${framework.sdk.path}\sn.exe" commandline="-Vl" output="${wix.snskip.tempname}" />
+    <loadfile file="${wix.snskip.tempname}" property="wix.snkip.output" />
+    <delete file="${wix.snskip.tempname}" failonerror="false" />
+    <exec program="${framework.sdk.path}\sn.exe" commandline="-Vr *,36e4ce08b8ecfb17" unless="${string::contains(wix.snkip.output, '*,36e4ce08b8ecfb17')}" />
+    
+    <if test="${directory::exists(framework.sdk.path.x64)}">
+      <exec program="${framework.sdk.path.x64}\sn.exe" commandline="-Vl" output="${wix.snskip.tempname}" />
+      <loadfile file="${wix.snskip.tempname}" property="wix.snkip.output" />
+      <delete file="${wix.snskip.tempname}" failonerror="false" />    
+      <exec program="${framework.sdk.path.x64}\sn.exe" commandline="-Vr *,36e4ce08b8ecfb17" unless="${string::contains(wix.snkip.output, '*,36e4ce08b8ecfb17')}" />
+    </if>
+  </target>
+
+  <target name="initbuildenv" depends="snskip">
+    <mkdir dir="${dir.objroot}" />
+    <mkdir dir="${dir.targetroot}" />
+  </target>
+
+  <target name="trustmsbuildfiles" depends="initbuildenv, toolsrc">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="false">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:TrustMSBuildTargetsFiles" />
+      <arg file="${dir.wixroot}\WixBuild.Common.targets" />
+    </exec>
+  </target>
+
+  <target name="first" depends="trustmsbuildfiles" />
+  <target name="ambient" depends="first, appsynup.inc" />
+  <target name="chm" depends="core, ext, chm.inc" />
+  <target name="core" depends="winterop, core.inc" />
+  <target name="dtf" depends="first, dtf.inc" />
+  <target name="dutil" depends="dutil.inc" />
+  <target name="burn" depends="first, dutil, burn.inc" />
+  <target name="ext" depends="ambient, serverca, setupbld.inc, setupexe.inc, updateexe.inc, ext.inc, core, ext.sln.inc" />
+  <target name="serverca" depends="wcautil, wixca, serverca.inc" />
+  <target name="setup" depends="chm, core, ext, votive, shine.inc, setup.inc" />
+  <target name="toolsrc" depends="dutil, toolsrc.inc" />
+  <target name="votive" depends="votive2005, votive2008, votive2010" />
+  <target name="votive2005" depends="chm, core, ext, votive2005.inc" />
+  <target name="votive2008" depends="chm, core, ext, votive2008.inc" />
+  <target name="votive2010" depends="chm, core, ext, votive2010.inc" />
+  <target name="wcautil" depends="first, wcautil.inc" />
+  <target name="winterop" depends="first, winterop.inc" />
+  <target name="wixca" depends="wcautil, wixca.inc" />
+  <target name="zip" depends="setup, zip.inc" />
+
+  <!-- Build -->
+  <target name="chm.build" description="Peforms a full rebuild (clean then build)">
+    <property name="msbuild.project" value="${dir.src.chm}\chm.proj" />
+    <property name="msbuild.target" value="Rebuild" />
+    <call target="msbuild" />
+
+  <!--
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:FxCopEnabled=false" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.chm}\chm.proj" />
+    </exec>
+  -->
+  </target>
+
+   <target name="core.build" description="Peforms a full rebuild (clean then build)">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:NantPath=&quot;${NantPath}&quot;" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.wixroot.src}\core.sln" />
+    </exec>
+  </target>
+
+  <target name="ext.sln.build" description="Peforms a full rebuild (clean then build)">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.ext}\ext.sln" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.wixroot.src}\Tools.sln" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x86" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x64" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true" if="${ia64}">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=ia64" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Rebuild" />
+      <arg file="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    </exec>
+  </target>
+
+  <!-- Clean -->
+  <target name="chm.clean" description="Cleans the build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.chm}\chm.proj" />
+    </exec>
+  </target>
+
+   <target name="core.clean" description="Cleans the build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.wixroot.src}\core.sln" />
+    </exec>
+  </target>
+
+  <target name="ext.sln.clean" description="Cleans the build">
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.ext}\ext.sln" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:BuildIA64=${ia64}" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.wixroot.src}\Tools.sln" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x86" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=x64" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    </exec>
+
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true" if="${ia64}">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:Platform=ia64" />
+      <arg value="/verbosity:${msbuildverbosity}" />
+      <arg value="/target:Clean" />
+      <arg file="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    </exec>
+  </target>
+
+  <!-- Inc -->
+  <target name="chm.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile">
+    <property name="msbuild.project" value="${dir.src.chm}\chm.proj" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" />
+<!--
+    <exec program="msbuild.exe" basedir="${wix.settings.msbuildframework}" failonerror="true">
+      <arg value="/property:Configuration=Debug" if="${debug}" />
+      <arg value="/property:Configuration=Release" if="${ship}" />
+      <arg value="/property:FxCopEnabled=false" />
+      <arg value="/target:Build" />
+      <arg file="${dir.src.chm}\chm.proj" />
+    </exec>
+-->
+  </target>
+
+   <target name="core.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile, dtf">
+    <property name="msbuild.project" value="${dir.wixroot.src}\core.sln" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" />
+  </target>
+
+  <target name="ext.sln.inc" description="Performs an incremental build" depends="makeDirs, createKeyFile">
+    <property name="msbuild.project" value="${dir.src.ext}\ext.sln" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" />
+
+    <property name="msbuild.project" value="${dir.wixroot.src}\Tools.sln" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" />
+
+    <property name="msbuild.project" value="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    <property name="msbuild.platform" value="x86" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" />
+
+    <property name="msbuild.project" value="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    <property name="msbuild.platform" value="x64" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" />
+
+    <property name="msbuild.project" value="${dir.src.ext}\DifxAppExtension\wixlib\DIFxAppExtension.wixproj" />
+    <property name="msbuild.platform" value="ia64" />
+    <property name="msbuild.target" value="Build" />
+    <call target="msbuild" if="${ia64}" />
+  </target>
+</project>

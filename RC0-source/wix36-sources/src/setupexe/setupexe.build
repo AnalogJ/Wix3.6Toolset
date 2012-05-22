@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="setupexe" default="setupexe.inc" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+  <description>
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+
+    setupexe.build - Builds the WiX setup executable (Setup.exe).
+  </description>
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Properties
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Include the global build properties -->
+  <include buildfile="..\..\wix.include" unless="${property::exists('wix.properties.defined')}" />
+
+  <property name="dir.src.setupexe" value="${dir.wixroot.src}\setupexe" readonly="true" />
+  <property name="dir.build.setupexe" value="${dir.build.wix}\setupexe" readonly="true" />
+
+  <!-- setupexe-specific properties -->
+  <property name="setupexe.file.target" value="${dir.target.wix}\setup.exe" readonly="true" />
+  <property name="setupexe.file.targetpdb" value="${dir.target.wix}\setup.pdb" readonly="true" />
+
+  <!--
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Targets
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- Build -->
+  <target name="setupexe.build" description="Peforms a full rebuild (clean then build)" depends="setupexe.clean, setupexe.inc" />
+  
+  <!-- Clean -->
+  <target name="setupexe.clean" description="Cleans the build">
+    <delete dir="${dir.build.setupexe}" failonerror="false" if="${directory::exists(dir.build.setupexe)}" />
+    <delete file="${setupexe.file.target}" failonerror="false" if="${file::exists(setupexe.file.target)}" />
+    <delete file="${setupexe.file.targetpdb}" failonerror="false" if="${file::exists(setupexe.file.targetpdb)}" />
+  </target>
+
+  <!-- Inc -->
+  <target name="setupexe.inc" description="Performs an incremental build" depends="makeDirs">
+    <mkdir dir="${dir.build.setupexe}" />
+
+    <fileset id="compileCpp.fileset.sources" basedir="${dir.src.setupexe}">
+      <include name="setupexe.cpp" />
+    </fileset>
+    <property name="compileCpp.dir.build" value="${dir.build.setupexe}" />
+    <property name="compileCpp.file.precomp.h" value="${dir.src.setupexe}\precomp.h" />
+    <property name="compileCpp.file.rc" value="${dir.src.setupexe}\setup.rc" />
+    <property name="compileCpp.additionalOptions" value="/I &quot;${dir.src.setupexe.inc}&quot;"/>
+    <property name="makeNativeExe.file.target" value="${setupexe.file.target}" />
+    <property name="makeNativeExe.additionalLibs" value="-entry:WinMainCRTStartup &quot;${file.target.dutil}&quot; &quot;${dir.platformsdk.lib}\comctl32.lib&quot; &quot;${dir.platformsdk.lib}\msi.lib&quot; &quot;${dir.platformsdk.lib}\shell32.lib&quot;" dynamic="true" />
+
+    <!-- Make setupbld.exe -->
+    <call target="makeNativeExe" />
+  </target>
+  
+</project>
